@@ -1,0 +1,83 @@
+{
+    "version": 1,
+    "name": "PlayerInputSetup",
+    "maps": [
+        {
+            "name": "GamePlay",
+            "id": "0cb3e126-3aa9-4648-8d71-6c6822a5f1c4",
+            "actions": [
+                {
+                    "name": "Press",
+                    "type": "Button",
+                    "id": "f9730e34-eb0e-47fe-aebe-a8192b8db372",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Position",
+                    "type": "PassThrough",
+                    "id": "fac56723-46c2-456e-b3c1-bd5d16754149",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "632749bf-8afb-47de-b07a-a9559db9ff18",
+                    "path": "<Pointer>/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Press",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f78d55ee-95a4-4492-bafa-deef8b6ab615",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Position",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "f40ad106-a80b-40cb-8002-ac8c09480372",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "a6383a9d-933d-46da-88ef-0506a32c6d5c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6bc4b7cb-10ed-4ecc-bdf7-dc4e2e19e4a6",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

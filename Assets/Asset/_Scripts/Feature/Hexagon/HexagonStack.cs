@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using UnityEngine;
 
-public class HexagonStack
+public class HexagonStack : MonoBehaviour
 {
     private List<Hexagon> hexagons;
     public bool IsEmpty => hexagons.Count <= 0;
