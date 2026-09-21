@@ -8,11 +8,11 @@ public class DragAndDropHandler : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     [SerializeField] private InputManager inputManager;
     [SerializeField] private LayerMask hexagonLayer;
+    [SerializeField] private LayerMask slotLayer;
     private PlayerInputSetup Input;
     private HexagonStack CurrentStack;
-    private readonly Subject<Vector3> _drag = new Subject<Vector3>();
-    public Observable<Vector3> OnDrag => _drag;
-    
+    public event Action<Vector3> OnDrag;
+    public event Action<HexagonStack,Vector3> OnEndDrag;
     private void Awake()
     {
         Input = inputManager.InputAction;
@@ -28,7 +28,6 @@ public class DragAndDropHandler : MonoBehaviour
     {
         Input.GamePlay.Press.started -= OnPress;
         Input.GamePlay.Press.canceled -= OnRelease;
-        _drag.Dispose();
     }
 
     private void OnPress(InputAction.CallbackContext ctx)
@@ -42,18 +41,40 @@ public class DragAndDropHandler : MonoBehaviour
 
     private void OnRelease(InputAction.CallbackContext ctx)
     {
-        if(CurrentStack == null) return;
         Vector2 pos = Input.GamePlay.Position.ReadValue<Vector2>();
+        RaycastHit hit;
+        Physics.Raycast(ScreenToRay(pos),out hit, 500, slotLayer);
+        if (hit.collider != null)
+        {
+            OnEndDrag?.Invoke(CurrentStack,hit.point);
+        }
         CurrentStack = null;
     }
 
     private void Update()
     {
-        if(CurrentStack == null) return;
-        _drag.OnNext(ScreenToWorld(Input.GamePlay.Position.ReadValue<Vector2>()));
+        if (CurrentStack == null) return;
+        Vector2 pos = Input.GamePlay.Position.ReadValue<Vector2>();
+        
+        
+        Ray ray = ScreenToRay(pos);
+        float targetY = CurrentStack.transform.position.y;
+        Plane horizontalPlane = new Plane(Vector3.up, new Vector3(0, targetY, 0));
+        
+        if (horizontalPlane.Raycast(ray, out float distance))
+        {
+            Vector3 worldPos = ray.GetPoint(distance);
+            CurrentStack.MoveToTargetPosition(worldPos);
+        }
+        
+        
+        RaycastHit hit;
+        Physics.Raycast(ray, out hit, 500, slotLayer);
+        if (hit.collider != null)
+        {
+            OnDrag?.Invoke(hit.point);
+        } else OnDrag?.Invoke(new Vector3(999,999,999));
     }
 
-
     private Ray ScreenToRay(Vector2 position) => mainCamera.ScreenPointToRay(position);
-    private Vector2 ScreenToWorld(Vector2 position) => mainCamera.ScreenToWorldPoint(position);
 }

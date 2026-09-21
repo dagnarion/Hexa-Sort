@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3631255490404461764}
   - component: {fileID: 1092047456935759341}
   - component: {fileID: 6380362740929414466}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HexagonRender
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HexagonRender
   render: {fileID: 3631255490404461764}
-  collider: {fileID: 0}
+  collider: {fileID: 6380362740929414466}
   JumpPower: 3
   duration: 0.5
 --- !u!64 &6380362740929414466
@@ -140,7 +140,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7589997304754119165}
   - component: {fileID: 7708298281066024100}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Hexagon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
