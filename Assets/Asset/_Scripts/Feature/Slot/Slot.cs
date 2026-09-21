@@ -12,6 +12,9 @@ public class Slot : MonoBehaviour
         this.Type = type;
     }
 
+    public void FillHexagonStackToSlot(HexagonStack hexagonStack)  => this.currentStack = hexagonStack;
+    public void ReleaseSlot() => this.currentStack = null;
+
     public void Deselected() => slotRender.Deselected();
 
     public void Selected() => slotRender.Selected();

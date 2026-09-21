@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e346acca123b412cbaa6ce3224e0f52d, type: 3}
-  m_Name: New Grid Data SO
-  m_EditorClassIdentifier: Assembly-CSharp::GridDataSO
-  <GridSize>k__BackingField: {x: 3, y: 3}
+  m_Script: {fileID: 11500000, guid: 196afde7f7ff4f338dfdfddaeab8c074, type: 3}
+  m_Name: DragEvent
+  m_EditorClassIdentifier: Assembly-CSharp::PositionEventChannel

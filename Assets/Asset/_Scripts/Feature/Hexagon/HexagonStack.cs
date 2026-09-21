@@ -13,13 +13,16 @@ public class HexagonStack : MonoBehaviour
         oldPosition = this.transform.position;
     }
 
-
     public void ReturnToOriginPosition() => this.transform.position = oldPosition;
-    
     
     public void MoveToTargetPosition(Vector3 position)
     {
-        this.transform.position = position;
+        this.transform.position = position.With(y: transform.position.y);
+    }
+
+    public void DropToTargetPosition(Vector3 position)
+    {
+        this.transform.position = position.With(y: position.y + hexagons.Capacity * .2f);
     }
     
     public Hexagon GetElement(int index)
@@ -34,8 +37,11 @@ public class HexagonStack : MonoBehaviour
         return hexagons[^1];
     }
 
-    public void AddElement(Hexagon hex) => hexagons.Add(hex);
-    
+    public void AddElement(Hexagon hex)
+    {
+        hexagons.Add(hex);
+    }
+
     public void RemoveElement(int index)
     {
         if (IsEmpty || index >= hexagons.Count) return;

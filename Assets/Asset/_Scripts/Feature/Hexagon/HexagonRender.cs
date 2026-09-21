@@ -14,8 +14,6 @@ public class HexagonRender : MonoBehaviour
         set { render.material.color = value; }
     }
 
-    public void SetParent(Transform parent) => transform.SetParent(parent);
-
     public void SetPosition(Vector3 pos)
     {
         transform.position = pos;
