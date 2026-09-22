@@ -5,14 +5,23 @@ using UnityEngine;
 public class HexagonStack : MonoBehaviour
 {
     private List<Hexagon> hexagons = new List<Hexagon>();
+    private HexagonStackArranger stackArranger;
     public bool IsEmpty => hexagons.Count <= 0;
     private Vector3 oldPosition;
+
+    private void Awake()
+    {
+        stackArranger = new HexagonStackArranger(this);
+    }
 
     private void Start()
     {
         oldPosition = this.transform.position;
     }
 
+    #region Position
+    public Vector3 GetTopPosition() => stackArranger.GetTopPosition();
+    
     public void ReturnToOriginPosition() => this.transform.position = oldPosition;
     
     public void MoveToTargetPosition(Vector3 position)
@@ -22,8 +31,11 @@ public class HexagonStack : MonoBehaviour
 
     public void DropToTargetPosition(Vector3 position)
     {
-        this.transform.position = position.With(y: position.y + hexagons.Capacity * .2f);
+        this.transform.position = position.With(y: position.y + .2f);
     }
+    #endregion
+
+
     
     public Hexagon GetElement(int index)
     {

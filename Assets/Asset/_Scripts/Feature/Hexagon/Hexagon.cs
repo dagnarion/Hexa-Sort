@@ -3,8 +3,8 @@ using UnityEngine;
 public class Hexagon : MonoBehaviour
 {
     public Color ColorType { get; private set; }
-    [SerializeField] public HexagonRender render;
-    
+    [field:SerializeField] public HexagonRender render { get; private set; }
+
     public void SetParent(Transform parent) => transform.SetParent(parent);
     
     public void Init(Color color)

@@ -20,9 +20,16 @@ public class HexagonStackSpawner : MonoBehaviour
             SpawnHexagonStack(point);
         }
     }
+    //test
+    private void Update()
+    {
+        Spawn();
+    }
+
     private void SpawnHexagonStack(Transform target)
     {
         HexagonStack hexagonStack = Instantiate<HexagonStack>(hexagonStackPrefab,target.position,Quaternion.identity);
+        hexagonStack.transform.SetParent(target);
         Color[] colorHolder = GetRandColour();
         int rand = Random.Range(spawnRange.x, spawnRange.y);
         int randColorRatio = Random.Range(spawnRange.x, rand);
@@ -31,14 +38,16 @@ public class HexagonStackSpawner : MonoBehaviour
             if (i < randColorRatio)
             {
                 Hexagon hexagon = SpawnHexagon(target, colorHolder[0]);
-                hexagonStack.AddElement(hexagon);
                 hexagon.SetParent(hexagonStack.transform);
+                hexagon.render.SetPosition(hexagonStack.GetTopPosition());
+                hexagonStack.AddElement(hexagon);
             }
             else
             {
                 Hexagon hexagon = SpawnHexagon(target, colorHolder[1]);
-                hexagonStack.AddElement(hexagon);
                 hexagon.SetParent(hexagonStack.transform);
+                hexagon.render.SetPosition(hexagonStack.GetTopPosition());
+                hexagonStack.AddElement(hexagon);
             }
         }
     }

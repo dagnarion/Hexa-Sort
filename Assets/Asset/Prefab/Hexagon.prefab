@@ -175,4 +175,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfcf99029e194356ac7ed6a8dcc33983, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hexagon
-  render: {fileID: 1092047456935759341}
+  <render>k__BackingField: {fileID: 1092047456935759341}
