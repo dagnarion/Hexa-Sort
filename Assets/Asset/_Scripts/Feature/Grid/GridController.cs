@@ -38,7 +38,7 @@ public class GridController : MonoBehaviour
         {
             Vector3 position = gridComponent.GetCellCenterWorld(new Vector3Int(pos.x,pos.y,0));
             Slot slot = Instantiate(slotPrefab,position,Quaternion.identity,holder);
-            slot.Init(SlotType.Nozmal);
+            slot.Init(SlotType.Nozmal,pos);
             return slot;
         });
     }
