@@ -12,6 +12,7 @@ public class DragAndDropHandler : MonoBehaviour
     [Header("Config")]
     [SerializeField] private LayerMask hexagonLayer;
     [SerializeField] private LayerMask slotLayer;
+    [SerializeField] private Vector3 inPointCheckArea;
     private PlayerInputSetup Input;
     private HexagonStack CurrentStack;
     private void Awake()
@@ -46,7 +47,7 @@ public class DragAndDropHandler : MonoBehaviour
         Vector2 pos = Input.GamePlay.Position.ReadValue<Vector2>();
         Ray ray = ScreenToRay(pos);
         float targetY = CurrentStack.transform.position.y;
-        Plane horizontalPlane = new Plane(Vector3.up, new Vector3(0, targetY, 0));
+        Plane horizontalPlane = new Plane(Vector3.up, inPointCheckArea); // magic number =))
         
         if (horizontalPlane.Raycast(ray, out float distance))
         {
