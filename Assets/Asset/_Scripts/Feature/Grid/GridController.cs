@@ -6,11 +6,12 @@ public class GridController : MonoBehaviour
 {
     [SerializeField] private EventChannel<Vector3> dragEventChannel;
     [SerializeField] private EventChannel<(HexagonStack, Vector3)> dropEventChannel;
+    [SerializeField] private EventChannel<Vector2Int> dropHexagonChannel;
     [SerializeField] private GridDataSO data;
     [SerializeField] private Grid gridComponent;
     [SerializeField] private Slot slotPrefab;
     [SerializeField] private Transform holder;
-    private Grid<Slot> grid;
+    public Grid<Slot> grid { get; private set; }
     private Slot currentSlot;
     
     private void OnEnable()
@@ -90,6 +91,8 @@ public class GridController : MonoBehaviour
         slot.FillHexagonStackToSlot(hexaStack);
         hexaStack.DropToTargetPosition(slot.transform.position);
         hexaStack.transform.SetParent(slot.transform);
+        dropHexagonChannel.Raise(gridPos);
+        hexaStack.DisableAllCollider();
         currentSlot?.Deselected();
         currentSlot = null;
     }

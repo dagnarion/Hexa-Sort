@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HexagonStack : MonoBehaviour
 {
-    private List<Hexagon> hexagons = new List<Hexagon>();
+   [SerializeField] private List<Hexagon> hexagons = new List<Hexagon>();
     private HexagonStackArranger stackArranger;
     public bool IsEmpty => hexagons.Count <= 0;
     private Vector3 oldPosition;
@@ -17,6 +17,11 @@ public class HexagonStack : MonoBehaviour
     private void Start()
     {
         oldPosition = this.transform.position;
+    }
+
+    public void Init(Vector3 oldPosition)
+    {
+        this.oldPosition = oldPosition;
     }
 
     #region Position
@@ -35,7 +40,13 @@ public class HexagonStack : MonoBehaviour
     }
     #endregion
 
-
+    public void DisableAllCollider()
+    {
+        foreach (Hexagon hexa in hexagons)
+        {
+            hexa.UnSelect();
+        }
+    }
     
     public Hexagon GetElement(int index)
     {

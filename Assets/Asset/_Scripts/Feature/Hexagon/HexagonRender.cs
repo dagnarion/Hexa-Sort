@@ -4,7 +4,7 @@ using DG.Tweening;
 public class HexagonRender : MonoBehaviour
 {
     [SerializeField] private MeshRenderer render;
-    [SerializeField] private Collider collider;
+
     [SerializeField] private float JumpPower;
     [SerializeField] private float duration;
 
@@ -52,6 +52,10 @@ public class HexagonRender : MonoBehaviour
         return sequence;
     }
 
-    public void UnSelect() => collider.enabled = false;
-    public void CanSelect() => collider.enabled = true;
+    public Sequence ReleaseHexagon()
+    {
+        Sequence sequence = DOTween.Sequence();
+        
+        return sequence;
+    }
 }

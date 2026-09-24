@@ -12,10 +12,10 @@ public class MergeChainResolver
         this.slotScoring = slotScoring;
     }
 
-    public List<MergeNode> ResolveMergeOrder(List<Slot> path)
+    public List<MergeNode> ResolveMergeOrder(List<Slot> path, Slot droppedSlot = null)
     {
         if (path == null || path.Count == 0) return new List<MergeNode>();
-        Slot root = GetRoot(path);
+        Slot root = GetRoot(path,droppedSlot);
         MergeNode rootNode = BuildTree(root, path);
         List<MergeNode> executionOrder = new List<MergeNode>();
         TraversePostOrder(rootNode, executionOrder);
@@ -71,23 +71,28 @@ public class MergeChainResolver
     }
 
 
-    private Slot GetRoot(List<Slot> path)
+    private Slot GetRoot(List<Slot> path,Slot originSlot)
     {
-        List<(Slot, int)> slot = new List<(Slot, int)>();
-        List<Slot> tmp = new List<Slot>();
-        int minn = int.MaxValue;
-        foreach (var it in path)
+        int minScore = int.MaxValue;
+        List<Slot> lowestScoreSlots = new List<Slot>();
+        foreach (var slot in path)
         {
-            int score = slotScoring.CalculateMergeCost(it.Position);
-            slot.Add((it, score));
-            minn = Math.Min(minn, score);
+            int score = slotScoring.CalculateMergeCost(slot.Position);
+            if (score < minScore)
+            {
+                minScore = score;
+                lowestScoreSlots.Clear();
+                lowestScoreSlots.Add(slot);
+            }
+            else if (score == minScore)
+            {
+                lowestScoreSlots.Add(slot);
+            }
         }
-
-        foreach (var it in slot)
+        if (originSlot != null && lowestScoreSlots.Contains(originSlot))
         {
-            if (it.Item2 == minn) tmp.Add(it.Item1);
+            return originSlot;
         }
-
-        return tmp[Random.Range(0, tmp.Count)];
+        return lowestScoreSlots[0];
     }
 }

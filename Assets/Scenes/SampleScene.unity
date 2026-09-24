@@ -520,6 +520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GridController
   dragEventChannel: {fileID: 11400000, guid: f9892dd7de7de7a4da60d84987829472, type: 2}
   dropEventChannel: {fileID: 11400000, guid: f33c192577b87b143b02573a3eab1415, type: 2}
+  dropHexagonChannel: {fileID: 11400000, guid: a14d70323f83ebb41b3634267b6ce17d, type: 2}
   data: {fileID: 11400000, guid: d18fd080909784b4c88f64f6c380ba23, type: 2}
   gridComponent: {fileID: 425005842}
   slotPrefab: {fileID: 7115882015209012136, guid: 5dd617996b196a344a98b30583a84dff, type: 3}
@@ -1041,6 +1042,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1980188289}
   - component: {fileID: 1980188290}
+  - component: {fileID: 1980188291}
   m_Layer: 0
   m_Name: DragAndDropHandler
   m_TagString: Untagged
@@ -1086,6 +1088,20 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   inPointCheckArea: {x: 0, y: 1, z: 0}
+--- !u!114 &1980188291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1980188288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d11f74d452184d78823466628e62544b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MergeService
+  gridController: {fileID: 425005845}
+  dropChannel: {fileID: 11400000, guid: a14d70323f83ebb41b3634267b6ce17d, type: 2}
 --- !u!1 &2082688958
 GameObject:
   m_ObjectHideFlags: 0

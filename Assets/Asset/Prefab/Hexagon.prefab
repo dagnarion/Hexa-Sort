@@ -105,7 +105,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HexagonRender
   render: {fileID: 3631255490404461764}
-  collider: {fileID: 6380362740929414466}
   JumpPower: 3
   duration: 0.5
 --- !u!64 &6380362740929414466
@@ -176,3 +175,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hexagon
   <render>k__BackingField: {fileID: 1092047456935759341}
+  collider: {fileID: 6380362740929414466}
