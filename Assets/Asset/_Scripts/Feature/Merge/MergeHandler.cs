@@ -25,6 +25,7 @@ public class MergeHandler
         Slot originSlot = path.Find(s => s.Position == pos);
         List<MergeNode> chain = chainResolver.ResolveMergeOrder(path,originSlot);
         await Merge(chain);
+        await MergeResolve(chainResolver.Root.GetHexagonStack(),chainResolver.Root);
     }
 
     private async UniTask Merge(List<MergeNode> chain)
@@ -70,7 +71,7 @@ public class MergeHandler
         }
     }
 
-    private async UniTask MergeResolve(HexagonStack hexagonStack)
+    private async UniTask MergeResolve(HexagonStack hexagonStack,Slot slot)
     {
         if(hexagonStack == null || hexagonStack.IsEmpty) return;
         List<Hexagon> hexagons = new List<Hexagon>();
@@ -81,7 +82,19 @@ public class MergeHandler
             if (hexagonStack.GetElement(i).ColorType == topHexagon.ColorType) hexagons.Add(hexagonStack.GetElement(i));
             else break;
         }
-        
-        
+        if(hexagonStack.IsEmpty) return;
+        if(hexagons.Count < 10) return;
+        foreach (var it in hexagons)
+        {
+            it.SetParent(null);
+            hexagonStack.RemoveElement(it);
+        }
+        await mergeVisual.ReleaseHexagon(hexagons);
+        if (hexagonStack.IsEmpty)
+        {
+            slot?.ReleaseSlot();
+            hexagonStack.transform.SetParent(null);
+            hexagonStack.gameObject.SetActive(false);
+        }
     }
 }

@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 public class MergeChainResolver
 {
     private SlotScoring slotScoring;
-
+    public Slot Root { get; private set; }
     public MergeChainResolver(SlotScoring slotScoring)
     {
         this.slotScoring = slotScoring;
@@ -15,8 +15,8 @@ public class MergeChainResolver
     public List<MergeNode> ResolveMergeOrder(List<Slot> path, Slot droppedSlot = null)
     {
         if (path == null || path.Count == 0) return new List<MergeNode>();
-        Slot root = GetRoot(path,droppedSlot);
-        MergeNode rootNode = BuildTree(root, path);
+        Root = GetRoot(path,droppedSlot);
+        MergeNode rootNode = BuildTree(Root, path);
         List<MergeNode> executionOrder = new List<MergeNode>();
         TraversePostOrder(rootNode, executionOrder);
         return executionOrder;

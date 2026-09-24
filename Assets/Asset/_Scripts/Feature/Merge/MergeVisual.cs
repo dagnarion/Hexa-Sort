@@ -18,7 +18,11 @@ public class MergeVisual
     public async UniTask ReleaseHexagon(List<Hexagon> hexagons)
     {
         Sequence sequence = DOTween.Sequence();
-        
+        for (int i = 0; i < hexagons.Count; i++)
+        {
+            sequence.Insert(0.05f * i, hexagons[i].render.ReleaseHexagon());
+        }
+        await sequence.ToUniTask();
     }
     
 }

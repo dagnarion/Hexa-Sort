@@ -106,7 +106,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HexagonRender
   render: {fileID: 3631255490404461764}
   JumpPower: 3
-  duration: 0.5
+  jumpDuration: 0.5
+  disappearDuration: 0.2
 --- !u!64 &6380362740929414466
 MeshCollider:
   m_ObjectHideFlags: 0

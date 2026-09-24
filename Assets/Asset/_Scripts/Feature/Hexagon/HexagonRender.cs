@@ -6,7 +6,8 @@ public class HexagonRender : MonoBehaviour
     [SerializeField] private MeshRenderer render;
 
     [SerializeField] private float JumpPower;
-    [SerializeField] private float duration;
+    [SerializeField] private float jumpDuration;
+    [SerializeField] private float disappearDuration;
 
     public Color32 color
     {
@@ -30,7 +31,7 @@ public class HexagonRender : MonoBehaviour
         sequence.Append(
             transform.DOPath(
                 new[] { start, middle, target },
-                duration,
+                jumpDuration,
                 PathType.CatmullRom
             ).SetEase(Ease.InOutQuad)
         );
@@ -38,7 +39,7 @@ public class HexagonRender : MonoBehaviour
         sequence.Join(
             transform.DORotate(
                 new Vector3(0f, 0f, 180f),
-                duration,
+                jumpDuration,
                 RotateMode.WorldAxisAdd
             ).SetEase(Ease.Linear)
         );
@@ -55,7 +56,9 @@ public class HexagonRender : MonoBehaviour
     public Sequence ReleaseHexagon()
     {
         Sequence sequence = DOTween.Sequence();
-        
+        sequence.Append(
+            transform.DOScale(0f,disappearDuration).SetEase(Ease.InBack)
+        );
         return sequence;
     }
 }
