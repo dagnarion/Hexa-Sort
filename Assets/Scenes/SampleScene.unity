@@ -824,7 +824,7 @@ MonoBehaviour:
   - {r: 0, g: 0.14067984, b: 1, a: 1}
   - {r: 1, g: 0.8377491, b: 0, a: 1}
   hexagonStackPrefab: {fileID: 3256607935155576203, guid: 96df5bf199cb9b948a0d3e72410e349f, type: 3}
-  hexagonPrefab: {fileID: 7708298281066024100, guid: d4aef04f4fa0e1447b229f97a85edd32, type: 3}
+  HexagonPool: {fileID: 11400000, guid: ff0316f875b877b4091d0ae734559852, type: 2}
   spawnRange: {x: 4, y: 8}
 --- !u!1 &1022557021
 GameObject:
@@ -1100,6 +1100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d11f74d452184d78823466628e62544b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MergeService
+  holder: {fileID: 1022557022}
   gridController: {fileID: 425005845}
   dropChannel: {fileID: 11400000, guid: a14d70323f83ebb41b3634267b6ce17d, type: 2}
 --- !u!1 &2082688958

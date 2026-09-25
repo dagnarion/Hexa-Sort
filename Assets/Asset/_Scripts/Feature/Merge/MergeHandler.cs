@@ -23,9 +23,9 @@ public class MergeHandler
             if (node.Parent != null)
             {
                await MergeStack(node.Slot.GetHexagonStack(),node.Parent.Slot.GetHexagonStack(),node.Slot); 
-               if(!node.Slot.IsEmpty) potentialSlot.Add(node.Slot);
+               if(!node.Slot.IsEmpty && !potentialSlot.Contains(node.Slot)) potentialSlot.Add(node.Slot);
             }
-            else if(!node.Slot.IsEmpty) potentialSlot.Add(node.Slot);
+            else if(!node.Slot.IsEmpty && !potentialSlot.Contains(node.Slot)) potentialSlot.Add(node.Slot);
         }
 
         return potentialSlot;
