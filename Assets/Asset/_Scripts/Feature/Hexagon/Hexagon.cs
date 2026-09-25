@@ -11,6 +11,7 @@ public class Hexagon : MonoBehaviour
     {
         this.ColorType = color;
         render.color = color;
+        render.Init();
     }
     public void UnSelect() => collider.enabled = false;
     public void CanSelect() => collider.enabled = true;

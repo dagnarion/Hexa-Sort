@@ -1,35 +1,19 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Cysharp.Threading.Tasks.Triggers;
 using UnityEngine;
 
 public class MergeHandler
 {
-    private ConnectedSlotFinder connectedSlotFinder;
-    private MergeChainResolver chainResolver;
     private MergeVisual mergeVisual;
 
-    public MergeHandler(ConnectedSlotFinder connectedSlotFinder,MergeChainResolver chainResolver)
+    public MergeHandler(MergeVisual mergeVisual)
     {
-        this.connectedSlotFinder = connectedSlotFinder;
-        this.chainResolver = chainResolver;
-        mergeVisual = new MergeVisual(); // test
+        this.mergeVisual = mergeVisual; // test
     }
-        
-        
-    public async UniTask MergeSlot(Vector2Int pos)
+    
+    public async UniTask Merge(List<MergeNode> chain)
     {
-        List<Slot> path = connectedSlotFinder.FindConnectedSameColorSlots(pos);
-        if(path.Count <= 1) return;
-        
-        Slot originSlot = path.Find(s => s.Position == pos);
-        List<MergeNode> chain = chainResolver.ResolveMergeOrder(path,originSlot);
-        await Merge(chain);
-        await MergeResolve(chainResolver.Root.GetHexagonStack(),chainResolver.Root);
-    }
-
-    private async UniTask Merge(List<MergeNode> chain)
-    {
+        if(chain == null || chain.Count <= 1) return;
         foreach (var node in chain)
         {
             if (node.Parent != null)
@@ -71,30 +55,6 @@ public class MergeHandler
         }
     }
 
-    private async UniTask MergeResolve(HexagonStack hexagonStack,Slot slot)
-    {
-        if(hexagonStack == null || hexagonStack.IsEmpty) return;
-        List<Hexagon> hexagons = new List<Hexagon>();
-        Hexagon topHexagon = hexagonStack.GetTopElement();
-        hexagons.Add(topHexagon);
-        for (int i = hexagonStack.GetNumberOfElement() - 2; i >= 0; i--)
-        {
-            if (hexagonStack.GetElement(i).ColorType == topHexagon.ColorType) hexagons.Add(hexagonStack.GetElement(i));
-            else break;
-        }
-        if(hexagonStack.IsEmpty) return;
-        if(hexagons.Count < 10) return;
-        foreach (var it in hexagons)
-        {
-            it.SetParent(null);
-            hexagonStack.RemoveElement(it);
-        }
-        await mergeVisual.ReleaseHexagon(hexagons);
-        if (hexagonStack.IsEmpty)
-        {
-            slot?.ReleaseSlot();
-            hexagonStack.transform.SetParent(null);
-            hexagonStack.gameObject.SetActive(false);
-        }
-    }
+
 }
+

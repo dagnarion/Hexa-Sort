@@ -1,5 +1,8 @@
+using System;
 using UnityEngine;
 using DG.Tweening;
+using Unity.VisualScripting;
+using Sequence = DG.Tweening.Sequence;
 
 public class HexagonRender : MonoBehaviour
 {
@@ -8,6 +11,17 @@ public class HexagonRender : MonoBehaviour
     [SerializeField] private float JumpPower;
     [SerializeField] private float jumpDuration;
     [SerializeField] private float disappearDuration;
+    private Vector3 baseScale;
+
+    private void Awake()
+    {
+        baseScale = transform.localScale;
+    }
+
+    public void Init()
+    {
+        this.transform.localScale = baseScale;
+    }
 
     public Color32 color
     {
@@ -59,6 +73,7 @@ public class HexagonRender : MonoBehaviour
         sequence.Append(
             transform.DOScale(0f,disappearDuration).SetEase(Ease.InBack)
         );
+        sequence.OnComplete(() => transform.parent.gameObject.SetActive(false));
         return sequence;
     }
 }

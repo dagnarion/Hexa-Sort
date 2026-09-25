@@ -6,15 +6,18 @@ using Random = UnityEngine.Random;
 public class MergeChainResolver
 {
     private SlotScoring slotScoring;
-    public Slot Root { get; private set; }
     public MergeChainResolver(SlotScoring slotScoring)
     {
         this.slotScoring = slotScoring;
     }
 
-    public List<MergeNode> ResolveMergeOrder(List<Slot> path, Slot droppedSlot = null)
+    public List<MergeNode> ResolveMergeOrder(List<Slot> path,out Slot Root,Slot droppedSlot = null)
     {
-        if (path == null || path.Count == 0) return new List<MergeNode>();
+        if (path == null || path.Count == 0)
+        {
+            Root = null;
+            return new List<MergeNode>();
+        }
         Root = GetRoot(path,droppedSlot);
         MergeNode rootNode = BuildTree(Root, path);
         List<MergeNode> executionOrder = new List<MergeNode>();
