@@ -8,7 +8,7 @@ public class HexagonStackSpawner : MonoBehaviour
     [SerializeField] private Transform[] spawnPoint;
     [SerializeField] private Color[] color;
     [SerializeField] private HexagonStack hexagonStackPrefab;
-    [SerializeField] private Hexagon hexagonPrefab;
+    [SerializeField] private ComponentPoolSO<Hexagon> HexagonPool;
     [MinMaxSlider(1, 10),SerializeField] private Vector2Int spawnRange;
     
     [Button]
@@ -54,7 +54,7 @@ public class HexagonStackSpawner : MonoBehaviour
 
     private Hexagon SpawnHexagon(Transform target,Color color)
     {
-        Hexagon hexa = Instantiate(hexagonPrefab, target.position, Quaternion.identity);
+        Hexagon hexa = HexagonPool.Get();
         hexa.Init(color);
         return hexa;
     }

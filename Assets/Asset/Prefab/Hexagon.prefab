@@ -104,6 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30a27bf88f614a528edf51258933130d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HexagonRender
+  hexagon: {fileID: 7708298281066024100}
   render: {fileID: 3631255490404461764}
   JumpPower: 3
   jumpDuration: 0.5
@@ -176,4 +177,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hexagon
   <render>k__BackingField: {fileID: 1092047456935759341}
+  hexagonPool: {fileID: 11400000, guid: ff0316f875b877b4091d0ae734559852, type: 2}
   collider: {fileID: 6380362740929414466}

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class MergeService : MonoBehaviour
 {
+    [SerializeField] private Transform holder;
     [SerializeField] private GridController gridController;
     [SerializeField] private EventChannel<Vector2Int> dropChannel;
     private SlotScoring slotScoring;
@@ -39,8 +40,8 @@ public class MergeService : MonoBehaviour
         chainResolver = new MergeChainResolver(slotScoring);
         connectedSlotFinder = new ConnectedSlotFinder(gridController.grid);
         mergeVisual = new MergeVisual();
-        mergeResolve = new MergeResolve(mergeVisual);
-        mergeHandler = new MergeHandler(mergeVisual);
+        mergeResolve = new MergeResolve(mergeVisual,holder);
+        mergeHandler = new MergeHandler(mergeVisual,holder);
     }
 
 

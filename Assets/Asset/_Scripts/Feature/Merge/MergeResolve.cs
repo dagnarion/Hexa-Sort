@@ -1,14 +1,17 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 
 public class MergeResolve
 {
+    private Transform holder;
     private MergeVisual mergeVisual;
 
-    public MergeResolve(MergeVisual mergeVisual)
+    public MergeResolve(MergeVisual mergeVisual,Transform holder)
     {
         this.mergeVisual = mergeVisual;
+        this.holder = holder;
     }
     
     public async UniTask Resolve(Slot slot)
@@ -27,7 +30,7 @@ public class MergeResolve
         if(hexagons.Count < 10) return;
         foreach (var it in hexagons)
         {
-            it.SetParent(null);
+            it.SetParent(holder);
             hexagonStack.RemoveElement(it);
         }
         await mergeVisual.ReleaseHexagon(hexagons);

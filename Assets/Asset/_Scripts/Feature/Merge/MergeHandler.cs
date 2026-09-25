@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class MergeHandler
 {
+    private Transform holder;
     private MergeVisual mergeVisual;
 
-    public MergeHandler(MergeVisual mergeVisual)
+    public MergeHandler(MergeVisual mergeVisual,Transform holder)
     {
         this.mergeVisual = mergeVisual; // test
+        this.holder = holder;
     }
     
     public async UniTask<List<Slot>> Merge(List<MergeNode> chain)
@@ -56,7 +58,7 @@ public class MergeHandler
         if (currentStack.IsEmpty)
         {
             currentSlot?.ReleaseSlot();
-            currentStack.transform.SetParent(null);
+            currentStack.transform.SetParent(holder);
             currentStack.gameObject.SetActive(false);
         }
     }
