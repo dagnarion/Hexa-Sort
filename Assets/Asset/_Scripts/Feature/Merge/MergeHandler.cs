@@ -11,16 +11,22 @@ public class MergeHandler
         this.mergeVisual = mergeVisual; // test
     }
     
-    public async UniTask Merge(List<MergeNode> chain)
+    public async UniTask<List<Slot>> Merge(List<MergeNode> chain)
     {
-        if(chain == null || chain.Count <= 1) return;
+        List<Slot> potentialSlot = new List<Slot>();
+        if(chain == null || chain.Count <= 1) return potentialSlot;
+        
         foreach (var node in chain)
         {
             if (node.Parent != null)
             {
                await MergeStack(node.Slot.GetHexagonStack(),node.Parent.Slot.GetHexagonStack(),node.Slot); 
+               if(!node.Slot.IsEmpty) potentialSlot.Add(node.Slot);
             }
+            else if(!node.Slot.IsEmpty) potentialSlot.Add(node.Slot);
         }
+
+        return potentialSlot;
     }
 
     private async UniTask MergeStack(HexagonStack currentStack,HexagonStack targetStack,Slot currentSlot)

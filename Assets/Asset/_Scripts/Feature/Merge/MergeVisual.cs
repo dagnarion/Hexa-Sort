@@ -10,7 +10,7 @@ public class MergeVisual
         Sequence sequence = DOTween.Sequence();
         for (int i = 0; i < hexagon.Count; i++)
         {
-            sequence.Insert(0.1f * i, hexagon[i].render.GotoTargetPosition(target.With(y:target.y+i*.2f)));
+            sequence.Insert(0.07f * i, hexagon[i].render.GotoTargetPosition(target.With(y:target.y+i*.2f)));
         }
         await sequence.ToUniTask();
     }

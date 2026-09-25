@@ -57,17 +57,18 @@ public class MergeService : MonoBehaviour
     {
         isRunning = true;
         List<Slot> MergeRoot = new List<Slot>();
+        List<Slot> potentialSlot = new List<Slot>();
         while (mergeQueue.Count > 0)
         {
             MergeRoot.Clear();
+            potentialSlot.Clear();
             while (mergeQueue.Count != 0)
             {
                 Vector2Int pos = mergeQueue.Dequeue();
                 List<MergeNode> mergeChain = GetMergeChain(pos, out Slot root);
                 if (root != null) MergeRoot.Add(root);
-                await mergeHandler.Merge(mergeChain);
+               potentialSlot.AddRange(await mergeHandler.Merge(mergeChain));
             }
-
             if (MergeRoot.Count > 0)
             {
                 List<UniTask> tasks = new List<UniTask>();
@@ -75,6 +76,15 @@ public class MergeService : MonoBehaviour
                     tasks.Add(mergeResolve.Resolve(slot));
                 await UniTask.WhenAll(tasks);
             }
+
+            if (potentialSlot != null && potentialSlot.Count != 0)
+            {
+                foreach (Slot slot in potentialSlot)
+                {
+                    mergeQueue.Enqueue(slot.Position);
+                }
+            }
+            
         }
 
         isRunning = false;
