@@ -7,17 +7,19 @@ public class MergeResolve
 {
     private Transform holder;
     private MergeVisual mergeVisual;
-
-    public MergeResolve(MergeVisual mergeVisual,Transform holder)
+    private Grid<Slot> grid;
+    public MergeResolve(MergeVisual mergeVisual,Grid<Slot> grid,Transform holder)
     {
         this.mergeVisual = mergeVisual;
         this.holder = holder;
+        this.grid = grid;
     }
     
     public async UniTask Resolve(Slot slot)
     {
         HexagonStack hexagonStack = slot.GetHexagonStack();
         if(hexagonStack == null || hexagonStack.IsEmpty) return;
+        
         List<Hexagon> hexagons = new List<Hexagon>();
         Hexagon topHexagon = hexagonStack.GetTopElement();
         hexagons.Add(topHexagon);
@@ -34,6 +36,9 @@ public class MergeResolve
             hexagonStack.RemoveElement(it);
         }
         await mergeVisual.ReleaseHexagon(hexagons);
+        
+        await TryDamageNeighbourLocksAsync(slot);
+        
         if (hexagonStack.IsEmpty)
         {
             slot?.ReleaseSlot();
@@ -41,4 +46,22 @@ public class MergeResolve
             hexagonStack.gameObject.SetActive(false);
         }
     }
+
+
+    private async UniTask TryDamageNeighbourLocksAsync(Slot slot)
+    {
+        Vector2Int currentPosition = slot.Position;
+        List<UniTask> damageTasks = new List<UniTask>();
+        foreach (Vector2Int direct in Direction.GetDirections(currentPosition))
+        {
+            Vector2Int nextPosition = currentPosition + direct;
+            if (!grid.IsOnGrid(nextPosition)) continue;
+            Slot nextSlot = grid.GetValue(nextPosition);
+            if (nextSlot == null || !nextSlot.IsLocked) continue;
+            damageTasks.Add(nextSlot.TryHitLockAsync());
+        }
+        if (damageTasks.Count > 0)
+            await UniTask.WhenAll(damageTasks);
+    }
+    
 }

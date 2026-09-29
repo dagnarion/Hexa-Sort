@@ -106,6 +106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HexagonRender
   hexagon: {fileID: 7708298281066024100}
   render: {fileID: 3631255490404461764}
+  OnHexagonCollected: {fileID: 11400000, guid: 6fef3a273a89a4145ae2c71ecdb3eb85, type: 2}
   JumpPower: 3
   jumpDuration: 0.5
   disappearDuration: 0.2

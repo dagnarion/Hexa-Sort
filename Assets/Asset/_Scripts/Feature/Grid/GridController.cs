@@ -9,7 +9,11 @@ public class GridController : MonoBehaviour
     [SerializeField] private EventChannel<Vector2Int> dropHexagonChannel;
     [SerializeField] private GridDataSO data;
     [SerializeField] private Grid gridComponent;
+    // 2 thằng này nhớ bốc ra để tạo cái factory spawn
     [SerializeField] private Slot slotPrefab;
+    [SerializeField] private BreakLock breakLockPrefab;
+    [SerializeField] private TaskLock taskLockPrefab;
+    
     [SerializeField] private Transform holder;
     public Grid<Slot> grid { get; private set; }
     private Slot currentSlot;
@@ -39,9 +43,33 @@ public class GridController : MonoBehaviour
         {
             Vector3 position = gridComponent.GetCellCenterWorld(new Vector3Int(pos.x,pos.y,0));
             Slot slot = Instantiate(slotPrefab,position,Quaternion.identity,holder);
-            slot.Init(SlotType.Nozmal,pos);
+            slot.Init(SlotType.Nozmal,pos,null,null);
             return slot;
         });
+        Test(new Vector2Int(0,0));
+        Test2(new Vector2Int(0,1));
+    }
+
+    private void Test(Vector2Int pos)
+    {
+        Destroy(grid.GetValue(pos).gameObject);
+        Vector3 position = gridComponent.GetCellCenterWorld(new Vector3Int(pos.x,pos.y,0));
+        Slot slot = Instantiate(slotPrefab,position,Quaternion.identity,holder);
+        TaskLock taskLock = Instantiate(taskLockPrefab,position.With(y:position.y+.2f),Quaternion.identity,holder);
+        taskLock.Init(50,position.With(y: position.y + .2f));
+        slot.Init(SlotType.Nozmal,pos,null,taskLock);
+        grid.SetValue(pos,slot);     
+    }    
+    
+    private void Test2(Vector2Int pos)
+    {
+        Destroy(grid.GetValue(pos).gameObject);
+        Vector3 position = gridComponent.GetCellCenterWorld(new Vector3Int(pos.x,pos.y,0));
+        Slot slot = Instantiate(slotPrefab,position,Quaternion.identity,holder);
+        BreakLock breakLock = Instantiate(breakLockPrefab,position.With(y:position.y+.2f),Quaternion.identity,holder);
+        breakLock.Init(2,position.With(y: position.y + .2f));
+        slot.Init(SlotType.Nozmal,pos,null,breakLock);
+        grid.SetValue(pos,slot);     
     }
 
     void SlotSelected(Vector3 pos)
@@ -55,7 +83,7 @@ public class GridController : MonoBehaviour
         }
 
         Slot targetSlot = grid.GetValue(gridPos);
-        if (!targetSlot.IsEmpty)
+        if (!targetSlot.IsEmpty || targetSlot.IsLocked)
         {
             currentSlot?.Deselected();
             currentSlot = null;
@@ -76,6 +104,7 @@ public class GridController : MonoBehaviour
         Vector3 pos = value.Item2;
         Vector2Int gridPos = (Vector2Int)gridComponent.WorldToCell(pos);
         if(hexaStack == null) return;
+        
         if (!grid.IsOnGrid(gridPos))
         {
             hexaStack.ReturnToOriginPosition();
@@ -83,16 +112,20 @@ public class GridController : MonoBehaviour
         }
 
         Slot slot = grid.GetValue(gridPos);
-        if(!slot.IsEmpty)
+        if(!slot.IsEmpty || slot.IsLocked)
         {
             hexaStack.ReturnToOriginPosition();
             return;
         }
+        
         slot.FillHexagonStackToSlot(hexaStack);
+        
         hexaStack.DropToTargetPosition(slot.transform.position);
         hexaStack.transform.SetParent(slot.transform);
+        
         dropHexagonChannel.Raise(gridPos);
         hexaStack.DisableAllCollider();
+        
         currentSlot?.Deselected();
         currentSlot = null;
     }

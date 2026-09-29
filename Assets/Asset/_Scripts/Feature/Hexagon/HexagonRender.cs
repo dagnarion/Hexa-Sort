@@ -8,7 +8,7 @@ public class HexagonRender : MonoBehaviour
 {
     [SerializeField] private Hexagon hexagon;
     [SerializeField] private MeshRenderer render;
-
+    [SerializeField] private EventChannel<int> OnHexagonCollected;
     [SerializeField] private float JumpPower;
     [SerializeField] private float jumpDuration;
     [SerializeField] private float disappearDuration;
@@ -74,7 +74,11 @@ public class HexagonRender : MonoBehaviour
         sequence.Append(
             transform.DOScale(0f,disappearDuration).SetEase(Ease.InBack)
         );
-        sequence.OnComplete(() => hexagon.ReleaseHexagon());
+        sequence.OnComplete(() =>
+        {
+            OnHexagonCollected.Raise(1);
+            hexagon.ReleaseHexagon();
+        });
         return sequence;
     }
 }

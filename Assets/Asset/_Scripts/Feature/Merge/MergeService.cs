@@ -40,7 +40,7 @@ public class MergeService : MonoBehaviour
         chainResolver = new MergeChainResolver(slotScoring);
         connectedSlotFinder = new ConnectedSlotFinder(gridController.grid);
         mergeVisual = new MergeVisual();
-        mergeResolve = new MergeResolve(mergeVisual,holder);
+        mergeResolve = new MergeResolve(mergeVisual,gridController.grid,holder);
         mergeHandler = new MergeHandler(mergeVisual,holder);
     }
 
