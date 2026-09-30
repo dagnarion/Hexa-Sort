@@ -129,7 +129,12 @@ public class GridController : MonoBehaviour
         currentSlot?.Deselected();
         currentSlot = null;
     }
-    
-    
+
+    public Slot GetSlotOnPosition(Vector3 pos)
+    {
+        Vector2Int gridPos = (Vector2Int)gridComponent.WorldToCell(pos);
+        Slot slot = grid.GetValue(gridPos);
+        return slot;
+    }
     
 }

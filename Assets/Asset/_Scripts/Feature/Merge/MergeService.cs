@@ -8,6 +8,7 @@ public class MergeService : MonoBehaviour
     [SerializeField] private Transform holder;
     [SerializeField] private GridController gridController;
     [SerializeField] private EventChannel<Vector2Int> dropChannel;
+    [SerializeField] private ComponentPoolSO<HexagonStack> hexagonStackPool;
     private SlotScoring slotScoring;
 
     private MergeChainResolver chainResolver;
@@ -40,7 +41,7 @@ public class MergeService : MonoBehaviour
         chainResolver = new MergeChainResolver(slotScoring);
         connectedSlotFinder = new ConnectedSlotFinder(gridController.grid);
         mergeVisual = new MergeVisual();
-        mergeResolve = new MergeResolve(mergeVisual,gridController.grid,holder);
+        mergeResolve = new MergeResolve(mergeVisual,gridController.grid,hexagonStackPool,holder);
         mergeHandler = new MergeHandler(mergeVisual,holder);
     }
 

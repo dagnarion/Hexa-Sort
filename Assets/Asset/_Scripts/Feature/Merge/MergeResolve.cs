@@ -8,11 +8,13 @@ public class MergeResolve
     private Transform holder;
     private MergeVisual mergeVisual;
     private Grid<Slot> grid;
-    public MergeResolve(MergeVisual mergeVisual,Grid<Slot> grid,Transform holder)
+    private ComponentPoolSO<HexagonStack> hexagonStackPool;
+    public MergeResolve(MergeVisual mergeVisual,Grid<Slot> grid,ComponentPoolSO<HexagonStack> hexagonStackPool,Transform holder)
     {
         this.mergeVisual = mergeVisual;
         this.holder = holder;
         this.grid = grid;
+        this.hexagonStackPool = hexagonStackPool;
     }
     
     public async UniTask Resolve(Slot slot)
@@ -43,7 +45,7 @@ public class MergeResolve
         {
             slot?.ReleaseSlot();
             hexagonStack.transform.SetParent(null);
-            hexagonStack.gameObject.SetActive(false);
+            hexagonStackPool.Release(hexagonStack);
         }
     }
 

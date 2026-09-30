@@ -6,6 +6,7 @@ public class DragAndDropHandler : MonoBehaviour
     [Header("Reference")]
     [SerializeField] private Camera mainCamera;
     [SerializeField] private InputManager inputManager;
+    [SerializeField] private EventChannel<Vector3> pressEventChannel;
     [SerializeField] private EventChannel<Vector3> dragEventChannel;
     [SerializeField] private EventChannel<(HexagonStack, Vector3)> dropEventChannel;
     
@@ -35,6 +36,15 @@ public class DragAndDropHandler : MonoBehaviour
     private void OnPress(InputAction.CallbackContext ctx)
     {
         Vector2 pos = Input.GamePlay.Position.ReadValue<Vector2>();
+        Ray ray = ScreenToRay(pos);
+        Plane horizontalPlane = new Plane(Vector3.up, inPointCheckArea);
+        
+        if (horizontalPlane.Raycast(ray, out float distance))
+        {
+            Vector3 worldPos = ray.GetPoint(distance);
+            pressEventChannel.Raise(worldPos);
+        } 
+        
         RaycastHit hit;
         Physics.Raycast(ScreenToRay(pos),out hit, 500, hexagonLayer);
         if(hit.collider == null) return;
@@ -46,8 +56,7 @@ public class DragAndDropHandler : MonoBehaviour
         if(CurrentStack == null) return;
         Vector2 pos = Input.GamePlay.Position.ReadValue<Vector2>();
         Ray ray = ScreenToRay(pos);
-        float targetY = CurrentStack.transform.position.y;
-        Plane horizontalPlane = new Plane(Vector3.up, inPointCheckArea); // magic number =))
+        Plane horizontalPlane = new Plane(Vector3.up, inPointCheckArea);
         
         if (horizontalPlane.Raycast(ray, out float distance))
         {

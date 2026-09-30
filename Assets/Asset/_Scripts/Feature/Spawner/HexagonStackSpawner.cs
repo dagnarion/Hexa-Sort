@@ -9,16 +9,44 @@ public class HexagonStackSpawner : MonoBehaviour
     [SerializeField] private Color[] color;
     [SerializeField] private HexagonStack hexagonStackPrefab;
     [SerializeField] private ComponentPoolSO<Hexagon> HexagonPool;
+    [SerializeField] private ComponentPoolSO<HexagonStack> HexagonStackPool;
     [MinMaxSlider(1, 10),SerializeField] private Vector2Int spawnRange;
     
     [Button]
-    private void Spawn()
+    public void Spawn()
     {
         foreach (var point in spawnPoint)
         {
-            if(point.childCount > 0) continue;
+            if(point.childCount > 0) return;
+        }
+
+        foreach (var point in spawnPoint)
+        {
             SpawnHexagonStack(point);
         }
+    }
+
+    public void Release()
+    {
+        foreach (var point in spawnPoint)
+        {
+            if(point.childCount <= 0) continue;
+            HexagonStack hexagonStack = point.GetChild(0).gameObject.GetComponent<HexagonStack>();
+            ReleaseStack(hexagonStack);
+        }
+    }
+
+
+    private void ReleaseStack(HexagonStack hexagonStack)
+    {
+        for (int i = hexagonStack.GetNumberOfElement() - 1; i >= 0; i--)
+        {
+            Hexagon hexa = hexagonStack.GetElement(i);
+            hexagonStack.RemoveElement(hexa);
+            HexagonPool.Release(hexa);
+        }
+        hexagonStack.transform.SetParent(null);
+        HexagonStackPool.Release(hexagonStack);
     }
     //test
     private void Update()
@@ -28,7 +56,8 @@ public class HexagonStackSpawner : MonoBehaviour
 
     private void SpawnHexagonStack(Transform target)
     {
-        HexagonStack hexagonStack = Instantiate<HexagonStack>(hexagonStackPrefab,target.position,Quaternion.identity);
+        HexagonStack hexagonStack = HexagonStackPool.Get();
+        hexagonStack.transform.position = target.position;
         hexagonStack.transform.SetParent(target);
         Color[] colorHolder = GetRandColour();
         int rand = Random.Range(spawnRange.x, spawnRange.y);
