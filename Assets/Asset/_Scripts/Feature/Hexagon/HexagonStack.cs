@@ -5,40 +5,16 @@ using UnityEngine;
 public class HexagonStack : MonoBehaviour
 {
    [SerializeField] private List<Hexagon> hexagons = new List<Hexagon>();
+   [field:SerializeField] public HexagonStackRender Render { get; private set; }
     private HexagonStackArranger stackArranger;
     public bool IsEmpty => hexagons.Count <= 0;
-    private Vector3 oldPosition;
 
     private void Awake()
     {
         stackArranger = new HexagonStackArranger(this);
+        Render.Init(stackArranger);
+        Render.SetOriginPosition(this.transform.position);
     }
-
-    private void Start()
-    {
-        oldPosition = this.transform.position;
-    }
-
-    public void Init(Vector3 oldPosition)
-    {
-        this.oldPosition = oldPosition;
-    }
-
-    #region Position
-    public Vector3 GetTopPosition() => stackArranger.GetTopPosition();
-    
-    public void ReturnToOriginPosition() => this.transform.position = oldPosition;
-    
-    public void MoveToTargetPosition(Vector3 position)
-    {
-        this.transform.position = position.With(y: transform.position.y);
-    }
-
-    public void DropToTargetPosition(Vector3 position)
-    {
-        this.transform.position = position.With(y: position.y + .2f);
-    }
-    #endregion
 
     public void DisableAllCollider()
     {

@@ -38,7 +38,7 @@ public class MergeHandler
         
         if (topTargetCell == null) return;
         List<Hexagon> hexagons = new List<Hexagon>();
-        Vector3 targetPos = targetStack.GetTopPosition();
+        Vector3 targetPos = targetStack.Render.GetTopPosition();
         
         for (int i = currentStack.GetNumberOfElement() - 1; i >= 0; i--)
         {

@@ -58,6 +58,7 @@ public class HexagonStackSpawner : MonoBehaviour
     {
         HexagonStack hexagonStack = HexagonStackPool.Get();
         hexagonStack.transform.position = target.position;
+        hexagonStack.Render.SetOriginPosition(target.position);
         hexagonStack.transform.SetParent(target);
         Color[] colorHolder = GetRandColour();
         int rand = Random.Range(spawnRange.x, spawnRange.y);
@@ -68,14 +69,14 @@ public class HexagonStackSpawner : MonoBehaviour
             {
                 Hexagon hexagon = SpawnHexagon(target, colorHolder[0]);
                 hexagon.SetParent(hexagonStack.transform);
-                hexagon.render.SetPosition(hexagonStack.GetTopPosition());
+                hexagon.render.SetPosition(hexagonStack.Render.GetTopPosition());
                 hexagonStack.AddElement(hexagon);
             }
             else
             {
                 Hexagon hexagon = SpawnHexagon(target, colorHolder[1]);
                 hexagon.SetParent(hexagonStack.transform);
-                hexagon.render.SetPosition(hexagonStack.GetTopPosition());
+                hexagon.render.SetPosition(hexagonStack.Render.GetTopPosition());
                 hexagonStack.AddElement(hexagon);
             }
         }

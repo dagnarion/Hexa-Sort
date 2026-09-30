@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8188271620637263447}
   - component: {fileID: 3256607935155576203}
+  - component: {fileID: 8962777899381858690}
   m_Layer: 0
   m_Name: HexagonStack
   m_TagString: Untagged
@@ -44,3 +45,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b96ce94e94742288d821a4eb6096a2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HexagonStack
+  hexagons: []
+  <Render>k__BackingField: {fileID: 8962777899381858690}
+--- !u!114 &8962777899381858690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7877654589240970842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 125a7c0067b14fac8233e02168e85358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HexagonStackRender
+  upHeight: 2
+  updownDuration: 0.15
+  lerpDuration: 0.2

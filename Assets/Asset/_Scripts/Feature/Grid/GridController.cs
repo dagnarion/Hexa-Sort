@@ -107,20 +107,20 @@ public class GridController : MonoBehaviour
         
         if (!grid.IsOnGrid(gridPos))
         {
-            hexaStack.ReturnToOriginPosition();
+            hexaStack.Render.ReturnToOriginPosition();
             return;
         }
 
         Slot slot = grid.GetValue(gridPos);
         if(!slot.IsEmpty || slot.IsLocked)
         {
-            hexaStack.ReturnToOriginPosition();
+            hexaStack.Render.ReturnToOriginPosition();
             return;
         }
         
         slot.FillHexagonStackToSlot(hexaStack);
         
-        hexaStack.DropToTargetPosition(slot.transform.position);
+        hexaStack.Render.DropToTargetPosition(slot.transform.position);
         hexaStack.transform.SetParent(slot.transform);
         
         dropHexagonChannel.Raise(gridPos);

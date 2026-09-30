@@ -81,7 +81,7 @@ public class DragAndDropHandler : MonoBehaviour
         if (horizontalPlane.Raycast(ray, out float distance))
         {
             Vector3 worldPos = ray.GetPoint(distance);
-            CurrentStack.MoveToTargetPosition(worldPos);
+            CurrentStack.Render.MoveToTargetPosition(worldPos);
         }
         
         

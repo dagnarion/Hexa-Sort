@@ -1165,8 +1165,9 @@ GameObject:
   - component: {fileID: 625346832}
   - component: {fileID: 625346831}
   - component: {fileID: 625346830}
+  - component: {fileID: 625346833}
   m_Layer: 5
-  m_Name: SelectBooster
+  m_Name: SwapBooster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1235,7 +1236,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 625346831}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 625346833}
+        m_TargetAssemblyTypeName: SwapBooster, Assembly-CSharp
+        m_MethodName: Apply
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &625346831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1274,6 +1287,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 625346828}
   m_CullTransparentMesh: 1
+--- !u!114 &625346833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625346828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 948a0ada8600f614db6c62cbc5ecf7bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SwapBooster
+  remain: 40
+  gridController: {fileID: 425005845}
+  pressedEvent: {fileID: 11400000, guid: aa070cb4e65a5d8449c77ce4b6cfc4bf, type: 2}
+  dropEvent: {fileID: 11400000, guid: a14d70323f83ebb41b3634267b6ce17d, type: 2}
 --- !u!1 &723368190
 GameObject:
   m_ObjectHideFlags: 0

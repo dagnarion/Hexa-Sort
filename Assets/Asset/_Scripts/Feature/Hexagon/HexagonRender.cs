@@ -13,10 +13,12 @@ public class HexagonRender : MonoBehaviour
     [SerializeField] private float jumpDuration;
     [SerializeField] private float disappearDuration;
     private Vector3 baseScale;
+    private Transform hexagonTransform;
 
     private void Awake()
     {
         baseScale = transform.localScale;
+        hexagonTransform = this.transform.parent;
     }
 
     public void Init()
@@ -32,19 +34,19 @@ public class HexagonRender : MonoBehaviour
 
     public void SetPosition(Vector3 pos)
     {
-        transform.position = pos;
+        hexagonTransform.position = pos;
     }
     
     public Sequence GotoTargetPosition(Vector3 target)
     {
         Sequence sequence = DOTween.Sequence();
 
-        Vector3 start = transform.position;
+        Vector3 start = hexagonTransform.position;
         Vector3 middle = Vector3.Lerp(start, target, 0.5f);
         middle.y += JumpPower;
 
         sequence.Append(
-            transform.DOPath(
+            hexagonTransform.DOPath(
                 new[] { start, middle, target },
                 jumpDuration,
                 PathType.CatmullRom
