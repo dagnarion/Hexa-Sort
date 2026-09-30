@@ -38,7 +38,15 @@ public class SwapBooster : MonoBehaviour
     {
         if (!isBoosterPlay || remain <= 0) return;
         Slot slot = gridController.GetSlotOnPosition(pos);
-        if (slot == null || slot.IsLocked) return;
+        if (slot == null || slot.IsLocked)
+        {
+            if (SelectedSlot != null && !SelectedSlot.IsEmpty)
+            {
+                SelectedSlot.GetHexagonStack().Render.MoveDown();
+                SelectedSlot = null;
+            }
+            return;
+        }
 
         if (SelectedSlot == null)
         {
@@ -64,14 +72,15 @@ public class SwapBooster : MonoBehaviour
 
                 if (secondSlot.IsEmpty)
                 {
-                    SelectedSlot.GetHexagonStack().Render.MoveDown();
                     SelectedSlot = null;
+                    await SwapSlotNotHaveStack(firstSlot, secondSlot);
+                    isBoosterPlay = false;
                     return;
                 }
 
                 SelectedSlot = null;
                 await secondSlot.GetHexagonStack().Render.MoveUp().ToUniTask();
-                await Swap(firstSlot, secondSlot);
+                await SwapSlotHasStack(firstSlot, secondSlot);
 
                 isBoosterPlay = false;
                 remain--;
@@ -79,7 +88,7 @@ public class SwapBooster : MonoBehaviour
         }
     }
 
-    private async UniTask Swap(Slot origin, Slot target)
+    private async UniTask SwapSlotHasStack(Slot origin, Slot target)
     {
         Sequence sq = DOTween.Sequence();
         HexagonStack currentStack = origin.GetHexagonStack();
@@ -110,6 +119,28 @@ public class SwapBooster : MonoBehaviour
         );
         
         dropEvent.Raise(origin.Position);
+        dropEvent.Raise(target.Position);
+    }    
+    
+    private async UniTask SwapSlotNotHaveStack(Slot origin, Slot target)
+    {
+        Sequence sq = DOTween.Sequence();
+        HexagonStack currentStack = origin.GetHexagonStack();
+        currentStack.transform.SetParent(null);
+
+        sq.Join(currentStack.Render.LerpToTargetPosition(
+            target.transform.position.With(y: currentStack.transform.position.y)));
+        
+        await sq.ToUniTask();
+        sq.Kill();
+        
+        currentStack.transform.SetParent(target.transform);
+        currentStack.Render.SetUpAndDownPosition(target.transform.position);
+        
+        target.FillHexagonStackToSlot(currentStack);
+        origin.FillHexagonStackToSlot(null);
+        
+        await currentStack.Render.MoveDown().ToUniTask();
         dropEvent.Raise(target.Position);
     }
 }

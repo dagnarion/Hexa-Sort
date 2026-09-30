@@ -496,7 +496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff65301e44bb2043aa872a94c4d3bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReshuffleBooster
-  remain: 0
+  remain: 450
   hexagonStackSpawner: {fileID: 927260872}
 --- !u!1 &330585543
 GameObject:
