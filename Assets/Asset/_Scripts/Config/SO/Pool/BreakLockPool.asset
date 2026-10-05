@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b57e78b09c334633aa64e138d9d75394, type: 3}
   m_Name: BreakLockPool
   m_EditorClassIdentifier: Assembly-CSharp::BreakLockPool
-  prefab: {fileID: 0}
-  Capacity: 0
-  MaxSize: 0
+  prefab: {fileID: 7842153725890777361, guid: e25c26f52a5fafa4d8180df547fa421c, type: 3}
+  Capacity: 100
+  MaxSize: 2000

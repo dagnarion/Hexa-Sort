@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76b0857b2e13418299141915d3cae6bc, type: 3}
   m_Name: TaskLockPool
   m_EditorClassIdentifier: Assembly-CSharp::TaskLockPool
-  prefab: {fileID: 0}
-  Capacity: 0
-  MaxSize: 0
+  prefab: {fileID: 7449669693779047442, guid: a2639647b151c4d49926328daa3a1721, type: 3}
+  Capacity: 100
+  MaxSize: 2000

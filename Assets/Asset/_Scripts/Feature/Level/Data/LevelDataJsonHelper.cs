@@ -55,7 +55,6 @@ public static class LevelDataJsonHelper
             levelName = so.levelName,
             gridSizeX = so.gridSize.x,
             gridSizeY = so.gridSize.y,
-            formLayout = so.formLayout.ToString(),
             slots = new List<SlotJsonDto>()
         };
 
@@ -97,11 +96,7 @@ public static class LevelDataJsonHelper
         targetSO.levelNumber = dto.levelNumber;
         targetSO.levelName = dto.levelName;
         targetSO.gridSize = new Vector2Int(dto.gridSizeX, dto.gridSizeY);
-
-        if (Enum.TryParse<GridFormLayout>(dto.formLayout, out var fl))
-            targetSO.formLayout = fl;
-        else
-            targetSO.formLayout = GridFormLayout.FlatTopped;
+        
 
         targetSO.slots = new List<SlotLevelData>();
 

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc4027f24af84a2dbfe22fcf2a30ca98, type: 3}
   m_Name: SlotPool
   m_EditorClassIdentifier: Assembly-CSharp::SlotPool
-  prefab: {fileID: 0}
-  Capacity: 0
-  MaxSize: 0
+  prefab: {fileID: 7115882015209012136, guid: 5dd617996b196a344a98b30583a84dff, type: 3}
+  Capacity: 100
+  MaxSize: 2000

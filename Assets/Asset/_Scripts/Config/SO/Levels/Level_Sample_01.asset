@@ -15,212 +15,211 @@ MonoBehaviour:
   levelNumber: 1
   levelName: Sample Level 1
   gridSize: {x: 5, y: 5}
-  formLayout: 1
   slots:
-  - gridPosition: {x: 0, y: 0}
-    isActive: 0
+  - isActive: 0
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 0, y: 0}
     stackColors: []
-  - gridPosition: {x: 1, y: 0}
-    isActive: 0
+  - isActive: 0
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 1, y: 0}
     stackColors: []
-  - gridPosition: {x: 2, y: 0}
-    isActive: 1
+  - isActive: 1
     slotType: 1
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 2, y: 0}
     stackColors: []
-  - gridPosition: {x: 3, y: 0}
-    isActive: 0
+  - isActive: 0
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 3, y: 0}
     stackColors: []
-  - gridPosition: {x: 4, y: 0}
-    isActive: 0
+  - isActive: 0
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 4, y: 0}
     stackColors: []
-  - gridPosition: {x: 0, y: 1}
-    isActive: 0
+  - isActive: 0
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 0, y: 1}
     stackColors: []
-  - gridPosition: {x: 1, y: 1}
-    isActive: 1
+  - isActive: 1
     slotType: 0
     lockType: 1
     breakHitCount: 3
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 1, y: 1}
     stackColors: []
-  - gridPosition: {x: 2, y: 1}
-    isActive: 1
+  - isActive: 1
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 2, y: 1}
     stackColors: []
-  - gridPosition: {x: 3, y: 1}
-    isActive: 1
+  - isActive: 1
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 3, y: 1}
     stackColors: []
-  - gridPosition: {x: 4, y: 1}
-    isActive: 0
+  - isActive: 0
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 4, y: 1}
     stackColors: []
-  - gridPosition: {x: 0, y: 2}
-    isActive: 1
+  - isActive: 1
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 0, y: 2}
     stackColors: []
-  - gridPosition: {x: 1, y: 2}
-    isActive: 1
+  - isActive: 1
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 1, y: 2}
     stackColors: []
-  - gridPosition: {x: 2, y: 2}
-    isActive: 1
+  - isActive: 1
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 1
+    gridPosition: {x: 2, y: 2}
     stackColors:
     - {r: 1, g: 0, b: 0, a: 1}
     - {r: 1, g: 0.85, b: 0, a: 1}
     - {r: 0, g: 0.2, b: 1, a: 1}
     - {r: 0.1, g: 0.8, b: 0.2, a: 1}
-  - gridPosition: {x: 3, y: 2}
-    isActive: 1
+  - isActive: 1
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 3, y: 2}
     stackColors: []
-  - gridPosition: {x: 4, y: 2}
-    isActive: 1
+  - isActive: 1
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 4, y: 2}
     stackColors: []
-  - gridPosition: {x: 0, y: 3}
-    isActive: 0
+  - isActive: 0
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 0, y: 3}
     stackColors: []
-  - gridPosition: {x: 1, y: 3}
-    isActive: 1
+  - isActive: 1
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 1
+    gridPosition: {x: 1, y: 3}
     stackColors:
     - {r: 0.7, g: 0.1, b: 0.9, a: 1}
     - {r: 1, g: 0.5, b: 0, a: 1}
     - {r: 1, g: 0.85, b: 0, a: 1}
-  - gridPosition: {x: 2, y: 3}
-    isActive: 1
+  - isActive: 1
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 2, y: 3}
     stackColors: []
-  - gridPosition: {x: 3, y: 3}
-    isActive: 1
+  - isActive: 1
     slotType: 0
     lockType: 2
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 3, y: 3}
     stackColors: []
-  - gridPosition: {x: 4, y: 3}
-    isActive: 0
+  - isActive: 0
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 4, y: 3}
     stackColors: []
-  - gridPosition: {x: 0, y: 4}
-    isActive: 0
+  - isActive: 0
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 0, y: 4}
     stackColors: []
-  - gridPosition: {x: 1, y: 4}
-    isActive: 0
+  - isActive: 0
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 1, y: 4}
     stackColors: []
-  - gridPosition: {x: 2, y: 4}
-    isActive: 1
+  - isActive: 1
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 2, y: 4}
     stackColors: []
-  - gridPosition: {x: 3, y: 4}
-    isActive: 0
+  - isActive: 0
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 3, y: 4}
     stackColors: []
-  - gridPosition: {x: 4, y: 4}
-    isActive: 0
+  - isActive: 0
     slotType: 0
     lockType: 0
     breakHitCount: 2
     taskTargetScore: 50
     hasStack: 0
+    gridPosition: {x: 4, y: 4}
     stackColors: []

@@ -15,7 +15,6 @@ public class SlotLevelData
     #endregion
     
     public Vector2Int gridPosition;
-
     
     public List<Color> stackColors = new List<Color>();
 

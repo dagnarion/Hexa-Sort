@@ -14,7 +14,6 @@ public class Hexagon : MonoBehaviour
         render.color = color;
         render.Init();
         CanSelect();
-        transform.rotation = Quaternion.identity;
     }
     public void UnSelect() => hexagonCollider.enabled = false;
     public void CanSelect() => hexagonCollider.enabled = true;

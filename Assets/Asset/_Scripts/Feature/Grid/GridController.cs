@@ -4,17 +4,27 @@ using UnityEngine;
 
 public class GridController : MonoBehaviour
 {
+    #region EventChannel
     [SerializeField] private EventChannel<Vector3> dragEventChannel;
     [SerializeField] private EventChannel<(HexagonStack, Vector3)> dropEventChannel;
     [SerializeField] private EventChannel<Vector2Int> dropHexagonChannel;
-    [SerializeField] private GridDataSO data;
+    #endregion
+
+    #region Grid
     [SerializeField] private Grid gridComponent;
-    
-    [SerializeField] private Slot slotPrefab;
-    [SerializeField] private LockFactory lockFactory;
+    private BoardBuilder boardBuilder;
+    public Grid<Slot> grid { get; private set; }
+    #endregion
     
     [SerializeField] private Transform holder;
-    public Grid<Slot> grid { get; private set; }
+
+    [SerializeField] private LevelDataSO levelData;
+    [SerializeField] private ComponentPoolSO<Slot> slotPool;
+    [SerializeField] private ComponentPoolSO<Hexagon> hexagonPool;
+    [SerializeField] private ComponentPoolSO<HexagonStack> hexagonStackPool;
+    [SerializeField] private LockFactory lockFactory;
+    
+
     private Slot currentSlot;
     
     private void OnEnable()
@@ -29,49 +39,27 @@ public class GridController : MonoBehaviour
         dropEventChannel.OnEventRaise -= OnDropProccessing;
     }
 
-    private void Start()
+    private void Awake()
     {
-        GenerateGrid();
-    }
-    
-    [Button]
-    void GenerateGrid()
-    {
-        holder.Clear();
-        grid = new Grid<Slot>(data.GridSize, pos =>
-        {
-            Vector3 position = gridComponent.GetCellCenterWorld(new Vector3Int(pos.x,pos.y,0));
-            Slot slot = Instantiate(slotPrefab,position,Quaternion.identity,holder);
-            slot.Init(SlotType.Nozmal,pos,null,null);
-            return slot;
-        });
-        Test(new Vector2Int(0,0));
-        Test2(new Vector2Int(0,1));
+        boardBuilder = new BoardBuilder(slotPool,hexagonPool,hexagonStackPool,lockFactory, gridComponent, holder);
     }
 
-    private void Test(Vector2Int pos)
+    private void Start()
     {
-        Destroy(grid.GetValue(pos).gameObject);
-        Vector3 position = gridComponent.GetCellCenterWorld(new Vector3Int(pos.x,pos.y,0));
-        Slot slot = Instantiate(slotPrefab,position,Quaternion.identity,holder);
-        ILock taskLock = lockFactory.CreateLock(LockType.TaskLock, 50, position);
-        slot.Init(SlotType.Nozmal,pos,null,taskLock);
-        grid.SetValue(pos,slot);     
-    }    
-    
-    private void Test2(Vector2Int pos)
-    {
-        Destroy(grid.GetValue(pos).gameObject);
-        Vector3 position = gridComponent.GetCellCenterWorld(new Vector3Int(pos.x,pos.y,0));
-        Slot slot = Instantiate(slotPrefab,position,Quaternion.identity,holder);
-        ILock breakLock = lockFactory.CreateLock(LockType.BreakLock,2, position);
-        slot.Init(SlotType.Nozmal,pos,null,breakLock);
-        grid.SetValue(pos,slot);     
+        slotPool.InitPool(holder);
+        GenerateGrid(levelData);
     }
+    
+    void GenerateGrid(LevelDataSO levelData)
+    {
+        grid = boardBuilder.Build(levelData);
+    }
+    
 
     void SlotSelected(Vector3 pos)
     {
-        Vector2Int gridPos = (Vector2Int) gridComponent.WorldToCell(pos);
+        Vector3Int cell = gridComponent.WorldToCell(pos);
+        Vector2Int gridPos = new Vector2Int(cell.y, cell.x);
         if (!grid.IsOnGrid(gridPos))
         {
             currentSlot?.Deselected();
@@ -80,7 +68,7 @@ public class GridController : MonoBehaviour
         }
 
         Slot targetSlot = grid.GetValue(gridPos);
-        if (!targetSlot.IsEmpty || targetSlot.IsLocked)
+        if (targetSlot == null || !targetSlot.IsEmpty || targetSlot.IsLocked)
         {
             currentSlot?.Deselected();
             currentSlot = null;
@@ -99,7 +87,8 @@ public class GridController : MonoBehaviour
     {
         HexagonStack hexaStack = value.Item1;
         Vector3 pos = value.Item2;
-        Vector2Int gridPos = (Vector2Int)gridComponent.WorldToCell(pos);
+        Vector3Int cell = gridComponent.WorldToCell(pos);
+        Vector2Int gridPos = new Vector2Int(cell.y, cell.x);
         if(hexaStack == null) return;
         
         if (!grid.IsOnGrid(gridPos))
@@ -109,7 +98,7 @@ public class GridController : MonoBehaviour
         }
 
         Slot slot = grid.GetValue(gridPos);
-        if(!slot.IsEmpty || slot.IsLocked)
+        if(slot == null || !slot.IsEmpty || slot.IsLocked)
         {
             hexaStack.Render.ReturnToOriginPosition();
             return;
@@ -129,7 +118,8 @@ public class GridController : MonoBehaviour
 
     public Slot GetSlotOnPosition(Vector3 pos)
     {
-        Vector2Int gridPos = (Vector2Int)gridComponent.WorldToCell(pos);
+        Vector3Int cell = gridComponent.WorldToCell(pos);
+        Vector2Int gridPos = new Vector2Int(cell.y, cell.x);
         Slot slot = grid.GetValue(gridPos);
         return slot;
     }

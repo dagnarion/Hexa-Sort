@@ -20,7 +20,7 @@ public class LevelEditorWindow : EditorWindow
 {
     [SerializeField] private LevelDataSO currentLevel;
     private SerializedObject serializedLevel;
-    
+
     private EditorToolMode currentTool = EditorToolMode.Select;
     private Vector2Int selectedSlotPos = new Vector2Int(0, 0);
     private bool hasSelection = false;
@@ -36,7 +36,7 @@ public class LevelEditorWindow : EditorWindow
     private bool showSceneHandles = true;
     private bool show3DScenePreview = true;
     private bool showGridLabels = true;
-    
+
     private static readonly Color[] PresetColors = new Color[]
     {
         new Color(1f, 0f, 0f), // Red
@@ -422,39 +422,10 @@ public class LevelEditorWindow : EditorWindow
         EditorGUILayout.Space(3);
 
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("Form Layout:", EditorStyles.boldLabel, GUILayout.Width(85));
+        EditorGUILayout.LabelField("Grid Layout:", EditorStyles.boldLabel, GUILayout.Width(85));
 
-        bool isPointy = currentLevel.formLayout == GridFormLayout.PointyTopped;
-        bool isFlat = currentLevel.formLayout == GridFormLayout.FlatTopped;
-
-        GUI.backgroundColor = isPointy ? Color.cyan : Color.white;
-        if (GUILayout.Button("🔀 So le (Đỉnh dọc)", EditorStyles.miniButtonLeft, GUILayout.Width(150)))
-        {
-            if (currentLevel.formLayout != GridFormLayout.PointyTopped)
-            {
-                Undo.RecordObject(currentLevel, "Change Form Layout & Reset Slots");
-                currentLevel.formLayout = GridFormLayout.PointyTopped;
-                currentLevel.ResetSlots();
-                EditorUtility.SetDirty(currentLevel);
-                Repaint();
-                SceneView.RepaintAll();
-            }
-        }
-
-        GUI.backgroundColor = isFlat ? Color.cyan : Color.white;
-        if (GUILayout.Button("📏 Thẳng hàng (Đỉnh ngang)", EditorStyles.miniButtonRight, GUILayout.Width(160)))
-        {
-            if (currentLevel.formLayout != GridFormLayout.FlatTopped)
-            {
-                Undo.RecordObject(currentLevel, "Change Form Layout & Reset Slots");
-                currentLevel.formLayout = GridFormLayout.FlatTopped;
-                currentLevel.ResetSlots();
-                EditorUtility.SetDirty(currentLevel);
-                Repaint();
-                SceneView.RepaintAll();
-            }
-        }
-
+        GUI.backgroundColor = new Color(0.2f, 0.7f, 0.9f, 0.3f);
+        GUILayout.Label("📏 Flat-Topped (Cố định)", EditorStyles.helpBox, GUILayout.Width(170));
         GUI.backgroundColor = Color.white;
 
         GUILayout.FlexibleSpace();
@@ -582,22 +553,13 @@ public class LevelEditorWindow : EditorWindow
         int width = currentLevel.gridSize.x;
         int height = currentLevel.gridSize.y;
 
-        bool isFlatTopped = currentLevel.formLayout == GridFormLayout.FlatTopped;
         float radius = cellDisplaySize * 0.5f;
 
         float colStepX;
         float rowStepY;
 
-        if (isFlatTopped)
-        {
-            colStepX = radius * 1.5f + 4f;
-            rowStepY = radius * Mathf.Sqrt(3f) + 3f;
-        }
-        else
-        {
-            colStepX = radius * Mathf.Sqrt(3f) + 3f;
-            rowStepY = radius * 1.5f + 4f;
-        }
+        colStepX = radius * 1.5f + 4f;
+        rowStepY = radius * Mathf.Sqrt(3f) + 3f;
 
         float totalWidth = (width + 2) * colStepX + 80f;
         float totalHeight = (height + 2) * rowStepY + 80f;
@@ -614,8 +576,8 @@ public class LevelEditorWindow : EditorWindow
             {
                 for (int x = 0; x < width; x++)
                 {
-                    Vector2 cellCenter = GetCellCenterGUI(matrixRect, x, y, height, colStepX, rowStepY, isFlatTopped);
-                    Vector3[] corners = GetHexCornersGUI(cellCenter, radius, isFlatTopped);
+                    Vector2 cellCenter = GetCellCenterGUI(matrixRect, x, y, height, colStepX, rowStepY);
+                    Vector3[] corners = GetHexCornersGUI(cellCenter, radius);
 
                     if (IsPointInHex(mousePos, corners))
                     {
@@ -645,38 +607,27 @@ public class LevelEditorWindow : EditorWindow
                 Vector2Int pos = new Vector2Int(x, y);
                 SlotLevelData slot = currentLevel.GetOrCreateSlot(pos);
 
-                Vector2 cellCenter = GetCellCenterGUI(matrixRect, x, y, height, colStepX, rowStepY, isFlatTopped);
-                DrawHexCellGUI(cellCenter, radius, slot, isFlatTopped);
+                Vector2 cellCenter = GetCellCenterGUI(matrixRect, x, y, height, colStepX, rowStepY);
+                DrawHexCellGUI(cellCenter, radius, slot);
             }
         }
 
         EditorGUILayout.EndScrollView();
     }
 
-    private static Vector2 GetCellCenterGUI(Rect matrixRect, int x, int y, int height, float colStepX, float rowStepY,
-        bool isFlatTopped)
+    private static Vector2 GetCellCenterGUI(Rect matrixRect, int x, int y, int height, float colStepX, float rowStepY)
     {
         int visualY = (height - 1) - y;
-        if (isFlatTopped)
-        {
-            float yOffset = (x % 2 != 0) ? (rowStepY * 0.5f) : 0f;
-            float centerX = matrixRect.x + 45f + x * colStepX;
-            float centerY = matrixRect.y + 45f + visualY * rowStepY + yOffset;
-            return new Vector2(centerX, centerY);
-        }
-        else
-        {
-            float xOffset = (Mathf.Abs(y) % 2 != 0) ? (colStepX * 0.5f) : 0f;
-            float centerX = matrixRect.x + 45f + x * colStepX + xOffset;
-            float centerY = matrixRect.y + 45f + visualY * rowStepY;
-            return new Vector2(centerX, centerY);
-        }
+        float yOffset = (x % 2 != 0) ? (rowStepY * 0.5f) : 0f;
+        float centerX = matrixRect.x + 45f + x * colStepX;
+        float centerY = matrixRect.y + 45f + visualY * rowStepY - yOffset;
+        return new Vector2(centerX, centerY);
     }
 
-    private static Vector3[] GetHexCornersGUI(Vector2 center, float radius, bool isFlatTopped)
+    private static Vector3[] GetHexCornersGUI(Vector2 center, float radius)
     {
         Vector3[] corners = new Vector3[6];
-        float angleOffset = isFlatTopped ? 0f : 30f;
+        float angleOffset = 0f;
         for (int i = 0; i < 6; i++)
         {
             float angleDeg = 60f * i + angleOffset;
@@ -707,10 +658,10 @@ public class LevelEditorWindow : EditorWindow
         return inside;
     }
 
-    private void DrawHexCellGUI(Vector2 center, float radius, SlotLevelData slot, bool isFlatTopped)
+    private void DrawHexCellGUI(Vector2 center, float radius, SlotLevelData slot)
     {
         bool isSelected = hasSelection && selectedSlotPos == slot.gridPosition;
-        Vector3[] corners = GetHexCornersGUI(center, radius, isFlatTopped);
+        Vector3[] corners = GetHexCornersGUI(center, radius);
 
         Event e = Event.current;
         if (e.type == EventType.MouseDown && IsPointInHex(e.mousePosition, corners))
@@ -784,7 +735,7 @@ public class LevelEditorWindow : EditorWindow
 
         if (slot.hasStack && slot.stackColors != null && slot.stackColors.Count > 0)
         {
-            DrawMiniHexStackGUI(center, radius, slot.stackColors, isFlatTopped);
+            DrawMiniHexStackGUI(center, radius, slot.stackColors);
         }
 
         GUIStyle coordStyle = new GUIStyle(EditorStyles.miniLabel)
@@ -850,7 +801,7 @@ public class LevelEditorWindow : EditorWindow
         }
     }
 
-    private void DrawMiniHexStackGUI(Vector2 center, float hexRadius, List<Color> colors, bool isFlatTopped)
+    private void DrawMiniHexStackGUI(Vector2 center, float hexRadius, List<Color> colors)
     {
         int count = colors.Count;
         if (count == 0) return;
@@ -867,7 +818,7 @@ public class LevelEditorWindow : EditorWindow
             Vector2 layerCenter = stackBase - new Vector2(0f, i * layerSpacing);
             if (i == count - 1) topLayerCenter = layerCenter;
 
-            Vector3[] layerCorners = GetHexCornersGUI(layerCenter, miniRadius, isFlatTopped);
+            Vector3[] layerCorners = GetHexCornersGUI(layerCenter, miniRadius);
 
             Handles.color = colors[i];
             Handles.DrawAAConvexPolygon(layerCorners);
@@ -1579,24 +1530,22 @@ public class LevelEditorWindow : EditorWindow
             {
                 Vector3 worldHit = ray.GetPoint(enter);
                 Vector2Int clickedCell;
-                bool isFlatScene = currentLevel.formLayout == GridFormLayout.FlatTopped;
 
-                if (isFlatScene)
+                if (gridObj != null)
                 {
-                    float R = gridObj != null ? gridObj.cellSize.y / 2f : 1.0f;
+                    Vector3Int cell = gridObj.WorldToCell(worldHit);
+                    clickedCell = new Vector2Int(cell.y, cell.x);
+                }
+                else
+                {
+                    float R = 1.0f;
                     float colStepX = 1.5f * R;
                     float rowStepZ = Mathf.Sqrt(3f) * R;
                     Vector3 rel = worldHit - originPos;
                     int cellX = Mathf.RoundToInt(rel.x / colStepX);
-                    float zOffset = (cellX % 2 == 0) ? (rowStepZ * 0.5f) : 0f;
+                    float zOffset = (cellX % 2 != 0) ? (rowStepZ * 0.5f) : 0f;
                     int cellY = Mathf.RoundToInt((rel.z - zOffset) / rowStepZ);
                     clickedCell = new Vector2Int(cellX, cellY);
-                }
-                else
-                {
-                    clickedCell = gridObj != null
-                        ? (Vector2Int)gridObj.WorldToCell(worldHit)
-                        : new Vector2Int(Mathf.RoundToInt(worldHit.x / 1.732f), Mathf.RoundToInt(worldHit.z / 1.5f));
                 }
 
                 if (clickedCell.x >= 0 && clickedCell.x < currentLevel.gridSize.x &&
@@ -1609,27 +1558,23 @@ public class LevelEditorWindow : EditorWindow
             }
         }
 
-        bool isFlatMode = currentLevel.formLayout == GridFormLayout.FlatTopped;
         foreach (var slot in currentLevel.slots)
         {
             if (slot == null) continue;
 
             Vector3 cellCenter;
-            if (isFlatMode)
+            if (gridObj != null)
             {
-                float R = gridObj != null ? gridObj.cellSize.y / 2f : 1.0f;
-                float colStepX = 1.5f * R;
-                float rowStepZ = Mathf.Sqrt(3f) * R;
-                float zOffset = (slot.gridPosition.x % 2 == 0) ? (rowStepZ * 0.5f) : 0f;
-                cellCenter = originPos + new Vector3(slot.gridPosition.x * colStepX, 0,
-                    slot.gridPosition.y * rowStepZ + zOffset);
+                cellCenter = gridObj.GetCellCenterWorld(new Vector3Int(slot.gridPosition.y, slot.gridPosition.x, 0));
             }
             else
             {
-                cellCenter = gridObj != null
-                    ? gridObj.GetCellCenterWorld(new Vector3Int(slot.gridPosition.x, slot.gridPosition.y, 0))
-                    : new Vector3(slot.gridPosition.x * 1.732f + (slot.gridPosition.y % 2 != 0 ? 0.866f : 0f), 0,
-                        slot.gridPosition.y * 1.5f);
+                float R = 1.0f;
+                float colStepX = 1.5f * R;
+                float rowStepZ = Mathf.Sqrt(3f) * R;
+                float zOffset = (slot.gridPosition.x % 2 != 0) ? (rowStepZ * 0.5f) : 0f;
+                cellCenter = originPos + new Vector3(slot.gridPosition.x * colStepX, 0,
+                    slot.gridPosition.y * rowStepZ + zOffset);
             }
 
             bool isSelected = hasSelection && selectedSlotPos == slot.gridPosition;
@@ -1646,7 +1591,7 @@ public class LevelEditorWindow : EditorWindow
 
             Handles.color = handleColor;
             float radius = gridObj != null ? gridObj.cellSize.x / 2f : 1.0f;
-            DrawSceneHexWire(cellCenter, radius, isFlatMode);
+            DrawSceneHexWire(cellCenter, radius);
 
             if (showGridLabels && slot.isActive)
             {
@@ -1668,15 +1613,15 @@ public class LevelEditorWindow : EditorWindow
             if (show3DScenePreview && slot.isActive && slot.hasStack && slot.stackColors != null &&
                 slot.stackColors.Count > 0)
             {
-                Draw3DStackPreview(cellCenter, slot.stackColors, radius * 0.85f, isFlatMode);
+                Draw3DStackPreview(cellCenter, slot.stackColors, radius * 0.85f);
             }
         }
     }
 
-    private void DrawSceneHexWire(Vector3 center, float radius, bool isFlatTopped)
+    private void DrawSceneHexWire(Vector3 center, float radius)
     {
         Vector3[] vertices = new Vector3[6];
-        float angleOffset = isFlatTopped ? 0f : (Mathf.PI / 6f);
+        float angleOffset = 0f;
         for (int i = 0; i < 6; i++)
         {
             float angle = (i * Mathf.PI * 2f / 6f) + angleOffset;
@@ -1691,10 +1636,10 @@ public class LevelEditorWindow : EditorWindow
         }
     }
 
-    private void Draw3DStackPreview(Vector3 basePos, List<Color> colors, float radius, bool isFlatTopped)
+    private void Draw3DStackPreview(Vector3 basePos, List<Color> colors, float radius)
     {
         float layerHeight = 0.2f;
-        float angleOffset = isFlatTopped ? 0f : (Mathf.PI / 6f);
+        float angleOffset = 0f;
 
         for (int i = 0; i < colors.Count; i++)
         {

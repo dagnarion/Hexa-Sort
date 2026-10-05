@@ -1,4 +1,3 @@
-using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
@@ -103,7 +102,6 @@ public class SwapBooster : MonoBehaviour
             origin.transform.position.With(y: targetStack.transform.position.y)));
         
         await sq.ToUniTask();
-        sq.Kill();
         currentStack.transform.SetParent(target.transform);
         targetStack.transform.SetParent(origin.transform);
         
