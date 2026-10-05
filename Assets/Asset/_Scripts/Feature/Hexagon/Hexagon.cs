@@ -5,7 +5,7 @@ public class Hexagon : MonoBehaviour
     public Color ColorType { get; private set; }
     [field:SerializeField] public HexagonRender render { get; private set; }
     [SerializeField] private ComponentPoolSO<Hexagon> hexagonPool;
-    [SerializeField] private Collider collider;
+    [SerializeField] private Collider hexagonCollider;
     public void SetParent(Transform parent) => transform.SetParent(parent);
     
     public void Init(Color color)
@@ -16,8 +16,8 @@ public class Hexagon : MonoBehaviour
         CanSelect();
         transform.rotation = Quaternion.identity;
     }
-    public void UnSelect() => collider.enabled = false;
-    public void CanSelect() => collider.enabled = true;
+    public void UnSelect() => hexagonCollider.enabled = false;
+    public void CanSelect() => hexagonCollider.enabled = true;
 
     public void ReleaseHexagon()
     {

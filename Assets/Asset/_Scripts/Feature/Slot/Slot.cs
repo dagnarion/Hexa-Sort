@@ -4,6 +4,7 @@ public class Slot : MonoBehaviour
 {
     public Vector2Int Position { get; private set; }
     [SerializeField] private SlotRender slotRender;
+    
     private ILock currentLock;
     private HexagonStack currentStack;
     

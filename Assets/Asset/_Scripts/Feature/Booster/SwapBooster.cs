@@ -27,7 +27,7 @@ public class SwapBooster : MonoBehaviour
         isBoosterPlay = false;
     }
 
-    public async void Apply()
+    public void Apply()
     {
         if (isBoosterPlay || remain <= 0) return;
         isBoosterPlay = true;
@@ -42,7 +42,7 @@ public class SwapBooster : MonoBehaviour
         {
             if (SelectedSlot != null && !SelectedSlot.IsEmpty)
             {
-                SelectedSlot.GetHexagonStack().Render.MoveDown();
+               await SelectedSlot.GetHexagonStack().Render.MoveDown();
                 SelectedSlot = null;
             }
             return;
@@ -52,7 +52,7 @@ public class SwapBooster : MonoBehaviour
         {
             if (slot.IsEmpty) return;
             SelectedSlot = slot;
-            SelectedSlot.GetHexagonStack().Render.MoveUp();
+            await SelectedSlot.GetHexagonStack().Render.MoveUp();
         }
         else
         {
@@ -60,7 +60,7 @@ public class SwapBooster : MonoBehaviour
             {
                 if (!SelectedSlot.IsEmpty)
                 {
-                    SelectedSlot.GetHexagonStack().Render.MoveDown();
+                await SelectedSlot.GetHexagonStack().Render.MoveDown();
                 }
 
                 SelectedSlot = null;

@@ -179,4 +179,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hexagon
   <render>k__BackingField: {fileID: 1092047456935759341}
   hexagonPool: {fileID: 11400000, guid: ff0316f875b877b4091d0ae734559852, type: 2}
-  collider: {fileID: 6380362740929414466}
+  hexagonCollider: {fileID: 6380362740929414466}

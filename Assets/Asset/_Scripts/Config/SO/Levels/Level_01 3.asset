@@ -1,0 +1,307 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e3eb95170ad4004989236c4546d5540, type: 3}
+  m_Name: Level_01 3
+  m_EditorClassIdentifier: Assembly-CSharp::HexaSort.Level.LevelDataSO
+  levelNumber: 1
+  levelName: Level 1
+  gridSize: {x: 6, y: 6}
+  formLayout: 1
+  slots:
+  - gridPosition: {x: 0, y: 0}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 1, y: 0}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 2, y: 0}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 3, y: 0}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 4, y: 0}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 5, y: 0}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 0, y: 1}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 1, y: 1}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 2, y: 1}
+    isActive: 1
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 3, y: 1}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 4, y: 1}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 5, y: 1}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 0, y: 2}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 1, y: 2}
+    isActive: 1
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 2, y: 2}
+    isActive: 1
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 3, y: 2}
+    isActive: 1
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 4, y: 2}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 5, y: 2}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 0, y: 3}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 1, y: 3}
+    isActive: 1
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 2, y: 3}
+    isActive: 1
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 3, y: 3}
+    isActive: 1
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 4, y: 3}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 5, y: 3}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 0, y: 4}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 1, y: 4}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 2, y: 4}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 3, y: 4}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 4, y: 4}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 5, y: 4}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 0, y: 5}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 1, y: 5}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 2, y: 5}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 3, y: 5}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 4, y: 5}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []
+  - gridPosition: {x: 5, y: 5}
+    isActive: 0
+    slotType: 0
+    lockType: 0
+    breakHitCount: 2
+    taskTargetScore: 50
+    hasStack: 0
+    stackColors: []

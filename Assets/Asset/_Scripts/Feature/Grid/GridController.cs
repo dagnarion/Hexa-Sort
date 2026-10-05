@@ -9,10 +9,9 @@ public class GridController : MonoBehaviour
     [SerializeField] private EventChannel<Vector2Int> dropHexagonChannel;
     [SerializeField] private GridDataSO data;
     [SerializeField] private Grid gridComponent;
-    // 2 thằng này nhớ bốc ra để tạo cái factory spawn
+    
     [SerializeField] private Slot slotPrefab;
-    [SerializeField] private BreakLock breakLockPrefab;
-    [SerializeField] private TaskLock taskLockPrefab;
+    [SerializeField] private LockFactory lockFactory;
     
     [SerializeField] private Transform holder;
     public Grid<Slot> grid { get; private set; }
@@ -55,8 +54,7 @@ public class GridController : MonoBehaviour
         Destroy(grid.GetValue(pos).gameObject);
         Vector3 position = gridComponent.GetCellCenterWorld(new Vector3Int(pos.x,pos.y,0));
         Slot slot = Instantiate(slotPrefab,position,Quaternion.identity,holder);
-        TaskLock taskLock = Instantiate(taskLockPrefab,position.With(y:position.y+.2f),Quaternion.identity,holder);
-        taskLock.Init(50,position.With(y: position.y + .2f));
+        ILock taskLock = lockFactory.CreateLock(LockType.TaskLock, 50, position);
         slot.Init(SlotType.Nozmal,pos,null,taskLock);
         grid.SetValue(pos,slot);     
     }    
@@ -66,8 +64,7 @@ public class GridController : MonoBehaviour
         Destroy(grid.GetValue(pos).gameObject);
         Vector3 position = gridComponent.GetCellCenterWorld(new Vector3Int(pos.x,pos.y,0));
         Slot slot = Instantiate(slotPrefab,position,Quaternion.identity,holder);
-        BreakLock breakLock = Instantiate(breakLockPrefab,position.With(y:position.y+.2f),Quaternion.identity,holder);
-        breakLock.Init(2,position.With(y: position.y + .2f));
+        ILock breakLock = lockFactory.CreateLock(LockType.BreakLock,2, position);
         slot.Init(SlotType.Nozmal,pos,null,breakLock);
         grid.SetValue(pos,slot);     
     }
