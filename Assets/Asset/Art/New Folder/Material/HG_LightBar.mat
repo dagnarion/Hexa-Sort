@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: HG_LightBar
+  m_Shader: {fileID: 4800000, guid: a8d53252ae0e16841a6faf15a81b85f8, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _EMISSION
+  m_LightmapFlags: 2
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties:
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+      unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: {}
+    m_Floats:
+      _Float: 0
+      _GlowStrength: -7.62
+      _Light_1: 0
+      _Light_2: 0
+      _Light_3: 0
+      _Light_4: 0
+      _Light_5: 0
+      _QueueControl: 0
+      _QueueOffset: 0
+      _Rotation: 0
+      _XRMotionVectorsPass: 1
+    m_Colors:
+      _Color: {r: 0.12370938, g: 0.86141807, b: 0.8742138, a: 0}
+      _Dark_Green: {r: 0.01683387, g: 0.1509434, b: 0.010917277, a: 1}
+      _Glow_COlor: {r: 0.4824803, g: 1, b: 0, a: 0}
+      _LIght_Green_hai: {r: 0.035294294, g: 1, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 0

@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Popcorn_TopLight
+  m_Shader: {fileID: 4800000, guid: a55b6edd44ab0a54185d160854b72bfd, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _EMISSION
+  m_LightmapFlags: 2
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses:
+  - MOTIONVECTORS
+  m_LockedProperties:
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+      unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: {}
+    m_Floats:
+      _Float: 0
+      _QueueControl: 0
+      _QueueOffset: 0
+      _Rotation: 0
+      _RotationSpeed: 200
+      _RotationToggle: 1
+      _XRMotionVectorsPass: 1
+    m_Colors:
+      _Color: {r: 0.56444436, g: 0.99607843, b: 0, a: 1}
+      _Emission_Intensity: {r: 0, g: 0, b: 0, a: 0}
+      _emmission: {r: 0.6588235, g: 1, b: 0, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 0

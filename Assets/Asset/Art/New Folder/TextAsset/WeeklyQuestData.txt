@@ -1,0 +1,73 @@
+Task Rolodex,,,,,,,,,
+Task Detail,,,,,,,,,
+Set Id,Stars,Mission ID,Task,Mission,Subtype,Target,Times,Min Level,Max Level
+0,10,1,Collect [Target] [Subtype] Hex tiles [Times] ,Collect Hex Tiles,any,3000,1,0,10
+0,10,2,Use [Subtype] [Times],Use Feature,Spin Wheel,1,2,0,10
+0,15,3,Use [Subtype] [Times] ,Use Booster,Refresh,1,3,0,10
+0,15,4,Use [Subtype] [Times] ,Use Booster,Hammer,1,2,0,10
+0,20,5,Collect [Target] coins through levels [Times],Collect Coins,None,150,1,0,10
+0,30,6,Use [Subtype] [Times] ,Use Booster,Swap,1,1,0,10
+,,,,,,,,,
+,,,,,,,,,
+1,10,7,Merge a Stack of [Target] Hex tiles [Times],Merge Stack,None,15,5,11,50
+1,10,8,Break [Target] Pinatas,Pinata,Break Pinatas,1,1,11,50
+1,15,9,Complete [Target] levels consecutively [Times],Level Completion Streak,None,5,1,11,50
+1,15,10,Finish in Top Three Positions in Race [Times],Race,Get Top 3 Position,1,1,11,50
+1,20,11,Use [Subtype] [Times],Use Feature,Spin Wheel,1,1,11,50
+1,30,12,Complete [Target] levels [Times],Complete Level,None,L1,1,11,50
+,,,,,,,,,
+,,,,,,,,,
+2,10,13,Claim Free Daily Reward [Times],Daily Reward,Claim Free,3,1,11,50
+2,10,14,Play [Target] Consecutive days [Times],Playtime Streak,None,3,1,11,50
+2,15,15,Participate in [Subtype] [Times],Participate in Event,Hexa Blaze Streak,1,1,11,50
+2,15,16,Collect [Target] [Subtype] for Battlepass,Battlepass,Battlepass Collectible,15,1,11,50
+2,20,17,Start New League [Times],League Promotion,Start League,1,1,11,50
+2,30,18,Collect [Target] coins through levels [Times],Collect Coins,None,L2,1,11,50
+,,,,,,,,,
+,,,,,,,,,
+3,10,19,Play for [Target] minutes [Times],Gameplay Time,None,50,1,51,100
+3,10,20,Collect [Target] [Subtype] Hex tiles [Times] ,Collect Hex Tiles,any,3000,1,51,100
+3,15,21,Collect [Target] Cards,Collections,Collect Cards,25,1,51,100
+3,15,22,Complete [Target] levels consecutively [Times],Level Completion Streak,None,5,1,51,100
+3,20,23,Open [Subtype] [Times],Collections,Card Pack,1,8,51,100
+3,30,24,Fill [Target] Candies in Pinata,Pinata,Collect Candies,L3,1,51,100
+,,,,,,,,,
+,,,,,,,,,
+4,10,25,Claim Free Daily Reward [Times],Daily Reward,Claim Free,3,1,51,100
+4,10,26,Unlock [Target] Locked Slots [Times],Unlock Locked Slots,None,35,1,51,100
+4,15,27,Play [Target] Consecutive days [Times],Playtime Streak,None,5,1,51,100
+4,15,28,Complete [Target] Meta World(s),Meta World,Complete Meta Worlds,1,1,51,100
+4,20,29,Use any booster [Times],Use Booster,any,1,5,51,100
+4,30,30,Complete [Target] levels [Times],Complete Level,None,L1,1,51,100
+,,,,,,,,,
+,,,,,,,,,
+5,15,31,Play for [Target] minutes [Times],Gameplay Time,None,60,1,101,0
+5,15,32,Complete Treasure Quest [Times],Treasure Quest,Complete Treasure Quest,1,1,101,0
+5,20,33,Collect [Target] [Subtype] Hex tiles [Times] ,Collect Hex Tiles,any,5000,1,101,0
+5,20,34,Collect [Target] Stickers in Sticker Hunt,Sticker Hunt,Collect Stickers,5,1,101,0
+5,30,35,Open [Subtype] [Times],Collections,Card Pack,1,7,101,0
+5,50,36,Complete [Target] Hexa Blaze Checkpoints ,Hexa Blaze,Complete Blaze Checkpoints,L5,1,101,0
+,,,,,,,,,
+,,,,,,,,,
+6,15,37,Merge a Stack of [Target] Hex tiles [Times],Merge Stack,None,15,5,101,0
+6,15,38,Collect [Target] [Subtype] Hex tiles [Times] ,Collect Hex Tiles,Blue,500,1,101,0
+6,20,39,Complete [Target] Levels consecutively[Times],Level Completion Streak,None,7,1,101,0
+6,20,40,Complete [Target] Sticker Hunt pages,Sticker Hunt,Complete Page,3,1,101,0
+6,30,41,Complete Roll and Win [Times],RollnWin,Complete RollnWin,1,1,101,0
+6,50,42,Collect [Target] Donuts,Donut Craze,Collect Donuts,L4,1,101,0
+,,,,,,,,,
+,,,,,,,,,
+7,15,43,Participate in [Subtype] [Times],Participate in Event,Hexa Blaze Streak,1,1,101,0
+7,15,44,Complete [Target] levels in a single attempt [Times],Level Complete in One attempt,None,5,1,101,0
+7,20,45,Watch [Target] AD Videos from Daily Rewards,Daily Reward,Watch Rv,3,1,101,0
+7,20,46,Get 1st Position in Race [Times],Race,Get 1st Position,1,1,101,0
+7,30,47,Complete [Target] Donut Orders,Donut Craze,Complete Orders,3,1,101,0
+7,50,48,Break [Target] Pinatas,Pinata,Break Pinatas,L6,1,101,0
+,,,,,,,,,
+,,,,,,,,,
+8,15,49,Play for [Target] minutes [Times],Gameplay Time,None,60,1,101,0
+8,15,50,Complete [Target] levels [Times],Complete Level,None,L1,1,101,0
+8,20,51,Play [Target] Consecutive days [Times],Playtime Streak,None,5,1,101,0
+8,20,52,Complete [Target] Levels consecutively [Times],Level Completion Streak,None,4,1,101,0
+8,30,53,Use any booster [Times],Use Booster,any,1,10,101,0
+8,50,54,Complete [Target] Sticker Hunt pages,Sticker Hunt,Complete Page,3,1,101,0
