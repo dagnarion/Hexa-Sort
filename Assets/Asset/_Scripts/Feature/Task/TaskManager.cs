@@ -1,40 +1,55 @@
 using System;
-using TMPro;
+using NaughtyAttributes;
 using UnityEngine;
 
-public class TaskManager : MonoBehaviour // task lấy data từ json
+public class TaskManager : MonoBehaviour
 {
     [SerializeField] private EventChannel<int> OnHexagonCollected;
-    [SerializeField] private EventChannel<int> OnCountChange;
-    [SerializeField] private TextMeshProUGUI tmp;
-    private int count = 0;
+    [SerializeField] private EventChannel<int> TaskProcess;
+    [SerializeField] private GridController gridController;
+    private int collected = 0;
+    private int blockBreaked = 0;
+   [SerializeField] private int maxCollected = 0;
+   [SerializeField] private int maxBreaked = 0;
 
-    private void Start()
+   private void OnEnable()
+   {
+       OnHexagonCollected.OnEventRaise += CollectHexagon;
+   }
+
+   private void OnDisable()
+   {
+       OnHexagonCollected.OnEventRaise -= CollectHexagon;
+   }
+
+   [Button]
+    public void ResetValue()
     {
-        Init(0);
+        collected = 0;
+        blockBreaked = 0;
     }
 
-    private void OnEnable()
+    [Button]
+    private void Check()
     {
-        OnHexagonCollected.OnEventRaise += Collect;
+        Debug.Log("win: " + IsWin());
+        Debug.Log("lose: " + IsLose());
     }
 
-    private void OnDisable()
+    private void CollectHexagon(int amount)
     {
-        OnHexagonCollected.OnEventRaise -= Collect;
+        collected += amount;
+        TaskProcess?.Raise(collected);
     }
 
-    public void Init(int count)
+    public bool IsWin()
     {
-        count = 0;
+        return (collected >= maxCollected) && (blockBreaked >= maxBreaked);
     }
-    
-    private void Collect(int amount)
+
+    public bool IsLose()
     {
-        count += amount;
-        OnCountChange?.Raise(count);
-        tmp.text = count.ToString();
+        if (IsWin()) return false;
+        return gridController.IsFull();
     }
-    
-    
 }

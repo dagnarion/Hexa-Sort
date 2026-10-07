@@ -123,5 +123,17 @@ public class GridController : MonoBehaviour
         Slot slot = grid.GetValue(gridPos);
         return slot;
     }
-    
+
+    public bool IsFull()
+    {
+        bool fulled = true;
+        grid.GridTraversal((pos, slot) =>
+        {
+            if (slot!= null && slot.IsEmpty)
+            {
+                fulled = false;
+            }
+        });
+        return fulled;
+    }
 }
