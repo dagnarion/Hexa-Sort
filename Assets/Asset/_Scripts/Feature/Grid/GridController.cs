@@ -38,7 +38,7 @@ public class GridController : MonoBehaviour
         levelLoadEventChannel.OnEventRaise -= GenerateGrid;
     }
 
-    private void Start()
+    private void Awake()
     { 
         boardBuilder = new BoardBuilder(slotPool,hexagonPool,hexagonStackPool,lockFactory, gridComponent, holder);
     }

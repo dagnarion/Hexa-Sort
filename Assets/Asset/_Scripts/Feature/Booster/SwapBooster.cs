@@ -2,33 +2,23 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
-public class SwapBooster : MonoBehaviour
+public class SwapBooster : SaveLoadAbstract
 {
     [SerializeField] private int remain;
     [SerializeField] private GridController gridController;
     [SerializeField] private EventChannel<Vector3> pressedEvent;
     [SerializeField] private EventChannel<Vector2Int> dropEvent;
-    [SerializeField] private EventChannel<GameData> GameDataEventChannel;
     private Slot SelectedSlot;
     private bool isBoosterPlay;
 
     private void OnEnable()
     {
         pressedEvent.OnEventRaise += OnPressed;
-        GameDataEventChannel.OnEventRaise += Init;
     }
 
     private void OnDisable()
     {
         pressedEvent.OnEventRaise -= OnPressed;
-        GameDataEventChannel.OnEventRaise -= Init;
-    }
-    
-    
-    private void Init(GameData data)
-    {
-        isBoosterPlay = false;
-        remain = data.SwapBoosterRemain;
     }
     
     public void Apply()
@@ -145,5 +135,17 @@ public class SwapBooster : MonoBehaviour
         
         await currentStack.Render.MoveDown().ToUniTask();
         dropEvent.Raise(target.Position);
+    }
+
+    public override void Save(GameData gameData)
+    {
+        isBoosterPlay = false;
+        gameData.SwapBoosterRemain = remain;
+    }
+
+    public override void Load(GameData gameData)
+    {
+        isBoosterPlay = false;
+        remain = gameData.SwapBoosterRemain;
     }
 }

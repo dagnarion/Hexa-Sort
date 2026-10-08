@@ -8,19 +8,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ComponentPoolSO<Hexagon> hexagonPool;
     [SerializeField] private ComponentPoolSO<HexagonStack> hexagonStackPool;
     [SerializeField] private ComponentPoolSO<Slot> slotPool;
-    [SerializeField] private EventChannel<GameData> GameDataEventChannel;
-    [SerializeField] private GameData gameData;
+    [SerializeField] private SaveLoadServices saveLoadServices;
     private void Start()
     {
         hexagonPool.InitPool(holder);
         hexagonStackPool.InitPool(holder);
         slotPool.InitPool(holder);
-    }
-
-    [Button]
-    private void LoadLevel()
-    {
-        GameDataEventChannel.Raise(gameData);
+        saveLoadServices.Load();
     }
     
 }

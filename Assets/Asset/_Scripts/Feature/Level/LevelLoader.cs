@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelLoader : MonoBehaviour
+public class LevelLoader : SaveLoadAbstract
 {
-    [SerializeField] private EventChannel<GameData> GameDataEventChannel;
     [SerializeField] private EventChannel<LevelData> LevelLoadEventChannel;
     [SerializeField] private LevelData[] levelDatas;
+    private int CurrentLevelID;
     private Dictionary<int, LevelData> levels = new Dictionary<int, LevelData>();
     private void Awake()
     {
@@ -15,18 +14,19 @@ public class LevelLoader : MonoBehaviour
             if(!levels.ContainsKey(i)) levels.Add(i,levelDatas[i]);
         }
     }
-
-    private void OnEnable()
+    
+    
+    public override void Save(GameData gameData)
     {
-        GameDataEventChannel.OnEventRaise += LoadLevel;
+        if(CurrentLevelID >= levelDatas.Length)
+        {
+            gameData.LevelID = 0;
+            return;
+        }
+        gameData.LevelID = CurrentLevelID + 1;
     }
 
-    private void OnDisable()
-    {
-        GameDataEventChannel.OnEventRaise -= LoadLevel;
-    }
-
-    private void LoadLevel(GameData gameData)
+    public override void Load(GameData gameData)
     {
         if(!levels.ContainsKey(gameData.LevelID))
         {
@@ -40,9 +40,8 @@ public class LevelLoader : MonoBehaviour
             Debug.LogError("Level Not Found");
             return;
         }
+
+        CurrentLevelID = gameData.LevelID;
         LevelLoadEventChannel?.Raise(level);
     }
-    
-    
-    
 }

@@ -1,34 +1,25 @@
-using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class BreakBooster : MonoBehaviour
+public class BreakBooster : SaveLoadAbstract
 {
     private int amount;
     private bool IsOnBooster;
     [SerializeField] private GridController gridController;
     [SerializeField] private EventChannel<Vector3> pressedEventChannel;
-    [SerializeField] private EventChannel<GameData> GameDataEventChannel;
 
     private void OnEnable()
     {
         pressedEventChannel.OnEventRaise += OnPressed;
-        GameDataEventChannel.OnEventRaise += Init;
     }
 
     private void OnDisable()
     {
         pressedEventChannel.OnEventRaise -= OnPressed;
-        GameDataEventChannel.OnEventRaise -= Init;
     }
-
-    private void Init(GameData gameData)
-    {
-        amount = gameData.BreakBoosterRemain;
-    }
-
+    
     public void SetBoosterState()
     {
         IsOnBooster = true;
@@ -72,5 +63,15 @@ public class BreakBooster : MonoBehaviour
             sequence.Insert(0.05f * i, hexagons[i].render.ReleaseHexagon());
         }
         await sequence.ToUniTask();
+    }
+
+    public override void Save(GameData gameData)
+    {
+        gameData.BreakBoosterRemain = amount;
+    }
+
+    public override void Load(GameData gameData)
+    {
+        amount = gameData.BreakBoosterRemain;
     }
 }

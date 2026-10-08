@@ -6,28 +6,32 @@ public class TaskManager : MonoBehaviour
 {
     [SerializeField] private EventChannel<int> OnHexagonCollected;
     [SerializeField] private EventChannel<int> TaskProcess;
+    [SerializeField] private EventChannel<LevelData> LevelLoadEventChannel;
     [SerializeField] private GridController gridController;
     private int collected = 0;
     private int blockBreaked = 0;
-   [SerializeField] private int maxCollected = 0;
-   [SerializeField] private int maxBreaked = 0;
+    private int maxCollected = 0;
+    private int maxBreaked = 0;
 
    private void OnEnable()
    {
        OnHexagonCollected.OnEventRaise += CollectHexagon;
+       LevelLoadEventChannel.OnEventRaise += SetValue;
    }
 
    private void OnDisable()
    {
        OnHexagonCollected.OnEventRaise -= CollectHexagon;
+       LevelLoadEventChannel.OnEventRaise -= SetValue;
    }
 
-   [Button]
-    public void ResetValue()
-    {
-        collected = 0;
-        blockBreaked = 0;
-    }
+   public void SetValue(LevelData levelData)
+   {
+       collected = 0;
+       blockBreaked = 0;
+       maxBreaked = levelData.BreakBlockTarget;
+       maxCollected = levelData.CollectHexagonTarget;
+   }
 
     [Button]
     private void Check()
@@ -52,4 +56,5 @@ public class TaskManager : MonoBehaviour
         if (IsWin()) return false;
         return gridController.IsFull();
     }
+    
 }
