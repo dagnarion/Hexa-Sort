@@ -5,11 +5,12 @@ using UnityEngine;
 public class GridController : MonoBehaviour
 {
     #region EventChannel
+
+    [SerializeField] private EventChannel<LevelData> levelLoadEventChannel;
     [SerializeField] private EventChannel<Vector3> dragEventChannel;
     [SerializeField] private EventChannel<(HexagonStack, Vector3)> dropEventChannel;
     [SerializeField] private EventChannel<Vector2Int> dropHexagonChannel;
     #endregion
-
     #region Grid
     [SerializeField] private Grid gridComponent;
     private BoardBuilder boardBuilder;
@@ -17,43 +18,38 @@ public class GridController : MonoBehaviour
     #endregion
     
     [SerializeField] private Transform holder;
-
-    [SerializeField] private LevelDataSO levelData;
     [SerializeField] private ComponentPoolSO<Slot> slotPool;
     [SerializeField] private ComponentPoolSO<Hexagon> hexagonPool;
     [SerializeField] private ComponentPoolSO<HexagonStack> hexagonStackPool;
     [SerializeField] private LockFactory lockFactory;
     
-
     private Slot currentSlot;
-    
     private void OnEnable()
     {
         dragEventChannel.OnEventRaise += SlotSelected;
         dropEventChannel.OnEventRaise += OnDropProccessing;
+        levelLoadEventChannel.OnEventRaise += GenerateGrid;
     }
 
     private void OnDisable()
     {
         dragEventChannel.OnEventRaise -= SlotSelected;
         dropEventChannel.OnEventRaise -= OnDropProccessing;
-    }
-
-    private void Awake()
-    {
-        boardBuilder = new BoardBuilder(slotPool,hexagonPool,hexagonStackPool,lockFactory, gridComponent, holder);
+        levelLoadEventChannel.OnEventRaise -= GenerateGrid;
     }
 
     private void Start()
-    {
-        slotPool.InitPool(holder);
-        GenerateGrid(levelData);
+    { 
+        boardBuilder = new BoardBuilder(slotPool,hexagonPool,hexagonStackPool,lockFactory, gridComponent, holder);
     }
     
-    void GenerateGrid(LevelDataSO levelData)
+    void GenerateGrid(LevelData data)
     {
-        grid = boardBuilder.Build(levelData);
+        // nhớ release lại các ô trong holder đi
+        grid = boardBuilder.Build(data.Level);
     }
+
+
     
 
     void SlotSelected(Vector3 pos)
@@ -68,7 +64,7 @@ public class GridController : MonoBehaviour
         }
 
         Slot targetSlot = grid.GetValue(gridPos);
-        if (targetSlot == null || !targetSlot.IsEmpty || targetSlot.IsLocked)
+        if (targetSlot == null || !targetSlot.IsEmpty || targetSlot.IsLocked || targetSlot.Type == SlotType.Block)
         {
             currentSlot?.Deselected();
             currentSlot = null;
@@ -98,7 +94,7 @@ public class GridController : MonoBehaviour
         }
 
         Slot slot = grid.GetValue(gridPos);
-        if(slot == null || !slot.IsEmpty || slot.IsLocked)
+        if(slot == null || !slot.IsEmpty || slot.IsLocked || slot.Type == SlotType.Block)
         {
             hexaStack.Render.ReturnToOriginPosition();
             return;

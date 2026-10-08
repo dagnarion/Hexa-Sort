@@ -50,28 +50,46 @@ public class BoardBuilder
         Slot slot = slotPool.Get();
         slot.transform.SetParent(holder);
         slot.transform.SetPositionAndRotation(position, rotation);
-        ILock lockInstance = lockFactory.CreateLock(slotData.lockType,
-            slotData.lockType == LockType.BreakLock
-                ? slotData.breakHitCount
-                : slotData.taskTargetScore,
-            position
-        );
 
-        slot.Init(slotData.slotType, gridPosition, null, lockInstance);
-        BuildStack(slot, slotData);
+        HexagonStack stack = null;
+        if (slotData.hasStack && slotData.stackColors != null && slotData.stackColors.Count > 0)
+        {
+            stack = BuildStack(slot, slotData);
+        }
+
+        ILock lockInstance = null;
+        if (slotData.lockType != LockType.None)
+        {
+            Vector3 lockPosition = stack != null
+                ? position.With(y: position.y + 0.2f + 0.2f * stack.GetNumberOfElement())
+                : position.With(y: position.y + 0.2f);
+
+            lockInstance = lockFactory.CreateLock(
+                slotData.lockType,
+                slotData.lockType == LockType.BreakLock
+                    ? slotData.breakHitCount
+                    : slotData.taskTargetScore,
+                lockPosition,
+                rotation,
+                holder
+            );
+        }
+
+        slot.Init(slotData.slotType, gridPosition, stack, lockInstance);
         return slot;
     }
 
-    private void BuildStack(Slot slot, SlotLevelData slotData)
+    private HexagonStack BuildStack(Slot slot, SlotLevelData slotData)
     {
-        if (!slotData.hasStack || slotData.stackColors == null || slotData.stackColors.Count == 0) return;
+        if (!slotData.hasStack || slotData.stackColors == null || slotData.stackColors.Count == 0) return null;
         HexagonStack stack = hexagonStackPool.Get();
         stack.transform.SetParent(slot.transform, false);
-        stack.transform.localPosition = Vector3.zero;
+        stack.transform.localPosition = new Vector3(0f, 0.2f, 0f);
         stack.transform.localRotation = Quaternion.identity;
         stack.transform.localScale = Vector3.one;
 
         stack.Render.SetOriginPosition(stack.transform.position);
+        stack.Render.SetUpAndDownPosition(slot.transform.position);
 
         foreach (var color in slotData.stackColors)
         {
@@ -85,6 +103,7 @@ public class BoardBuilder
 
             hex.Init(color);
 
+            hex.render.transform.localRotation = Quaternion.identity;
             hex.render.SetPosition(
                 stack.Render.GetTopPosition()
             );
@@ -94,6 +113,7 @@ public class BoardBuilder
 
         slot.FillHexagonStackToSlot(stack);
         stack.DisableAllCollider();
+        return stack;
     }
 
     private void GetWorldTransform(LevelDataSO levelData, Vector2Int pos, out Vector3 position, out Quaternion rotation)

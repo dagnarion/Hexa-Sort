@@ -6,19 +6,27 @@ using UnityEngine;
 
 public class BreakBooster : MonoBehaviour
 {
-    [SerializeField] private int amount;
+    private int amount;
     private bool IsOnBooster;
     [SerializeField] private GridController gridController;
     [SerializeField] private EventChannel<Vector3> pressedEventChannel;
+    [SerializeField] private EventChannel<GameData> GameDataEventChannel;
 
     private void OnEnable()
     {
         pressedEventChannel.OnEventRaise += OnPressed;
+        GameDataEventChannel.OnEventRaise += Init;
     }
 
     private void OnDisable()
     {
         pressedEventChannel.OnEventRaise -= OnPressed;
+        GameDataEventChannel.OnEventRaise -= Init;
+    }
+
+    private void Init(GameData gameData)
+    {
+        amount = gameData.BreakBoosterRemain;
     }
 
     public void SetBoosterState()

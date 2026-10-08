@@ -42,7 +42,7 @@ public class MergeHandler
         
         for (int i = currentStack.GetNumberOfElement() - 1; i >= 0; i--)
         {
-            if(currentStack.GetElement(i).ColorType != topTargetCell.ColorType) break;
+            if(!MergeRule.IsSameColor(currentStack.GetElement(i).ColorType, topTargetCell.ColorType)) break;
             Hexagon hexa = currentStack.GetElement(i);
             currentStack.RemoveElement(i);
             targetStack.AddElement(hexa);

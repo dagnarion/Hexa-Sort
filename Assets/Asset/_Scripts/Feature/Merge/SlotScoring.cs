@@ -31,14 +31,14 @@ public class SlotScoring
         return cnt;
     }
 
-    private bool CompareColor(Hexagon target, Color targetColor) => target.ColorType == targetColor;
+    private bool CompareColor(Hexagon target, Color targetColor) => MergeRule.IsSameColor(target.ColorType,targetColor);
 
     private Color GetSecondElementColorTypes(HexagonStack stack, Color currentColorType)
     {
         Color type = currentColorType;
         for (int i = stack.GetNumberOfElement() - 1; i >= 0; i--)
         {
-            if (stack.GetElement(i).ColorType == currentColorType) continue;
+            if (MergeRule.IsSameColor(stack.GetElement(i).ColorType , currentColorType)) continue;
             else
             {
                 type = stack.GetElement(i).ColorType;

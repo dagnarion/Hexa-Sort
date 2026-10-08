@@ -27,7 +27,7 @@ public class MergeResolve
         hexagons.Add(topHexagon);
         for (int i = hexagonStack.GetNumberOfElement() - 2; i >= 0; i--)
         {
-            if (hexagonStack.GetElement(i).ColorType == topHexagon.ColorType) hexagons.Add(hexagonStack.GetElement(i));
+            if (MergeRule.IsSameColor(hexagonStack.GetElement(i).ColorType, topHexagon.ColorType)) hexagons.Add(hexagonStack.GetElement(i));
             else break;
         }
         if(hexagonStack.IsEmpty) return;

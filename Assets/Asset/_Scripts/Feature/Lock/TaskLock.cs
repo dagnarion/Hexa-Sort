@@ -19,10 +19,11 @@ public class TaskLock : MonoBehaviour, ILock
         OnCountChange.OnEventRaise -= OnProgressUpdate;
     }
 
-    public void Init(int target,Vector3 position)
+    public void Init(int target, Vector3 position, Quaternion rotation = default)
     {
         IsLocked = true;
-        this.transform.position = position;
+        this.transform.SetPositionAndRotation(position, rotation);
+        this.transform.localScale = Vector3.one;
         this.target = target;
         render.Lock();
     }

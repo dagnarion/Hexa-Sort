@@ -85,6 +85,7 @@ public class HexagonStackSpawner : MonoBehaviour
     private Hexagon SpawnHexagon(Transform target,Color color)
     {
         Hexagon hexa = HexagonPool.Get();
+        hexa.render.transform.rotation = Quaternion.Euler(0, 30, 0);
         hexa.Init(color);
         return hexa;
     }

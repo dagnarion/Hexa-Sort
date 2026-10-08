@@ -8,9 +8,10 @@ public class BreakLock : MonoBehaviour,IHittableLock
     public event Action<ILock> OnUnlocked;
     [SerializeField] private int remain;
     
-    public void Init(int remain,Vector3 position)
+    public void Init(int remain, Vector3 position, Quaternion rotation = default)
     {
-        transform.position = position;
+        transform.SetPositionAndRotation(position, rotation);
+        transform.localScale = Vector3.one;
         this.remain = remain;
     }
     

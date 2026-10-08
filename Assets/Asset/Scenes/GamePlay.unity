@@ -299,6 +299,7 @@ GameObject:
   - component: {fileID: 103677683}
   - component: {fileID: 103677684}
   - component: {fileID: 103677685}
+  - component: {fileID: 103677686}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -352,6 +353,14 @@ MonoBehaviour:
   holder: {fileID: 1022557022}
   hexagonPool: {fileID: 11400000, guid: ff0316f875b877b4091d0ae734559852, type: 2}
   hexagonStackPool: {fileID: 11400000, guid: 8b939fdd29f7b7e478e9e428e3a1c30d, type: 2}
+  slotPool: {fileID: 11400000, guid: 8dd9d3fe1ca0e07418baaaeeb2372aa1, type: 2}
+  GameDataEventChannel: {fileID: 11400000, guid: 0d2bf683968850645882d26f944d50b8, type: 2}
+  gameData:
+    LevelID: 0
+    Gold: 0
+    BreakBoosterRemain: 3
+    SwapBoosterRemain: 3
+    ShuffleBoosterRemain: 3
 --- !u!114 &103677685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,6 +378,25 @@ MonoBehaviour:
   gridController: {fileID: 425005845}
   maxCollected: 50
   maxBreaked: 0
+--- !u!114 &103677686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103677681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bd1b5e8f91247f09e512c7ab7fd8ae8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelLoader
+  GameDataEventChannel: {fileID: 11400000, guid: 0d2bf683968850645882d26f944d50b8, type: 2}
+  LevelLoadEventChannel: {fileID: 11400000, guid: c6fff04a5008cc84080380c378b84322, type: 2}
+  levelDatas:
+  - <Level>k__BackingField: {fileID: 11400000, guid: 70b3938ef8321b34bab68985d3e517ac, type: 2}
+    <Reward>k__BackingField: 0
+    <CollectHexagonTarget>k__BackingField: 50
+    <BreakBlockTarget>k__BackingField: 0
 --- !u!1 &254801541
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,8 +543,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff65301e44bb2043aa872a94c4d3bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReshuffleBooster
-  remain: 450
   hexagonStackSpawner: {fileID: 927260872}
+  GameDataEventChannel: {fileID: 11400000, guid: 0d2bf683968850645882d26f944d50b8, type: 2}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -869,12 +897,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4539a6264d4549f083fc11e0fad36d43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridController
+  levelLoadEventChannel: {fileID: 11400000, guid: c6fff04a5008cc84080380c378b84322, type: 2}
   dragEventChannel: {fileID: 11400000, guid: f9892dd7de7de7a4da60d84987829472, type: 2}
   dropEventChannel: {fileID: 11400000, guid: f33c192577b87b143b02573a3eab1415, type: 2}
   dropHexagonChannel: {fileID: 11400000, guid: a14d70323f83ebb41b3634267b6ce17d, type: 2}
   gridComponent: {fileID: 425005842}
   holder: {fileID: 1022557022}
-  levelData: {fileID: 11400000, guid: 70b3938ef8321b34bab68985d3e517ac, type: 2}
   slotPool: {fileID: 11400000, guid: 8dd9d3fe1ca0e07418baaaeeb2372aa1, type: 2}
   hexagonPool: {fileID: 11400000, guid: ff0316f875b877b4091d0ae734559852, type: 2}
   hexagonStackPool: {fileID: 11400000, guid: 8b939fdd29f7b7e478e9e428e3a1c30d, type: 2}
@@ -1307,6 +1335,7 @@ MonoBehaviour:
   gridController: {fileID: 425005845}
   pressedEvent: {fileID: 11400000, guid: aa070cb4e65a5d8449c77ce4b6cfc4bf, type: 2}
   dropEvent: {fileID: 11400000, guid: a14d70323f83ebb41b3634267b6ce17d, type: 2}
+  GameDataEventChannel: {fileID: 11400000, guid: 0d2bf683968850645882d26f944d50b8, type: 2}
 --- !u!1 &646400284
 GameObject:
   m_ObjectHideFlags: 0
@@ -1935,8 +1964,8 @@ MonoBehaviour:
   - {fileID: 25957527}
   color:
   - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0, g: 0.14067984, b: 1, a: 1}
-  - {r: 1, g: 0.8377491, b: 0, a: 1}
+  - {r: 0, g: 0.2, b: 1, a: 1}
+  - {r: 1, g: 0.8509804, b: 0, a: 1}
   hexagonStackPrefab: {fileID: 3256607935155576203, guid: 96df5bf199cb9b948a0d3e72410e349f, type: 3}
   HexagonPool: {fileID: 11400000, guid: ff0316f875b877b4091d0ae734559852, type: 2}
   HexagonStackPool: {fileID: 11400000, guid: 8b939fdd29f7b7e478e9e428e3a1c30d, type: 2}
@@ -1993,9 +2022,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16c695a498448484c9d4d31e697a7cde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BreakBooster
-  amount: 1
   gridController: {fileID: 425005845}
   pressedEventChannel: {fileID: 11400000, guid: aa070cb4e65a5d8449c77ce4b6cfc4bf, type: 2}
+  GameDataEventChannel: {fileID: 11400000, guid: 0d2bf683968850645882d26f944d50b8, type: 2}
 --- !u!114 &1015426217
 MonoBehaviour:
   m_ObjectHideFlags: 0

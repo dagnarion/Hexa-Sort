@@ -8,24 +8,29 @@ public class SwapBooster : MonoBehaviour
     [SerializeField] private GridController gridController;
     [SerializeField] private EventChannel<Vector3> pressedEvent;
     [SerializeField] private EventChannel<Vector2Int> dropEvent;
+    [SerializeField] private EventChannel<GameData> GameDataEventChannel;
     private Slot SelectedSlot;
     private bool isBoosterPlay;
 
     private void OnEnable()
     {
         pressedEvent.OnEventRaise += OnPressed;
+        GameDataEventChannel.OnEventRaise += Init;
     }
 
     private void OnDisable()
     {
         pressedEvent.OnEventRaise -= OnPressed;
+        GameDataEventChannel.OnEventRaise -= Init;
     }
-
-    private void Start()
+    
+    
+    private void Init(GameData data)
     {
         isBoosterPlay = false;
+        remain = data.SwapBoosterRemain;
     }
-
+    
     public void Apply()
     {
         if (isBoosterPlay || remain <= 0) return;

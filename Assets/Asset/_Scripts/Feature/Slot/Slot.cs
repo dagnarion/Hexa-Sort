@@ -3,19 +3,22 @@ using Cysharp.Threading.Tasks;
 public class Slot : MonoBehaviour
 {
     public Vector2Int Position { get; private set; }
+    public SlotType Type { get; private set; }
     [SerializeField] private SlotRender slotRender;
     
     private ILock currentLock;
-    private HexagonStack currentStack;
+  [SerializeField]  private HexagonStack currentStack;
     
     public bool IsEmpty => currentStack == null;
    [field:SerializeField] public bool IsLocked { get; private set; }
     
-    public void Init(SlotType type,Vector2Int position,HexagonStack stack,ILock Lock)
+    public void Init(SlotType type, Vector2Int position, HexagonStack stack, ILock Lock)
     {
-        this.currentLock = Lock;
+        this.Type = type;
         this.Position = position;
         this.currentStack = stack;
+        this.IsLocked = false;
+        this.currentLock = null;
         SetLock(Lock);
     }
     

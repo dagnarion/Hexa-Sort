@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class MergeService : MonoBehaviour
@@ -29,12 +30,8 @@ public class MergeService : MonoBehaviour
     {
         dropChannel.OnEventRaise -= PushMergeCommand;
     }
-
-    private void Start()
-    {
-        Init();
-    }
-
+    
+    [Button]
     public void Init()
     {
         slotScoring = new SlotScoring(gridController.grid);

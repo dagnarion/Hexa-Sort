@@ -74,7 +74,6 @@ public class LevelEditorWindow : EditorWindow
         }
 
         string soPath = $"{dir}/Level_Sample_01.asset";
-        string jsonPath = $"{dir}/Level_Sample_01.json";
 
         LevelDataSO sampleLevel = ScriptableObject.CreateInstance<LevelDataSO>();
         sampleLevel.levelNumber = 1;
@@ -140,12 +139,11 @@ public class LevelEditorWindow : EditorWindow
         }
 
         AssetDatabase.CreateAsset(sampleLevel, soPath);
-        LevelDataJsonHelper.SaveToFile(jsonPath, sampleLevel);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
         OpenWithLevel(sampleLevel);
-        EditorUtility.DisplayDialog("Hexa Sort", $"Đã tạo thành công Level mẫu:\n- SO: {soPath}\n- JSON: {jsonPath}",
+        EditorUtility.DisplayDialog("Hexa Sort", $"Đã tạo thành công Level mẫu:\n- SO: {soPath}",
             "OK");
     }
 
@@ -238,17 +236,6 @@ public class LevelEditorWindow : EditorWindow
                 SaveAsNewSO();
             }
 
-            GUILayout.Space(10);
-
-            if (GUILayout.Button("Export JSON", EditorStyles.toolbarButton, GUILayout.Width(80)))
-            {
-                ExportLevelJson();
-            }
-
-            if (GUILayout.Button("Import JSON", EditorStyles.toolbarButton, GUILayout.Width(80)))
-            {
-                ImportLevelJson();
-            }
 
             GUILayout.FlexibleSpace();
 
@@ -336,38 +323,6 @@ public class LevelEditorWindow : EditorWindow
         ShowNotification(new GUIContent("Đã tạo bản sao Level mới!"));
     }
 
-    private void ExportLevelJson()
-    {
-        if (currentLevel == null) return;
-        string defaultName = $"{currentLevel.name}.json";
-        string path = EditorUtility.SaveFilePanel("Export Level JSON", "Assets", defaultName, "json");
-        if (string.IsNullOrEmpty(path)) return;
-
-        LevelDataJsonHelper.SaveToFile(path, currentLevel);
-        AssetDatabase.Refresh();
-        EditorUtility.DisplayDialog("Export JSON", $"Đã xuất thành công JSON ra file:\n{path}", "OK");
-    }
-
-    private void ImportLevelJson()
-    {
-        if (currentLevel == null) return;
-        string path = EditorUtility.OpenFilePanel("Import Level JSON", "Assets", "json");
-        if (string.IsNullOrEmpty(path)) return;
-
-        Undo.RecordObject(currentLevel, "Import Level JSON");
-        if (LevelDataJsonHelper.LoadFromFile(path, currentLevel))
-        {
-            currentLevel.EnsureSlotsInitialized();
-            EditorUtility.SetDirty(currentLevel);
-            AssetDatabase.SaveAssets();
-            Repaint();
-            EditorUtility.DisplayDialog("Import JSON", "Đã nạp dữ liệu từ file JSON thành công!", "OK");
-        }
-        else
-        {
-            EditorUtility.DisplayDialog("Import JSON", "Không thể đọc file JSON!", "OK");
-        }
-    }
 
     #endregion
 
@@ -1615,13 +1570,19 @@ public class LevelEditorWindow : EditorWindow
             {
                 Draw3DStackPreview(cellCenter, slot.stackColors, radius * 0.85f);
             }
+
+            if (show3DScenePreview && slot.isActive && slot.lockType != LockType.None)
+            {
+                float stackHeight = (slot.hasStack && slot.stackColors != null) ? slot.stackColors.Count * 0.2f : 0f;
+                Draw3DLockPreview(cellCenter + Vector3.up * stackHeight, slot.lockType, radius * 0.82f);
+            }
         }
     }
 
     private void DrawSceneHexWire(Vector3 center, float radius)
     {
         Vector3[] vertices = new Vector3[6];
-        float angleOffset = 0f;
+        float angleOffset = Mathf.PI / 6f; // 30 degrees to match Hexagon slot orientation
         for (int i = 0; i < 6; i++)
         {
             float angle = (i * Mathf.PI * 2f / 6f) + angleOffset;
@@ -1639,7 +1600,7 @@ public class LevelEditorWindow : EditorWindow
     private void Draw3DStackPreview(Vector3 basePos, List<Color> colors, float radius)
     {
         float layerHeight = 0.2f;
-        float angleOffset = 0f;
+        float angleOffset = Mathf.PI / 6f; // 30 degrees to match Hexagon slot orientation
 
         for (int i = 0; i < colors.Count; i++)
         {
@@ -1659,6 +1620,30 @@ public class LevelEditorWindow : EditorWindow
             {
                 Handles.DrawLine(verts[v], verts[(v + 1) % 6]);
             }
+        }
+    }
+
+    private void Draw3DLockPreview(Vector3 basePos, LockType lockType, float radius)
+    {
+        float angleOffset = Mathf.PI / 6f; // 30 degrees to match Hexagon slot orientation
+        Vector3 lockCenter = basePos + Vector3.up * 0.22f;
+        Color lockColor = lockType == LockType.BreakLock
+            ? new Color(0.72f, 0.74f, 0.76f, 0.95f) // Silver / Gray for BreakLock
+            : new Color(0.35f, 0.18f, 0.45f, 0.95f); // Deep Purple for TaskLock
+
+        Handles.color = lockColor;
+        Vector3[] verts = new Vector3[6];
+        for (int v = 0; v < 6; v++)
+        {
+            float angle = (v * Mathf.PI * 2f / 6f) + angleOffset;
+            verts[v] = lockCenter + new Vector3(Mathf.Cos(angle) * radius, 0, Mathf.Sin(angle) * radius);
+        }
+
+        Handles.DrawAAConvexPolygon(verts);
+        Handles.color = lockType == LockType.BreakLock ? Color.white : new Color(0.85f, 0.6f, 1f);
+        for (int v = 0; v < 6; v++)
+        {
+            Handles.DrawLine(verts[v], verts[(v + 1) % 6]);
         }
     }
 

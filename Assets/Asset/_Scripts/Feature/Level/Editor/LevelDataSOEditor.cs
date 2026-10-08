@@ -62,39 +62,6 @@ public class LevelDataSOEditor : UnityEditor.Editor
             }
         }
 
-        EditorGUILayout.Space(5);
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Export To JSON"))
-        {
-            string path = EditorUtility.SaveFilePanel("Export Level JSON", "Assets", $"{levelData.name}.json", "json");
-            if (!string.IsNullOrEmpty(path))
-            {
-                LevelDataJsonHelper.SaveToFile(path, levelData);
-                AssetDatabase.Refresh();
-                EditorUtility.DisplayDialog("Thành công", $"Đã xuất JSON ra file:\n{path}", "OK");
-            }
-        }
-
-        if (GUILayout.Button("Import From JSON"))
-        {
-            string path = EditorUtility.OpenFilePanel("Import Level JSON", "Assets", "json");
-            if (!string.IsNullOrEmpty(path))
-            {
-                Undo.RecordObject(levelData, "Import Level from JSON");
-                if (LevelDataJsonHelper.LoadFromFile(path, levelData))
-                {
-                    EditorUtility.SetDirty(levelData);
-                    AssetDatabase.SaveAssets();
-                    EditorUtility.DisplayDialog("Thành công", "Đã nạp thành công dữ liệu từ JSON!", "OK");
-                }
-                else
-                {
-                    EditorUtility.DisplayDialog("Thất bại", "Không thể đọc file JSON!", "OK");
-                }
-            }
-        }
-
-        EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.Space(15);
         EditorGUILayout.LabelField("Default Inspector", EditorStyles.boldLabel);
