@@ -56,6 +56,7 @@ public class GridController : MonoBehaviour
     {
         Vector3Int cell = gridComponent.WorldToCell(pos);
         Vector2Int gridPos = new Vector2Int(cell.y, cell.x);
+        if(grid == null) return;
         if (!grid.IsOnGrid(gridPos))
         {
             currentSlot?.Deselected();
@@ -87,7 +88,7 @@ public class GridController : MonoBehaviour
         Vector2Int gridPos = new Vector2Int(cell.y, cell.x);
         if(hexaStack == null) return;
         
-        if (!grid.IsOnGrid(gridPos))
+        if (grid == null || !grid.IsOnGrid(gridPos))
         {
             hexaStack.Render.ReturnToOriginPosition();
             return;
