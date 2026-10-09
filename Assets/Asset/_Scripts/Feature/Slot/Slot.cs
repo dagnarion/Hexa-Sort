@@ -1,17 +1,16 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+
 public class Slot : MonoBehaviour
 {
     public Vector2Int Position { get; private set; }
     public SlotType Type { get; private set; }
-    [SerializeField] private SlotRender slotRender;
-    
     private ILock currentLock;
-  [SerializeField]  private HexagonStack currentStack;
-    
     public bool IsEmpty => currentStack == null;
-   [field:SerializeField] public bool IsLocked { get; private set; }
-    
+    public bool IsLocked { get; private set; }
+    [SerializeField] private EventChannel<int> OnLockBreaked;
+    private HexagonStack currentStack;
+    [SerializeField] private SlotRender slotRender;
     public void Init(SlotType type, Vector2Int position, HexagonStack stack, ILock Lock)
     {
         this.Type = type;
@@ -21,7 +20,7 @@ public class Slot : MonoBehaviour
         this.currentLock = null;
         SetLock(Lock);
     }
-    
+
     public void SetLock(ILock lockItem)
     {
         if (currentLock != null)
@@ -33,17 +32,18 @@ public class Slot : MonoBehaviour
             IsLocked = true;
         }
     }
-    
+
     private void HandleLockUnlocked(ILock unlockedLock)
     {
         if (currentLock == unlockedLock)
         {
             IsLocked = false;
             currentLock.OnUnlocked -= HandleLockUnlocked;
+            OnLockBreaked?.Raise(1);
             currentLock = null;
         }
     }
-    
+
     public async UniTask TryHitLockAsync()
     {
         if (currentLock is IHittableLock hittableLock)
@@ -53,15 +53,13 @@ public class Slot : MonoBehaviour
     }
 
 
-  
     public HexagonStack GetHexagonStack() => currentStack;
 
-    public void FillHexagonStackToSlot(HexagonStack hexagonStack)  => this.currentStack = hexagonStack;
-    
+    public void FillHexagonStackToSlot(HexagonStack hexagonStack) => this.currentStack = hexagonStack;
+
     public void ReleaseSlot() => this.currentStack = null;
 
     public void Deselected() => slotRender.Deselected();
 
     public void Selected() => slotRender.Selected();
-
 }

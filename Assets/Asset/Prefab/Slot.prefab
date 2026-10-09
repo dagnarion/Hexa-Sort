@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20b2f95931f24172a02bc38134fc9ad0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slot
-  Type: 0
+  OnLockBreaked: {fileID: 11400000, guid: a4c94a3830b57314bb3e350a31d4a50a, type: 2}
   slotRender: {fileID: 5371743434860539138}
 --- !u!114 &5371743434860539138
 MonoBehaviour:

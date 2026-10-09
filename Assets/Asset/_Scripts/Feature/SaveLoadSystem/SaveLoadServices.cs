@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -6,15 +7,14 @@ public class SaveLoadServices : MonoBehaviour
    [SerializeField] private SaveLoadAbstract[] saveLoadAbstract;
    private GameData gameData;
    private string path = Application.dataPath + "/Asset/_Scripts/Config/Json/gamedata.data";
-   
+
    public void Save()
    {
        foreach (var tmp in saveLoadAbstract)
        {
            tmp?.Save(gameData);
        }
-       string json = JsonUtility.ToJson(gameData,true); 
-       File.WriteAllText(path,json);
+        JsonSave();;
    }
 
    public void Load()
@@ -27,6 +27,7 @@ public class SaveLoadServices : MonoBehaviour
        else
        {
            gameData = new GameData();
+           JsonSave();
        }
 
        foreach (var system in saveLoadAbstract)
@@ -34,5 +35,10 @@ public class SaveLoadServices : MonoBehaviour
            system?.Load(gameData);
        }
    }
-   
+
+   private void JsonSave()
+   {
+       string json = JsonUtility.ToJson(gameData,true); 
+       File.WriteAllText(path,json);
+   }
 }

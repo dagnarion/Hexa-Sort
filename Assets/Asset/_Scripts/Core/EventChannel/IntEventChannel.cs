@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "EventChannel/IntEvent")]
+[CreateAssetMenu(menuName = "EventChannel/Int")]
 public class IntEventChannel : EventChannel<int>
 {
 }

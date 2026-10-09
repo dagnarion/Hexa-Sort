@@ -18,7 +18,7 @@ public class LevelLoader : SaveLoadAbstract
     
     public override void Save(GameData gameData)
     {
-        if(CurrentLevelID >= levelDatas.Length)
+        if(CurrentLevelID+1 >= levelDatas.Length)
         {
             gameData.LevelID = 0;
             return;

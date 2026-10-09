@@ -351,11 +351,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84ca8d56e72047e4ae318bbd7bf19c01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  holder: {fileID: 1022557022}
+  <holder>k__BackingField: {fileID: 1022557022}
   hexagonPool: {fileID: 11400000, guid: ff0316f875b877b4091d0ae734559852, type: 2}
   hexagonStackPool: {fileID: 11400000, guid: 8b939fdd29f7b7e478e9e428e3a1c30d, type: 2}
   slotPool: {fileID: 11400000, guid: 8dd9d3fe1ca0e07418baaaeeb2372aa1, type: 2}
-  saveLoadServices: {fileID: 103677687}
+  <SaveLoadServices>k__BackingField: {fileID: 103677687}
+  <TaskManager>k__BackingField: {fileID: 103677685}
+  <HexagonStackSpawner>k__BackingField: {fileID: 927260872}
 --- !u!114 &103677685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,9 +371,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TaskManager
   OnHexagonCollected: {fileID: 11400000, guid: 6fef3a273a89a4145ae2c71ecdb3eb85, type: 2}
+  OnBlockBreaked: {fileID: 11400000, guid: a4c94a3830b57314bb3e350a31d4a50a, type: 2}
   TaskProcess: {fileID: 11400000, guid: 52afa077a40389e43b4e46cd4fdaea66, type: 2}
   LevelLoadEventChannel: {fileID: 11400000, guid: c6fff04a5008cc84080380c378b84322, type: 2}
   gridController: {fileID: 425005845}
+  collected: 0
+  blockBreaked: 0
+  maxCollected: 0
+  maxBreaked: 0
 --- !u!114 &103677686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,7 +396,7 @@ MonoBehaviour:
   - <Level>k__BackingField: {fileID: 11400000, guid: 70b3938ef8321b34bab68985d3e517ac, type: 2}
     <Reward>k__BackingField: 0
     <CollectHexagonTarget>k__BackingField: 50
-    <BreakBlockTarget>k__BackingField: 0
+    <BreakBlockTarget>k__BackingField: 3
 --- !u!114 &103677687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -860,6 +867,7 @@ GameObject:
   - component: {fileID: 425005843}
   - component: {fileID: 425005842}
   - component: {fileID: 425005845}
+  - component: {fileID: 425005846}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -916,6 +924,22 @@ MonoBehaviour:
   hexagonPool: {fileID: 11400000, guid: ff0316f875b877b4091d0ae734559852, type: 2}
   hexagonStackPool: {fileID: 11400000, guid: 8b939fdd29f7b7e478e9e428e3a1c30d, type: 2}
   lockFactory: {fileID: 1572077437}
+  mergeService: {fileID: 425005846}
+--- !u!114 &425005846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 425005841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d11f74d452184d78823466628e62544b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MergeService
+  holder: {fileID: 1022557022}
+  dropChannel: {fileID: 11400000, guid: a14d70323f83ebb41b3634267b6ce17d, type: 2}
+  hexagonStackPool: {fileID: 11400000, guid: 8b939fdd29f7b7e478e9e428e3a1c30d, type: 2}
 --- !u!1 &448244411
 GameObject:
   m_ObjectHideFlags: 0
@@ -2652,7 +2676,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1980188289}
   - component: {fileID: 1980188290}
-  - component: {fileID: 1980188291}
   m_Layer: 0
   m_Name: DragAndDropHandler
   m_TagString: Untagged
@@ -2699,22 +2722,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   inPointCheckArea: {x: 0, y: 1, z: 0}
---- !u!114 &1980188291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1980188288}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d11f74d452184d78823466628e62544b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MergeService
-  holder: {fileID: 1022557022}
-  gridController: {fileID: 425005845}
-  dropChannel: {fileID: 11400000, guid: a14d70323f83ebb41b3634267b6ce17d, type: 2}
-  hexagonStackPool: {fileID: 11400000, guid: 8b939fdd29f7b7e478e9e428e3a1c30d, type: 2}
 --- !u!1 &2082688958
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,43 @@
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+
+public class PlayingState : IState
+{
+    private GameManager gameManager;
+    public PlayingState(GameManager gameManager)
+    {
+        this.gameManager = gameManager;
+    }
+    
+    public void Enter()
+    {
+        
+    }
+
+    public void Tick()
+    {
+        if (gameManager.TaskManager.IsLose())
+        {
+            gameManager.StateMachine.ChangeState(gameManager.LoseState);
+            return;
+        }
+
+        if (gameManager.TaskManager.IsWin())
+        {
+            gameManager.StateMachine.ChangeState(gameManager.WinState);
+            Debug.Log("Win");
+            return;
+        }
+        
+    }
+
+    public void FixedTick()
+    {
+        
+    }
+
+    public void Exit()
+    {
+        
+    }
+}

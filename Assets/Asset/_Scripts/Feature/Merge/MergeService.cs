@@ -7,7 +7,6 @@ using UnityEngine;
 public class MergeService : MonoBehaviour
 {
     [SerializeField] private Transform holder;
-    [SerializeField] private GridController gridController;
     [SerializeField] private EventChannel<Vector2Int> dropChannel;
     [SerializeField] private ComponentPoolSO<HexagonStack> hexagonStackPool;
     private SlotScoring slotScoring;
@@ -31,14 +30,13 @@ public class MergeService : MonoBehaviour
         dropChannel.OnEventRaise -= PushMergeCommand;
     }
     
-    [Button]
-    public void Init()
+    public void Init(Grid<Slot> grid)
     {
-        slotScoring = new SlotScoring(gridController.grid);
+        slotScoring = new SlotScoring(grid);
         chainResolver = new MergeChainResolver(slotScoring);
-        connectedSlotFinder = new ConnectedSlotFinder(gridController.grid);
+        connectedSlotFinder = new ConnectedSlotFinder(grid);
         mergeVisual = new MergeVisual();
-        mergeResolve = new MergeResolve(mergeVisual,gridController.grid,hexagonStackPool,holder);
+        mergeResolve = new MergeResolve(mergeVisual,grid,hexagonStackPool,holder);
         mergeHandler = new MergeHandler(mergeVisual,holder);
     }
 

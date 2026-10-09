@@ -5,23 +5,26 @@ using UnityEngine;
 public class TaskManager : MonoBehaviour
 {
     [SerializeField] private EventChannel<int> OnHexagonCollected;
+    [SerializeField] private EventChannel<int> OnBlockBreaked;
     [SerializeField] private EventChannel<int> TaskProcess;
     [SerializeField] private EventChannel<LevelData> LevelLoadEventChannel;
     [SerializeField] private GridController gridController;
-    private int collected = 0;
-    private int blockBreaked = 0;
-    private int maxCollected = 0;
-    private int maxBreaked = 0;
+    [SerializeField] private int collected;
+    [SerializeField] private int blockBreaked;
+    [SerializeField] private int maxCollected;
+    [SerializeField] private int maxBreaked;
 
    private void OnEnable()
    {
        OnHexagonCollected.OnEventRaise += CollectHexagon;
+       OnBlockBreaked.OnEventRaise += Break;
        LevelLoadEventChannel.OnEventRaise += SetValue;
    }
 
    private void OnDisable()
    {
        OnHexagonCollected.OnEventRaise -= CollectHexagon;
+       OnBlockBreaked.OnEventRaise -= Break;
        LevelLoadEventChannel.OnEventRaise -= SetValue;
    }
 
@@ -44,6 +47,11 @@ public class TaskManager : MonoBehaviour
     {
         collected += amount;
         TaskProcess?.Raise(collected);
+    }
+
+    private void Break(int amount)
+    {
+        blockBreaked += amount;
     }
 
     public bool IsWin()

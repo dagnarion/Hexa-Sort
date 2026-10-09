@@ -22,7 +22,7 @@ public class GridController : MonoBehaviour
     [SerializeField] private ComponentPoolSO<Hexagon> hexagonPool;
     [SerializeField] private ComponentPoolSO<HexagonStack> hexagonStackPool;
     [SerializeField] private LockFactory lockFactory;
-    
+    [SerializeField] private MergeService mergeService;
     private Slot currentSlot;
     private void OnEnable()
     {
@@ -45,8 +45,8 @@ public class GridController : MonoBehaviour
     
     void GenerateGrid(LevelData data)
     {
-        // nhớ release lại các ô trong holder đi
         grid = boardBuilder.Build(data.Level);
+        mergeService.Init(grid);
     }
 
 
@@ -126,7 +126,7 @@ public class GridController : MonoBehaviour
         bool fulled = true;
         grid.GridTraversal((pos, slot) =>
         {
-            if (slot!= null && slot.IsEmpty)
+            if (slot!= null && slot.IsEmpty && !slot.IsLocked)
             {
                 fulled = false;
             }
