@@ -1,18 +1,21 @@
 using System;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [field:SerializeField] public Transform holder { get; private set; }
+    [field: SerializeField] public Transform holder { get; private set; }
     [SerializeField] private ComponentPoolSO<Hexagon> hexagonPool;
     [SerializeField] private ComponentPoolSO<HexagonStack> hexagonStackPool;
     [SerializeField] private ComponentPoolSO<Slot> slotPool;
-    
-    [field:SerializeField] public SaveLoadServices SaveLoadServices { get; private set; }
-    [field:SerializeField] public TaskManager TaskManager { get; private set; }
-    [field:SerializeField] public HexagonStackSpawner HexagonStackSpawner { get; private set; }
+
+    [field: SerializeField] public SaveLoadServices SaveLoadServices { get; private set; }
+    [field: SerializeField] public GridClearServices GridClearServices { get; private set; }
+    [field: SerializeField] public TaskManager TaskManager { get; private set; }
+    [field: SerializeField] public InputManager InputManager { get; private set; }
+    [field: SerializeField] public HexagonStackSpawner HexagonStackSpawner { get; private set; }
     public StateMachine StateMachine { get; private set; }
-    
+
     public WinState WinState { get; private set; }
     public LoseState LoseState { get; private set; }
     public PlayingState PlayingState { get; private set; }
@@ -31,6 +34,7 @@ public class GameManager : MonoBehaviour
         hexagonStackPool.InitPool(holder);
         slotPool.InitPool(holder);
         StateMachine.ForceChangeState(PreparePlayingState);
+        InputManager.ChangeToUI();
     }
 
     private void Init()
@@ -56,27 +60,29 @@ public class GameManager : MonoBehaviour
 
     public void ReleaseHolder()
     {
-        foreach (Transform child in holder)
+        for (int i = holder.childCount - 1; i >= 0; i--)
         {
+            Transform child = holder.GetChild(i);
             child.SetParent(null);
-            
             if (child.TryGetComponent<Slot>(out var slot))
             {
+                slot.Deselected();
                 slotPool.Release(slot);
-            }         
-            
+            }
+
             if (child.TryGetComponent<HexagonStack>(out var hexagonStack))
             {
-                foreach (Transform hexaChild in child)
+                for (int j = child.childCount - 1; j >= 0; j--)
                 {
+                    Transform hexaChild = child.GetChild(j);
                     if (hexaChild.TryGetComponent<Hexagon>(out var hexagon))
                     {
                         hexagonPool.Release(hexagon);
                     }
                 }
+
                 hexagonStackPool.Release(hexagonStack);
             }
-            
         }
     }
 
@@ -89,4 +95,5 @@ public class GameManager : MonoBehaviour
     {
         StateMachine.ChangeState(PlayingState);
     }
+    
 }

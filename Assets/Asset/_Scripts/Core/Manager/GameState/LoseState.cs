@@ -9,6 +9,7 @@ public class LoseState : IState
     }
     public void Enter()
     {
+        gameManager.InputManager.ChangeToUI();
         Debug.Log("Lose");
     }
 

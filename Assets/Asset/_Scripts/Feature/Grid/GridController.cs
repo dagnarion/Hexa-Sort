@@ -48,10 +48,7 @@ public class GridController : MonoBehaviour
         grid = boardBuilder.Build(data.Level);
         mergeService.Init(grid);
     }
-
-
     
-
     void SlotSelected(Vector3 pos)
     {
         Vector3Int cell = gridComponent.WorldToCell(pos);
@@ -90,6 +87,8 @@ public class GridController : MonoBehaviour
         
         if (grid == null || !grid.IsOnGrid(gridPos))
         {
+            currentSlot?.Deselected();
+            currentSlot = null;
             hexaStack.Render.ReturnToOriginPosition();
             return;
         }
@@ -112,7 +111,7 @@ public class GridController : MonoBehaviour
         currentSlot?.Deselected();
         currentSlot = null;
     }
-
+    
     public Slot GetSlotOnPosition(Vector3 pos)
     {
         Vector3Int cell = gridComponent.WorldToCell(pos);

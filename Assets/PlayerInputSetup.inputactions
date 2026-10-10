@@ -55,9 +55,9 @@
             "id": "f40ad106-a80b-40cb-8002-ac8c09480372",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Press",
                     "type": "Button",
-                    "id": "a6383a9d-933d-46da-88ef-0506a32c6d5c",
+                    "id": "3978d20a-7e76-4629-80bd-0a99959103a2",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -67,12 +67,12 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "6bc4b7cb-10ed-4ecc-bdf7-dc4e2e19e4a6",
-                    "path": "",
+                    "id": "e1b7ea84-81e7-41f4-97cf-7eee29d05956",
+                    "path": "<Pointer>/press",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Press",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

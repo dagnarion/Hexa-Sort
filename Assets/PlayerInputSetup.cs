@@ -141,9 +141,9 @@ public partial class @PlayerInputSetup: IInputActionCollection2, IDisposable
             ""id"": ""f40ad106-a80b-40cb-8002-ac8c09480372"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""Press"",
                     ""type"": ""Button"",
-                    ""id"": ""a6383a9d-933d-46da-88ef-0506a32c6d5c"",
+                    ""id"": ""3978d20a-7e76-4629-80bd-0a99959103a2"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -153,12 +153,12 @@ public partial class @PlayerInputSetup: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""6bc4b7cb-10ed-4ecc-bdf7-dc4e2e19e4a6"",
-                    ""path"": """",
+                    ""id"": ""e1b7ea84-81e7-41f4-97cf-7eee29d05956"",
+                    ""path"": ""<Pointer>/press"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""Press"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -173,7 +173,7 @@ public partial class @PlayerInputSetup: IInputActionCollection2, IDisposable
         m_GamePlay_Position = m_GamePlay.FindAction("Position", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-        m_UI_Newaction = m_UI.FindAction("New action", throwIfNotFound: true);
+        m_UI_Press = m_UI.FindAction("Press", throwIfNotFound: true);
     }
 
     ~@PlayerInputSetup()
@@ -362,7 +362,7 @@ public partial class @PlayerInputSetup: IInputActionCollection2, IDisposable
     // UI
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
-    private readonly InputAction m_UI_Newaction;
+    private readonly InputAction m_UI_Press;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -375,9 +375,9 @@ public partial class @PlayerInputSetup: IInputActionCollection2, IDisposable
         /// </summary>
         public UIActions(@PlayerInputSetup wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "UI/Newaction".
+        /// Provides access to the underlying input action "UI/Press".
         /// </summary>
-        public InputAction @Newaction => m_Wrapper.m_UI_Newaction;
+        public InputAction @Press => m_Wrapper.m_UI_Press;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -404,9 +404,9 @@ public partial class @PlayerInputSetup: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
-            @Newaction.started += instance.OnNewaction;
-            @Newaction.performed += instance.OnNewaction;
-            @Newaction.canceled += instance.OnNewaction;
+            @Press.started += instance.OnPress;
+            @Press.performed += instance.OnPress;
+            @Press.canceled += instance.OnPress;
         }
 
         /// <summary>
@@ -418,9 +418,9 @@ public partial class @PlayerInputSetup: IInputActionCollection2, IDisposable
         /// <seealso cref="UIActions" />
         private void UnregisterCallbacks(IUIActions instance)
         {
-            @Newaction.started -= instance.OnNewaction;
-            @Newaction.performed -= instance.OnNewaction;
-            @Newaction.canceled -= instance.OnNewaction;
+            @Press.started -= instance.OnPress;
+            @Press.performed -= instance.OnPress;
+            @Press.canceled -= instance.OnPress;
         }
 
         /// <summary>
@@ -484,11 +484,11 @@ public partial class @PlayerInputSetup: IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         /// <summary>
-        /// Method invoked when associated input action "New action" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Press" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnNewaction(InputAction.CallbackContext context);
+        void OnPress(InputAction.CallbackContext context);
     }
 }

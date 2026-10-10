@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class WinState : IState
 {
     private GameManager gameManager;
@@ -5,15 +7,18 @@ public class WinState : IState
     {
         this.gameManager = gameManager;
     }
-    public void Enter()
+    public async void Enter()
     {
+        gameManager.InputManager.ChangeToUI();
         gameManager.SaveLoadServices.Save();
+        await gameManager.GridClearServices.Release();
+        gameManager.StateMachine.ChangeState(gameManager.PreparePlayingState);
         // instance + popup UI ra
     }
 
     public void Tick()
     {
-        
+
     }
 
     public void FixedTick()

@@ -7,7 +7,7 @@ public class Slot : MonoBehaviour
     public SlotType Type { get; private set; }
     private ILock currentLock;
     public bool IsEmpty => currentStack == null;
-    public bool IsLocked { get; private set; }
+    [field:SerializeField] public bool IsLocked { get; private set; }
     [SerializeField] private EventChannel<int> OnLockBreaked;
     private HexagonStack currentStack;
     [SerializeField] private SlotRender slotRender;

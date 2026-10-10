@@ -316,12 +316,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 103677681}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 815518246}
+  m_Father: {fileID: 1957418422}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &103677683
 MonoBehaviour:
@@ -356,7 +356,9 @@ MonoBehaviour:
   hexagonStackPool: {fileID: 11400000, guid: 8b939fdd29f7b7e478e9e428e3a1c30d, type: 2}
   slotPool: {fileID: 11400000, guid: 8dd9d3fe1ca0e07418baaaeeb2372aa1, type: 2}
   <SaveLoadServices>k__BackingField: {fileID: 103677687}
+  <GridClearServices>k__BackingField: {fileID: 425005847}
   <TaskManager>k__BackingField: {fileID: 103677685}
+  <InputManager>k__BackingField: {fileID: 2082688959}
   <HexagonStackSpawner>k__BackingField: {fileID: 927260872}
 --- !u!114 &103677685
 MonoBehaviour:
@@ -397,6 +399,20 @@ MonoBehaviour:
     <Reward>k__BackingField: 0
     <CollectHexagonTarget>k__BackingField: 50
     <BreakBlockTarget>k__BackingField: 3
+    <ColorPallet>k__BackingField:
+    - {r: 1, g: 0, b: 0, a: 1}
+    - {r: 0, g: 0.2, b: 1, a: 0}
+    - {r: 1, g: 0.8509804, b: 0, a: 0}
+    - {r: 1, g: 0, b: 0.9105339, a: 1}
+  - <Level>k__BackingField: {fileID: 11400000, guid: 024c219eeffe04f42b2bfccaa7b7eeb2, type: 2}
+    <Reward>k__BackingField: 0
+    <CollectHexagonTarget>k__BackingField: 50
+    <BreakBlockTarget>k__BackingField: 3
+    <ColorPallet>k__BackingField:
+    - {r: 1, g: 0, b: 0, a: 1}
+    - {r: 0, g: 0.2, b: 1, a: 0}
+    - {r: 1, g: 0.8509804, b: 0, a: 0}
+    - {r: 1, g: 0, b: 0.9105339, a: 1}
 --- !u!114 &103677687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -868,6 +884,7 @@ GameObject:
   - component: {fileID: 425005842}
   - component: {fileID: 425005845}
   - component: {fileID: 425005846}
+  - component: {fileID: 425005847}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -940,6 +957,19 @@ MonoBehaviour:
   holder: {fileID: 1022557022}
   dropChannel: {fileID: 11400000, guid: a14d70323f83ebb41b3634267b6ce17d, type: 2}
   hexagonStackPool: {fileID: 11400000, guid: 8b939fdd29f7b7e478e9e428e3a1c30d, type: 2}
+--- !u!114 &425005847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 425005841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df020a03c8e44219a393b1827487c7b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridClearServices
+  gridController: {fileID: 425005845}
 --- !u!1 &448244411
 GameObject:
   m_ObjectHideFlags: 0
@@ -1643,7 +1673,6 @@ Transform:
   - {fileID: 1980188289}
   - {fileID: 1381264565}
   - {fileID: 927260871}
-  - {fileID: 103677682}
   - {fileID: 1572077436}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1994,13 +2023,10 @@ MonoBehaviour:
   - {fileID: 1318813572}
   - {fileID: 605181583}
   - {fileID: 25957527}
-  color:
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0, g: 0.2, b: 1, a: 1}
-  - {r: 1, g: 0.8509804, b: 0, a: 1}
   hexagonStackPrefab: {fileID: 3256607935155576203, guid: 96df5bf199cb9b948a0d3e72410e349f, type: 3}
   HexagonPool: {fileID: 11400000, guid: ff0316f875b877b4091d0ae734559852, type: 2}
   HexagonStackPool: {fileID: 11400000, guid: 8b939fdd29f7b7e478e9e428e3a1c30d, type: 2}
+  LevelLoad: {fileID: 11400000, guid: c6fff04a5008cc84080380c378b84322, type: 2}
   spawnRange: {x: 4, y: 8}
 --- !u!1 &1015426214
 GameObject:
@@ -2663,6 +2689,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 103677682}
   - {fileID: 2082688961}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

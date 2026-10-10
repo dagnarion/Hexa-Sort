@@ -11,7 +11,7 @@ public class PlayingState : IState
     
     public void Enter()
     {
-        
+        gameManager.InputManager.ChangeToGamePlay();
     }
 
     public void Tick()

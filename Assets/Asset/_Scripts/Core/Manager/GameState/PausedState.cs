@@ -7,7 +7,7 @@ public class PausedState : IState
     }
     public void Enter()
     {
-        
+        gameManager.InputManager.ChangeToUI();
     }
 
     public void Tick()

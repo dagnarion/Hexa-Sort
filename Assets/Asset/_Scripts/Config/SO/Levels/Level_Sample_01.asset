@@ -33,9 +33,9 @@ MonoBehaviour:
     gridPosition: {x: 1, y: 0}
     stackColors: []
   - isActive: 1
-    slotType: 1
-    lockType: 0
-    breakHitCount: 2
+    slotType: 2
+    lockType: 1
+    breakHitCount: 4
     taskTargetScore: 50
     hasStack: 0
     gridPosition: {x: 2, y: 0}

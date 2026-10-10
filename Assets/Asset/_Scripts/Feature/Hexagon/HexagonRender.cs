@@ -23,7 +23,10 @@ public class HexagonRender : MonoBehaviour
 
     public void Init()
     {
+        this.transform.DOKill();
+        hexagonTransform.DOKill();
         this.transform.localScale = baseScale;
+        hexagonTransform.localScale = Vector3.one;
     }
 
     public Color32 color
@@ -36,6 +39,8 @@ public class HexagonRender : MonoBehaviour
     {
         hexagonTransform.position = pos;
     }
+
+
     
     public Sequence GotoTargetPosition(Vector3 target)
     {

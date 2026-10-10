@@ -49,6 +49,16 @@ public class HexagonStackRender : MonoBehaviour
         targetUpPosition = position + new Vector3(0, upHeight, 0);
         targetDownPosition = position;
     }
+    public Sequence Appear()
+    {
+        transform.DOKill();
+        transform.localScale = Vector3.zero;
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(
+            transform.DOScale(Vector3.one,0.4f).SetEase(Ease.OutBounce)
+        );
+        return sequence;
+    }
     
     public Sequence MoveUp()
     {

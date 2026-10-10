@@ -16,18 +16,13 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        ChangeToGamePlay(); // test
-    }
-
-    private void ChangeToUI()
+    public void ChangeToUI()
     {
         InputAction.GamePlay.Disable();
         InputAction.UI.Enable();
     }
     
-    private void ChangeToGamePlay()
+    public void ChangeToGamePlay()
     {
         InputAction.GamePlay.Enable();
         InputAction.UI.Disable();
