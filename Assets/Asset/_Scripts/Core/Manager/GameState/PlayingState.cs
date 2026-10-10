@@ -4,11 +4,12 @@ using UnityEngine;
 public class PlayingState : IState
 {
     private GameManager gameManager;
+
     public PlayingState(GameManager gameManager)
     {
         this.gameManager = gameManager;
     }
-    
+
     public void Enter()
     {
         gameManager.InputManager.ChangeToGamePlay();
@@ -25,19 +26,14 @@ public class PlayingState : IState
         if (gameManager.TaskManager.IsWin())
         {
             gameManager.StateMachine.ChangeState(gameManager.WinState);
-            Debug.Log("Win");
-            return;
         }
-        
     }
 
     public void FixedTick()
     {
-        
     }
 
     public void Exit()
     {
-        
     }
 }

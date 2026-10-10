@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using UnityEngine;
@@ -16,9 +17,9 @@ public class MergeService : MonoBehaviour
     private MergeHandler mergeHandler;
     private MergeVisual mergeVisual;
     private MergeResolve mergeResolve;
-
     private Queue<Vector2Int> mergeQueue = new Queue<Vector2Int>();
     private bool isRunning;
+    private bool canMerge;
 
     private void OnEnable()
     {
@@ -29,20 +30,28 @@ public class MergeService : MonoBehaviour
     {
         dropChannel.OnEventRaise -= PushMergeCommand;
     }
-    
+
     public void Init(Grid<Slot> grid)
     {
         slotScoring = new SlotScoring(grid);
         chainResolver = new MergeChainResolver(slotScoring);
         connectedSlotFinder = new ConnectedSlotFinder(grid);
         mergeVisual = new MergeVisual();
-        mergeResolve = new MergeResolve(mergeVisual,grid,hexagonStackPool,holder);
-        mergeHandler = new MergeHandler(mergeVisual,holder);
+        mergeResolve = new MergeResolve(mergeVisual, grid, hexagonStackPool, holder);
+        mergeHandler = new MergeHandler(mergeVisual, holder);
     }
 
+    public bool IsFinishAllMerge() => !isRunning && mergeQueue.Count == 0;
+
+    public void RemoveAllCommand()
+    {
+        canMerge = false;
+        mergeQueue.Clear();
+    }
 
     private void PushMergeCommand(Vector2Int pos)
     {
+        canMerge = true;
         mergeQueue.Enqueue(pos);
         if (!isRunning)
         {
@@ -64,8 +73,9 @@ public class MergeService : MonoBehaviour
                 Vector2Int pos = mergeQueue.Dequeue();
                 List<MergeNode> mergeChain = GetMergeChain(pos, out Slot root);
                 if (root != null) MergeRoot.Add(root);
-               potentialSlot.AddRange(await mergeHandler.Merge(mergeChain));
+                potentialSlot.AddRange(await mergeHandler.Merge(mergeChain));
             }
+
             if (MergeRoot.Count > 0)
             {
                 List<UniTask> tasks = new List<UniTask>();
@@ -73,7 +83,7 @@ public class MergeService : MonoBehaviour
                     tasks.Add(mergeResolve.Resolve(slot));
                 await UniTask.WhenAll(tasks);
             }
-
+            if(!canMerge) break;
             if (potentialSlot != null && potentialSlot.Count != 0)
             {
                 foreach (Slot slot in potentialSlot)
@@ -81,23 +91,23 @@ public class MergeService : MonoBehaviour
                     mergeQueue.Enqueue(slot.Position);
                 }
             }
-            
         }
 
         isRunning = false;
     }
 
-    private List<MergeNode> GetMergeChain(Vector2Int pos,out Slot root)
+    private List<MergeNode> GetMergeChain(Vector2Int pos, out Slot root)
     {
         List<Slot> path = connectedSlotFinder.FindConnectedSameColorSlots(pos);
-        
+
         if (path.Count <= 1)
         {
             root = null;
             return null;
         }
+
         Slot originSlot = path.Find(s => s.Position == pos);
-        List<MergeNode> chain = chainResolver.ResolveMergeOrder(path,out root, originSlot);
+        List<MergeNode> chain = chainResolver.ResolveMergeOrder(path, out root, originSlot);
         return chain;
     }
 }

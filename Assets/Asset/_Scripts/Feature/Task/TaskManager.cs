@@ -9,6 +9,7 @@ public class TaskManager : MonoBehaviour
     [SerializeField] private EventChannel<int> TaskProcess;
     [SerializeField] private EventChannel<LevelData> LevelLoadEventChannel;
     [SerializeField] private GridController gridController;
+    [SerializeField] private MergeService mergeService;
     [SerializeField] private int collected;
     [SerializeField] private int blockBreaked;
     [SerializeField] private int maxCollected;
@@ -62,7 +63,7 @@ public class TaskManager : MonoBehaviour
     public bool IsLose()
     {
         if (IsWin()) return false;
-        return gridController.IsFull();
+        return gridController.IsFull() && mergeService.IsFinishAllMerge();
     }
     
 }
