@@ -19,33 +19,36 @@ public class MergeResolve
     
     public async UniTask Resolve(Slot slot)
     {
+        if (slot == null) return;
         HexagonStack hexagonStack = slot.GetHexagonStack();
-        if(hexagonStack == null || hexagonStack.IsEmpty) return;
-        
+        if (hexagonStack == null || hexagonStack.IsEmpty) return;
+
         List<Hexagon> hexagons = new List<Hexagon>();
         Hexagon topHexagon = hexagonStack.GetTopElement();
+        if (topHexagon == null) return;
         hexagons.Add(topHexagon);
         for (int i = hexagonStack.GetNumberOfElement() - 2; i >= 0; i--)
         {
-            if (MergeRule.IsSameColor(hexagonStack.GetElement(i).ColorType, topHexagon.ColorType)) hexagons.Add(hexagonStack.GetElement(i));
+            if (MergeRule.IsSameColor(hexagonStack.GetElement(i).ColorType, topHexagon.ColorType))
+                hexagons.Add(hexagonStack.GetElement(i));
             else break;
         }
-        if(hexagonStack.IsEmpty) return;
-        if(hexagons.Count < 10) return;
+        if (hexagons.Count < 10) return;
+
         foreach (var it in hexagons)
         {
             it.SetParent(holder);
             hexagonStack.RemoveElement(it);
         }
+
         await mergeVisual.ReleaseHexagon(hexagons);
-        
+
         await TryDamageNeighbourLocksAsync(slot);
-        
+
         if (hexagonStack.IsEmpty)
         {
             slot?.ReleaseSlot();
-            hexagonStack.transform.SetParent(null);
-            hexagonStackPool.Release(hexagonStack);
+            hexagonStack.Release();
         }
     }
 

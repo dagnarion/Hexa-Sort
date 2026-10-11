@@ -29,10 +29,12 @@ public class MergeService : MonoBehaviour
     private void OnDisable()
     {
         dropChannel.OnEventRaise -= PushMergeCommand;
+        RemoveAllCommand();
     }
 
     public void Init(Grid<Slot> grid)
     {
+        RemoveAllCommand();
         slotScoring = new SlotScoring(grid);
         chainResolver = new MergeChainResolver(slotScoring);
         connectedSlotFinder = new ConnectedSlotFinder(grid);
@@ -64,36 +66,56 @@ public class MergeService : MonoBehaviour
         isRunning = true;
         List<Slot> MergeRoot = new List<Slot>();
         List<Slot> potentialSlot = new List<Slot>();
-        while (mergeQueue.Count > 0)
+        try
         {
-            MergeRoot.Clear();
-            potentialSlot.Clear();
-            while (mergeQueue.Count != 0)
+            while (mergeQueue.Count > 0)
             {
-                Vector2Int pos = mergeQueue.Dequeue();
-                List<MergeNode> mergeChain = GetMergeChain(pos, out Slot root);
-                if (root != null) MergeRoot.Add(root);
-                potentialSlot.AddRange(await mergeHandler.Merge(mergeChain));
-            }
-
-            if (MergeRoot.Count > 0)
-            {
-                List<UniTask> tasks = new List<UniTask>();
-                foreach (Slot slot in MergeRoot)
-                    tasks.Add(mergeResolve.Resolve(slot));
-                await UniTask.WhenAll(tasks);
-            }
-            if(!canMerge) break;
-            if (potentialSlot != null && potentialSlot.Count != 0)
-            {
-                foreach (Slot slot in potentialSlot)
+                MergeRoot.Clear();
+                potentialSlot.Clear();
+                while (mergeQueue.Count != 0)
                 {
-                    mergeQueue.Enqueue(slot.Position);
+                    Vector2Int pos = mergeQueue.Dequeue();
+                    List<MergeNode> mergeChain = GetMergeChain(pos, out Slot root);
+                    if (root != null && !MergeRoot.Contains(root))
+                        MergeRoot.Add(root);
+
+                    List<Slot> mergedSlots = await mergeHandler.Merge(mergeChain);
+                    foreach (Slot s in mergedSlots)
+                    {
+                        if (s != null && !potentialSlot.Contains(s))
+                            potentialSlot.Add(s);
+                    }
+                }
+
+                if (MergeRoot.Count > 0)
+                {
+                    List<UniTask> tasks = new List<UniTask>();
+                    foreach (Slot slot in MergeRoot)
+                        tasks.Add(mergeResolve.Resolve(slot));
+                    await UniTask.WhenAll(tasks);
+
+                    foreach (Slot slot in MergeRoot)
+                    {
+                        if (slot != null && !slot.IsEmpty && !potentialSlot.Contains(slot))
+                            potentialSlot.Add(slot);
+                    }
+                }
+
+                if (!canMerge) break;
+                if (potentialSlot.Count != 0)
+                {
+                    foreach (Slot slot in potentialSlot)
+                    {
+                        if (slot != null && !slot.IsEmpty)
+                            mergeQueue.Enqueue(slot.Position);
+                    }
                 }
             }
         }
-
-        isRunning = false;
+        finally
+        {
+            isRunning = false;
+        }
     }
 
     private List<MergeNode> GetMergeChain(Vector2Int pos, out Slot root)
@@ -102,7 +124,14 @@ public class MergeService : MonoBehaviour
 
         if (path.Count <= 1)
         {
-            root = null;
+            if (path.Count == 1 && MergeRule.CanClearSlot(path[0]))
+            {
+                root = path[0];
+            }
+            else
+            {
+                root = null;
+            }
             return null;
         }
 

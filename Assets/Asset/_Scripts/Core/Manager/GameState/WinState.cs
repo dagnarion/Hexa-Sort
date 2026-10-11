@@ -12,8 +12,8 @@ public class WinState : IState
         gameManager.InputManager.ChangeToUI();
         gameManager.SaveLoadServices.Save();
         await gameManager.GridClearServices.Release();
+        if (gameManager == null) return;
         gameManager.StateMachine.ChangeState(gameManager.PreparePlayingState);
-        // instance + popup UI ra
     }
 
     public void Tick()

@@ -377,6 +377,7 @@ MonoBehaviour:
   TaskProcess: {fileID: 11400000, guid: 52afa077a40389e43b4e46cd4fdaea66, type: 2}
   LevelLoadEventChannel: {fileID: 11400000, guid: c6fff04a5008cc84080380c378b84322, type: 2}
   gridController: {fileID: 425005845}
+  mergeService: {fileID: 425005846}
   collected: 0
   blockBreaked: 0
   maxCollected: 0

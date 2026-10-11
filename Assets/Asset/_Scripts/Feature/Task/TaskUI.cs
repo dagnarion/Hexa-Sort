@@ -20,7 +20,7 @@ public class TaskUI : MonoBehaviour
     
     private void UpdateUI(int count)
     {
-        progressBar.value = (float) count / max;
+        progressBar.value = max > 0 ? (float)count / max : 0f;
         tmp.text = count.ToString();
     }
 }

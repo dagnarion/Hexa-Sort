@@ -1,7 +1,7 @@
 {
-    "LevelID": 1,
+    "LevelID": 0,
     "Gold": 0,
-    "BreakBoosterRemain": 39,
+    "BreakBoosterRemain": 37,
     "SwapBoosterRemain": 38,
-    "ShuffleBoosterRemain": 40
+    "ShuffleBoosterRemain": 39
 }

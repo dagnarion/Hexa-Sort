@@ -27,5 +27,14 @@ public class InputManager : MonoBehaviour
         InputAction.GamePlay.Enable();
         InputAction.UI.Disable();
     }
-    
+
+    private void OnDestroy()
+    {
+        if (_inputAction != null)
+        {
+            _inputAction.Disable();
+            _inputAction.Dispose();
+            _inputAction = null;
+        }
+    }
 }

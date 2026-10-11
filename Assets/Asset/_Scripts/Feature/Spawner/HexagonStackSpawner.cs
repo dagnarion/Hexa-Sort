@@ -47,6 +47,7 @@ public class HexagonStackSpawner : MonoBehaviour
     
     public async UniTask Spawn()
     {
+        if (color == null || color.Length == 0) return;
         CancelSpawn();
         spawnCts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
         CancellationToken token = spawnCts.Token;
@@ -57,6 +58,13 @@ public class HexagonStackSpawner : MonoBehaviour
             for (int i = 0; i < spawnPoint.Length; i++)
             {
                 if (token.IsCancellationRequested) return;
+                for (int j = spawnPoint[i].childCount - 1; j >= 0; j--)
+                {
+                    if (spawnPoint[i].GetChild(j).TryGetComponent<HexagonStack>(out var oldStack))
+                    {
+                        ReleaseStack(oldStack);
+                    }
+                }
                 SpawnHexagonStack(spawnPoint[i]);
                 await UniTask.WaitForSeconds(0.1f, cancellationToken: token);
             }
@@ -89,25 +97,22 @@ public class HexagonStackSpawner : MonoBehaviour
         }
     }
 
-
     private void ReleaseStack(HexagonStack hexagonStack)
     {
-        hexagonStack.transform.DOKill();
-        hexagonStack.transform.localScale = Vector3.one;
-
         for (int i = hexagonStack.GetNumberOfElement() - 1; i >= 0; i--)
         {
             Hexagon hexa = hexagonStack.GetElement(i);
-            hexagonStack.RemoveElement(hexa);
-            hexa.SetParent(null);
-            HexagonPool.Release(hexa);
+            if (hexa != null)
+            {
+                hexa.ReleaseHexagon();
+            }
         }
-        hexagonStack.transform.SetParent(null);
-        HexagonStackPool.Release(hexagonStack);
+        hexagonStack.Release();
     }
-    
+
     private void Update()
     {
+        if (color == null || color.Length == 0) return;
         if (!isSpawning && IsEmptyPoint() && !canSpawn) canSpawn = true;
         if (canSpawn)
         {
@@ -120,81 +125,77 @@ public class HexagonStackSpawner : MonoBehaviour
     {
         foreach (var point in spawnPoint)
         {
-            if(point.childCount > 0) return false;
+            if (point.childCount > 0) return false;
         }
         return true;
     }
 
     private void SpawnHexagonStack(Transform target)
     {
+        Color[] colorHolder = GetRandColour();
+        if (colorHolder == null) return;
+
         HexagonStack hexagonStack = HexagonStackPool.Get();
         hexagonStack.transform.DOKill();
-        hexagonStack.transform.localScale = Vector3.one;
-        hexagonStack.transform.position = target.position;
-        hexagonStack.Render.SetOriginPosition(target.position);
         hexagonStack.transform.SetParent(target);
-        Color[] colorHolder = GetRandColour();
+        hexagonStack.transform.localPosition = Vector3.zero;
+        hexagonStack.transform.localRotation = Quaternion.identity;
+        hexagonStack.transform.localScale = Vector3.one;
+        hexagonStack.Render.SetOriginPosition(target.position);
         int rand = Random.Range(spawnRange.x, spawnRange.y);
         int randColorRatio = Random.Range(spawnRange.x, rand);
-        
+
         for (int i = 1; i <= rand; i++)
         {
             if (i < randColorRatio)
             {
-               FillHexagonToHexagonStack(hexagonStack,target,colorHolder[0]);
+                FillHexagonToHexagonStack(hexagonStack, target, colorHolder[0]);
             }
             else
             {
-                FillHexagonToHexagonStack(hexagonStack,target,colorHolder[1]);
+                FillHexagonToHexagonStack(hexagonStack, target, colorHolder[1]);
             }
         }
 
         hexagonStack.Render.Appear();
     }
 
-    private void FillHexagonToHexagonStack(HexagonStack hexagonStack,Transform target,Color color)
+    private void FillHexagonToHexagonStack(HexagonStack hexagonStack, Transform target, Color color)
     {
         Hexagon hexagon = SpawnHexagon(target, color);
         hexagon.SetParent(hexagonStack.transform);
+        hexagon.transform.localPosition = Vector3.zero;
+        hexagon.transform.localRotation = Quaternion.identity;
         hexagon.transform.localScale = Vector3.one;
+        hexagon.render.transform.rotation = Quaternion.Euler(0f, 30f, 0f);
         hexagon.render.SetPosition(hexagonStack.Render.GetTopPosition());
         hexagonStack.AddElement(hexagon);
     }
-    
 
-    private Hexagon SpawnHexagon(Transform target,Color color)
+    private Hexagon SpawnHexagon(Transform target, Color color)
     {
         Hexagon hexa = HexagonPool.Get();
-        hexa.render.transform.rotation = Quaternion.Euler(0, 30, 0);
         hexa.Init(color);
         return hexa;
     }
 
     private Color[] GetRandColour()
     {
-        List<Color> colors = new List<Color>();
-        colors.AddRange(color);
-        if (colors.Count <= 0)
+        if (color == null || color.Length == 0)
         {
             Debug.LogError("There wasn't have color in holder");
             return null;
         }
 
-        int index = Random.Range(0, colors.Count);
-        Color firstcolor = colors[index];
-        colors.RemoveAt(index);
-
-        if (colors.Count <= 0)
+        if (color.Length == 1)
         {
-            Debug.LogError("There weren't have enough color");
-            return null;
+            return new Color[] { color[0], color[0] };
         }
-        
-        index = Random.Range(0, colors.Count);
-        Color secondcolor = colors[index];
-        colors.RemoveAt(index);
-        
-        return new Color[]{firstcolor,secondcolor};
-    }
 
+        int firstIndex = Random.Range(0, color.Length);
+        int secondIndex = Random.Range(0, color.Length - 1);
+        if (secondIndex >= firstIndex) secondIndex++;
+
+        return new Color[] { color[firstIndex], color[secondIndex] };
+    }
 }

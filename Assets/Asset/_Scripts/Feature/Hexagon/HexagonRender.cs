@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using DG.Tweening;
-using Unity.VisualScripting;
 using Sequence = DG.Tweening.Sequence;
 
 public class HexagonRender : MonoBehaviour
@@ -14,25 +13,41 @@ public class HexagonRender : MonoBehaviour
     [SerializeField] private float disappearDuration;
     private Vector3 baseScale;
     private Transform hexagonTransform;
+    private Material materialInstance;
 
     private void Awake()
     {
         baseScale = transform.localScale;
         hexagonTransform = this.transform.parent;
+        if (render != null)
+        {
+            materialInstance = render.material;
+        }
     }
 
     public void Init()
     {
-        this.transform.DOKill();
-        hexagonTransform.DOKill();
         this.transform.localScale = baseScale;
         hexagonTransform.localScale = Vector3.one;
+        hexagonTransform.localRotation = Quaternion.identity;
+        this.transform.rotation = Quaternion.Euler(0f, 30f, 0f);
     }
 
     public Color32 color
     {
-        get { return render.material.color; }
-        set { render.material.color = value; }
+        get
+        {
+            if (materialInstance == null && render != null)
+                materialInstance = render.material;
+            return materialInstance != null ? (Color32)materialInstance.color : default;
+        }
+        set
+        {
+            if (materialInstance == null && render != null)
+                materialInstance = render.material;
+            if (materialInstance != null)
+                materialInstance.color = value;
+        }
     }
 
     public void SetPosition(Vector3 pos)
@@ -40,8 +55,6 @@ public class HexagonRender : MonoBehaviour
         hexagonTransform.position = pos;
     }
 
-
-    
     public Sequence GotoTargetPosition(Vector3 target)
     {
         Sequence sequence = DOTween.Sequence();
@@ -79,13 +92,25 @@ public class HexagonRender : MonoBehaviour
     {
         Sequence sequence = DOTween.Sequence();
         sequence.Append(
-            transform.DOScale(0f,disappearDuration).SetEase(Ease.InBack)
+            transform.DOScale(0f, disappearDuration).SetEase(Ease.InBack)
         );
         sequence.OnComplete(() =>
         {
             OnHexagonCollected.Raise(1);
-            hexagon.ReleaseHexagon();
+            hexagon.gameObject.SetActive(false);
         });
         return sequence;
+    }
+
+    private void OnDestroy()
+    {
+        transform.DOKill();
+        if (hexagonTransform != null)
+            hexagonTransform.DOKill();
+        if (materialInstance != null)
+        {
+            Destroy(materialInstance);
+            materialInstance = null;
+        }
     }
 }

@@ -63,25 +63,72 @@ public class GameManager : MonoBehaviour
         for (int i = holder.childCount - 1; i >= 0; i--)
         {
             Transform child = holder.GetChild(i);
-            child.SetParent(null);
+            if (!child.gameObject.activeSelf) continue;
+
             if (child.TryGetComponent<Slot>(out var slot))
             {
+                HexagonStack slotStack = slot.GetHexagonStack();
+                if (slotStack != null)
+                {
+                    ReleaseStackElements(slotStack);
+                    slotStack.Release();
+                }
+
+                for (int j = child.childCount - 1; j >= 0; j--)
+                {
+                    Transform slotChild = child.GetChild(j);
+                    if (slotChild.TryGetComponent<HexagonStack>(out var childStack))
+                    {
+                        ReleaseStackElements(childStack);
+                        childStack.Release();
+                    }
+                }
+
+                slot.ReleaseLock();
+                slot.ReleaseSlot();
                 slot.Deselected();
                 slotPool.Release(slot);
+                continue;
             }
 
             if (child.TryGetComponent<HexagonStack>(out var hexagonStack))
             {
-                for (int j = child.childCount - 1; j >= 0; j--)
-                {
-                    Transform hexaChild = child.GetChild(j);
-                    if (hexaChild.TryGetComponent<Hexagon>(out var hexagon))
-                    {
-                        hexagonPool.Release(hexagon);
-                    }
-                }
+                ReleaseStackElements(hexagonStack);
+                hexagonStack.Release();
+                continue;
+            }
 
-                hexagonStackPool.Release(hexagonStack);
+            if (child.TryGetComponent<Hexagon>(out var hexagon))
+            {
+                hexagon.ReleaseHexagon();
+                continue;
+            }
+
+            if (child.TryGetComponent<ILock>(out var lockItem))
+            {
+                lockItem.ReleaseLock();
+            }
+        }
+    }
+
+    private void ReleaseStackElements(HexagonStack hexagonStack)
+    {
+        for (int i = hexagonStack.GetNumberOfElement() - 1; i >= 0; i--)
+        {
+            Hexagon hexa = hexagonStack.GetElement(i);
+            if (hexa != null)
+            {
+                hexa.ReleaseHexagon();
+            }
+        }
+        hexagonStack.Clear();
+
+        for (int j = hexagonStack.transform.childCount - 1; j >= 0; j--)
+        {
+            Transform hexaChild = hexagonStack.transform.GetChild(j);
+            if (hexaChild.TryGetComponent<Hexagon>(out var hexagon))
+            {
+                hexagon.ReleaseHexagon();
             }
         }
     }

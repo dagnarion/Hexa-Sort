@@ -11,12 +11,14 @@ public class LockFactory : MonoBehaviour
         {
             case LockType.BreakLock:
                 var breakLock = breakLockPool.Get();
+                breakLock.SetPool(breakLockPool);
                 if (parent != null) breakLock.transform.SetParent(parent);
                 breakLock.Init(target, position, rotation);
                 locks = breakLock;
                 break;
             case LockType.TaskLock:
                 var taskLock = taskLockPool.Get();
+                taskLock.SetPool(taskLockPool);
                 if (parent != null) taskLock.transform.SetParent(parent);
                 taskLock.Init(target, position, rotation);
                 locks = taskLock;
@@ -24,5 +26,4 @@ public class LockFactory : MonoBehaviour
         }
         return locks;
     }
-    
 }

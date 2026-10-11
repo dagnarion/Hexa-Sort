@@ -23,6 +23,11 @@ public class MergeVisual
             sequence.Insert(0.05f * i, hexagons[i].render.ReleaseHexagon());
         }
         await sequence.ToUniTask();
+        for (int i = 0; i < hexagons.Count; i++)
+        {
+            if (hexagons[i] != null)
+                hexagons[i].ReleaseHexagon();
+        }
     }
     
 }

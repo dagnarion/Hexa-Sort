@@ -6,7 +6,10 @@ public static class TransformUltites
     {
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
-            GameObject.DestroyImmediate(transform.GetChild(i).gameObject);
+            if (Application.isPlaying)
+                GameObject.Destroy(transform.GetChild(i).gameObject);
+            else
+                GameObject.DestroyImmediate(transform.GetChild(i).gameObject);
         }
     }
 }

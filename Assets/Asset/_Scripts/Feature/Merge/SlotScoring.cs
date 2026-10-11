@@ -15,7 +15,7 @@ public class SlotScoring
     {
         if (!grid.IsOnGrid(pos)) return 0;
         Slot slot = grid.GetValue(pos);
-        if (slot == null || slot.IsEmpty) return 0;
+        if (slot == null || slot.IsEmpty || slot.GetHexagonStack().IsEmpty) return 0;
         Color targetColor =
             GetSecondElementColorTypes(slot.GetHexagonStack(), slot.GetHexagonStack().GetTopElement().ColorType);
             
@@ -25,7 +25,7 @@ public class SlotScoring
             Vector2Int nextPos = new Vector2Int(pos.x + direct.x, pos.y + direct.y);
             if (!grid.IsOnGrid(nextPos)) continue;
             Slot nextSlot = grid.GetValue(nextPos);
-            if (nextSlot == null || nextSlot.IsEmpty) continue;
+            if (nextSlot == null || nextSlot.IsEmpty || nextSlot.IsLocked || nextSlot.GetHexagonStack().IsEmpty) continue;
             if (CompareColor(nextSlot.GetHexagonStack().GetTopElement(), targetColor)) cnt++;
         }
         return cnt;

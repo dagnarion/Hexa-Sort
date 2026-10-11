@@ -103,7 +103,7 @@ public class BoardBuilder
 
             hex.Init(color);
 
-            hex.render.transform.localRotation = Quaternion.identity;
+            hex.render.transform.rotation = Quaternion.Euler(0f, 30f, 0f);
             hex.render.SetPosition(
                 stack.Render.GetTopPosition()
             );

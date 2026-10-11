@@ -5,15 +5,40 @@ public class TaskLockRender : MonoBehaviour
 {
     [SerializeField] private Color lockColor;
     [SerializeField] private MeshRenderer render;
+    private Material materialInstance;
 
     public void Lock()
     {
-        render.material.color = lockColor;
+        ResetRender();
+        if (materialInstance == null && render != null)
+        {
+            materialInstance = render.material;
+        }
+        if (materialInstance != null)
+        {
+            materialInstance.color = lockColor;
+        }
+    }
+
+    public void ResetRender()
+    {
+        transform.DOKill();
+        transform.localScale = Vector3.one;
     }
 
     public async UniTask PlayUnlockEffect()
     {
-        await transform.DOScale(Vector3.zero, 0.25f).SetEase(Ease.InBack).ToUniTask();
+        transform.DOKill();
+        await transform.DOScale(Vector3.zero, 0.25f).SetEase(Ease.InBack).SetLink(gameObject).ToUniTask();
     }
-    // sửa sau
+
+    private void OnDestroy()
+    {
+        transform.DOKill();
+        if (materialInstance != null)
+        {
+            Destroy(materialInstance);
+            materialInstance = null;
+        }
+    }
 }

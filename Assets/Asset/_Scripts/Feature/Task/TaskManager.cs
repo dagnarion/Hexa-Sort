@@ -29,13 +29,14 @@ public class TaskManager : MonoBehaviour
        LevelLoadEventChannel.OnEventRaise -= SetValue;
    }
 
-   public void SetValue(LevelData levelData)
-   {
-       collected = 0;
-       blockBreaked = 0;
-       maxBreaked = levelData.BreakBlockTarget;
-       maxCollected = levelData.CollectHexagonTarget;
-   }
+    public void SetValue(LevelData levelData)
+    {
+        collected = 0;
+        blockBreaked = 0;
+        maxBreaked = levelData.BreakBlockTarget;
+        maxCollected = levelData.CollectHexagonTarget;
+        TaskProcess?.Raise(collected);
+    }
 
     [Button]
     private void Check()
@@ -57,13 +58,13 @@ public class TaskManager : MonoBehaviour
 
     public bool IsWin()
     {
-        return (collected >= maxCollected) && (blockBreaked >= maxBreaked);
+        if (maxCollected <= 0 && maxBreaked <= 0) return false;
+        return (collected >= maxCollected) && (blockBreaked >= maxBreaked) && mergeService.IsFinishAllMerge();
     }
 
     public bool IsLose()
     {
-        if (IsWin()) return false;
+        if ((maxCollected > 0 || maxBreaked > 0) && (collected >= maxCollected) && (blockBreaked >= maxBreaked)) return false;
         return gridController.IsFull() && mergeService.IsFinishAllMerge();
     }
-    
 }

@@ -11,8 +11,10 @@ public class Slot : MonoBehaviour
     [SerializeField] private EventChannel<int> OnLockBreaked;
     private HexagonStack currentStack;
     [SerializeField] private SlotRender slotRender;
+
     public void Init(SlotType type, Vector2Int position, HexagonStack stack, ILock Lock)
     {
+        ReleaseLock();
         this.Type = type;
         this.Position = position;
         this.currentStack = stack;
@@ -31,6 +33,17 @@ public class Slot : MonoBehaviour
             currentLock.OnUnlocked += HandleLockUnlocked;
             IsLocked = true;
         }
+    }
+
+    public void ReleaseLock()
+    {
+        if (currentLock != null)
+        {
+            currentLock.OnUnlocked -= HandleLockUnlocked;
+            currentLock.ReleaseLock();
+            currentLock = null;
+        }
+        IsLocked = false;
     }
 
     private void HandleLockUnlocked(ILock unlockedLock)
@@ -52,7 +65,6 @@ public class Slot : MonoBehaviour
         }
     }
 
-
     public HexagonStack GetHexagonStack() => currentStack;
 
     public void FillHexagonStackToSlot(HexagonStack hexagonStack) => this.currentStack = hexagonStack;
@@ -62,4 +74,13 @@ public class Slot : MonoBehaviour
     public void Deselected() => slotRender.Deselected();
 
     public void Selected() => slotRender.Selected();
+
+    private void OnDestroy()
+    {
+        if (currentLock != null)
+        {
+            currentLock.OnUnlocked -= HandleLockUnlocked;
+            currentLock = null;
+        }
+    }
 }

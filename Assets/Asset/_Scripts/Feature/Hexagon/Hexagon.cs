@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class Hexagon : MonoBehaviour
@@ -20,6 +21,7 @@ public class Hexagon : MonoBehaviour
 
     public void ReleaseHexagon()
     {
+        transform.localRotation = Quaternion.identity;
         hexagonPool.Release(this);
     }
 }

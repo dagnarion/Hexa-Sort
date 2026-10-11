@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class HexagonStack : MonoBehaviour
 {
-   [SerializeField] private List<Hexagon> hexagons = new List<Hexagon>();
-   [field:SerializeField] public HexagonStackRender Render { get; private set; }
+    [SerializeField] private List<Hexagon> hexagons = new List<Hexagon>();
+    [field:SerializeField] public HexagonStackRender Render { get; private set; }
     private HexagonStackArranger stackArranger;
+    private ComponentPoolSO<HexagonStack> pool;
     public bool IsEmpty => hexagons.Count <= 0;
+
+    public void SetPool(ComponentPoolSO<HexagonStack> stackPool) => pool = stackPool;
 
     private void Awake()
     {
@@ -20,13 +24,13 @@ public class HexagonStack : MonoBehaviour
     {
         foreach (Hexagon hexa in hexagons)
         {
-            hexa.UnSelect();
+            if (hexa != null) hexa.UnSelect();
         }
     }
-    
+
     public Hexagon GetElement(int index)
     {
-        if (IsEmpty || index >= hexagons.Count) return null;
+        if (IsEmpty || index < 0 || index >= hexagons.Count) return null;
         return hexagons[index];
     }
 
@@ -43,7 +47,7 @@ public class HexagonStack : MonoBehaviour
 
     public void RemoveElement(int index)
     {
-        if (IsEmpty || index >= hexagons.Count) return;
+        if (IsEmpty || index < 0 || index >= hexagons.Count) return;
         hexagons.RemoveAt(index);
     }
 
@@ -51,6 +55,28 @@ public class HexagonStack : MonoBehaviour
     {
         if (!hexagons.Contains(hexagonData)) return;
         hexagons.Remove(hexagonData);
+    }
+
+    public void Clear()
+    {
+        hexagons.Clear();
+    }
+
+    public void Release()
+    {
+        transform.DOKill();
+        transform.localRotation = Quaternion.identity;
+        transform.localScale = Vector3.one;
+        hexagons.Clear();
+        if (pool != null)
+        {
+            pool.Release(this);
+        }
+        else
+        {
+            transform.SetParent(null);
+            gameObject.SetActive(false);
+        }
     }
 
     public int GetNumberOfElement() => hexagons.Count;

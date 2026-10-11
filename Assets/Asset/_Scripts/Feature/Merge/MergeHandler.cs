@@ -58,8 +58,7 @@ public class MergeHandler
         if (currentStack.IsEmpty)
         {
             currentSlot?.ReleaseSlot();
-            currentStack.transform.SetParent(holder);
-            currentStack.gameObject.SetActive(false);
+            currentStack.Release();
         }
     }
 

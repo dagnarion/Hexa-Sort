@@ -32,29 +32,32 @@ public class BreakBooster : SaveLoadAbstract
     
     private async UniTask Apply(Vector3 pos)
     {
-        if(amount <= 0 || !IsOnBooster) return;
+        if (amount <= 0 || !IsOnBooster) return;
         Slot slot = gridController.GetSlotOnPosition(pos);
-        if(slot == null || slot.IsEmpty || slot.IsLocked) return;
-        List<Hexagon> hexagons = new List<Hexagon>();
+        if (slot == null || slot.IsEmpty || slot.IsLocked || slot.Type == SlotType.Block) return;
         HexagonStack stack = slot.GetHexagonStack();
-        for (int i = stack.GetNumberOfElement()-1; i >= 0; i--)
-        {
-            hexagons.Add(stack.GetElement(i));
-        }
-        await ReleaseHexagon(hexagons);
-        
-        for (int i = 0; i < stack.GetNumberOfElement(); i++)
-        {
-            stack.RemoveElement(i);
-        }
-        
-        slot?.ReleaseSlot();
-        stack.transform.SetParent(null);
-        stack.gameObject.SetActive(false);
+        if (stack == null) return;
+
         IsOnBooster = false;
         amount--;
+        slot.ReleaseSlot();
+
+        List<Hexagon> hexagons = new List<Hexagon>();
+        for (int i = stack.GetNumberOfElement() - 1; i >= 0; i--)
+        {
+            Hexagon hexa = stack.GetElement(i);
+            if (hexa != null)
+            {
+                hexa.SetParent(slot.transform.parent);
+                hexagons.Add(hexa);
+            }
+        }
+        stack.Clear();
+        stack.Release();
+
+        await ReleaseHexagon(hexagons);
     }
-    
+
     public async UniTask ReleaseHexagon(List<Hexagon> hexagons)
     {
         Sequence sequence = DOTween.Sequence();
@@ -63,15 +66,22 @@ public class BreakBooster : SaveLoadAbstract
             sequence.Insert(0.05f * i, hexagons[i].render.ReleaseHexagon());
         }
         await sequence.ToUniTask();
+        for (int i = 0; i < hexagons.Count; i++)
+        {
+            if (hexagons[i] != null)
+                hexagons[i].ReleaseHexagon();
+        }
     }
 
     public override void Save(GameData gameData)
     {
+        IsOnBooster = false;
         gameData.BreakBoosterRemain = amount;
     }
 
     public override void Load(GameData gameData)
     {
+        IsOnBooster = false;
         amount = gameData.BreakBoosterRemain;
     }
 }

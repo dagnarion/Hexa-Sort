@@ -7,4 +7,5 @@ public interface ILock
     event Action<ILock> OnUnlocked;
     UniTask UnlockAsync();
     public void Init(int target, Vector3 position, Quaternion rotation = default);
+    void ReleaseLock();
 }

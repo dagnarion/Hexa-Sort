@@ -45,6 +45,8 @@ public class GridController : MonoBehaviour
     
     void GenerateGrid(LevelData data)
     {
+        currentSlot?.Deselected();
+        currentSlot = null;
         grid = boardBuilder.Build(data.Level);
         mergeService.Init(grid);
     }
@@ -96,6 +98,8 @@ public class GridController : MonoBehaviour
         Slot slot = grid.GetValue(gridPos);
         if(slot == null || !slot.IsEmpty || slot.IsLocked || slot.Type == SlotType.Block)
         {
+            currentSlot?.Deselected();
+            currentSlot = null;
             hexaStack.Render.ReturnToOriginPosition();
             return;
         }
@@ -114,6 +118,7 @@ public class GridController : MonoBehaviour
     
     public Slot GetSlotOnPosition(Vector3 pos)
     {
+        if (grid == null) return null;
         Vector3Int cell = gridComponent.WorldToCell(pos);
         Vector2Int gridPos = new Vector2Int(cell.y, cell.x);
         Slot slot = grid.GetValue(gridPos);
@@ -122,10 +127,11 @@ public class GridController : MonoBehaviour
 
     public bool IsFull()
     {
+        if (grid == null) return false;
         bool fulled = true;
         grid.GridTraversal((pos, slot) =>
         {
-            if (slot!= null && slot.IsEmpty && !slot.IsLocked)
+            if (slot != null && slot.IsEmpty && !slot.IsLocked && slot.Type != SlotType.Block)
             {
                 fulled = false;
             }

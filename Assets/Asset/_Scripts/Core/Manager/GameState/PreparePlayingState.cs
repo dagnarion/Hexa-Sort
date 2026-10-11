@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+
 public class PreparePlayingState : IState
 {
     private GameManager gameManager;
@@ -7,9 +9,10 @@ public class PreparePlayingState : IState
     }
     public void Enter()
     {
-       gameManager.ReleaseHolder(); 
-       gameManager.SaveLoadServices.Load();
-       gameManager.HexagonStackSpawner.Spawn();
+        gameManager.ReleaseHolder();
+        gameManager.HexagonStackSpawner.Release();
+        gameManager.SaveLoadServices.Load();
+        gameManager.HexagonStackSpawner.Spawn().Forget();
     }
 
     public void Tick()

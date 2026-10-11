@@ -29,8 +29,16 @@ public class DragAndDropHandler : MonoBehaviour
 
     private void OnDisable()
     {
-        Input.GamePlay.Press.started -= OnPress;
-        Input.GamePlay.Press.canceled -= OnRelease;
+        if (Input != null)
+        {
+            Input.GamePlay.Press.started -= OnPress;
+            Input.GamePlay.Press.canceled -= OnRelease;
+        }
+        if (CurrentStack != null && CurrentStack.gameObject.activeInHierarchy)
+        {
+            CurrentStack.Render.ReturnToOriginPosition();
+        }
+        CurrentStack = null;
     }
 
     private void OnPress(InputAction.CallbackContext ctx)
@@ -53,7 +61,12 @@ public class DragAndDropHandler : MonoBehaviour
 
     private void OnRelease(InputAction.CallbackContext ctx)
     {
-        if(CurrentStack == null) return;
+        if (CurrentStack == null) return;
+        if (!CurrentStack.gameObject.activeInHierarchy)
+        {
+            CurrentStack = null;
+            return;
+        }
         Vector2 pos = Input.GamePlay.Position.ReadValue<Vector2>();
         Ray ray = ScreenToRay(pos);
         Plane horizontalPlane = new Plane(Vector3.up, inPointCheckArea);
@@ -71,6 +84,11 @@ public class DragAndDropHandler : MonoBehaviour
     private void Update()
     {
         if (CurrentStack == null) return;
+        if (!CurrentStack.gameObject.activeInHierarchy)
+        {
+            CurrentStack = null;
+            return;
+        }
         Vector2 pos = Input.GamePlay.Position.ReadValue<Vector2>();
         
         
