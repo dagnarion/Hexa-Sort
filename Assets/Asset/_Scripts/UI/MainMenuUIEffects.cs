@@ -28,12 +28,7 @@ namespace HexaSort.UI
         [SerializeField] private RectTransform piggyTransform;
         [SerializeField] private RectTransform[] lockBadges;
         [SerializeField] private RectTransform[] notificationDots;
-
-        [Header("Bottom Action Buttons")]
-        [SerializeField] private Button mailboxButton;
-        [SerializeField] private RectTransform mailboxIcon;
-        [SerializeField] private RectTransform checklistIcon;
-
+        
         [Header("Navigation Bar")]
         [SerializeField] private Button[] navTabButtons;
         [SerializeField] private RectTransform[] navTabRoots;
@@ -56,7 +51,6 @@ namespace HexaSort.UI
             SetupPlayButton();
             SetupTopBar();
             SetupSideButtons();
-            SetupBottomActionButtons();
             SetupNavigationTabs();
             SetupBackgroundStars();
         }
@@ -253,24 +247,7 @@ namespace HexaSort.UI
             }
         }
         #endregion
-
-        #region Bottom Action Buttons (Mailbox & Checklist)
-        private void SetupBottomActionButtons()
-        {
-            if (mailboxButton != null)
-            {
-                mailboxButton.onClick.AddListener(() =>
-                {
-                    if (mailboxIcon != null)
-                    {
-                        mailboxIcon.DOKill(true);
-                        mailboxIcon.DOPunchRotation(new Vector3(0, 0, 16f), 0.38f, 8, 0.6f);
-                    }
-                });
-            }
-            
-        }
-        #endregion
+        
 
         #region Navigation Tabs Switch Feel
         private void SetupNavigationTabs()
