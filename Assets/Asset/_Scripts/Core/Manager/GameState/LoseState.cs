@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class LoseState : IState
 {
     private GameManager gameManager;
@@ -10,7 +8,7 @@ public class LoseState : IState
     public void Enter()
     {
         gameManager.InputManager.ChangeToUI();
-        Debug.Log("Lose");
+        gameManager.WinLoseManager.ShowLose();
     }
 
     public void Tick()

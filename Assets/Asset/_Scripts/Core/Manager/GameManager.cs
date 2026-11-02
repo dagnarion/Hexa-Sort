@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [field: SerializeField] public SaveLoadServices SaveLoadServices { get; private set; }
     [field: SerializeField] public GridClearServices GridClearServices { get; private set; }
     [field: SerializeField] public TaskManager TaskManager { get; private set; }
+    public WinLoseManager WinLoseManager { get; private set; }
     [field: SerializeField] public InputManager InputManager { get; private set; }
     [field: SerializeField] public HexagonStackSpawner HexagonStackSpawner { get; private set; }
     public StateMachine StateMachine { get; private set; }
@@ -39,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     private void Init()
     {
+        WinLoseManager = GetComponent<WinLoseManager>();
         StateMachine = new StateMachine();
         WinState = new WinState(this);
         LoseState = new LoseState(this);

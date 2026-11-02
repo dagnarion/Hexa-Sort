@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class WinState : IState
 {
     private GameManager gameManager;
@@ -12,8 +10,7 @@ public class WinState : IState
         gameManager.InputManager.ChangeToUI();
         gameManager.SaveLoadServices.Save();
         await gameManager.GridClearServices.Release();
-        if (gameManager == null) return;
-        gameManager.StateMachine.ChangeState(gameManager.PreparePlayingState);
+        gameManager.WinLoseManager.ShowWin();
     }
 
     public void Tick()
@@ -28,6 +25,5 @@ public class WinState : IState
 
     public void Exit()
     {
-        // out ui
     }
 }

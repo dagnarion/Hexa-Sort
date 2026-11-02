@@ -301,6 +301,7 @@ GameObject:
   - component: {fileID: 103677685}
   - component: {fileID: 103677686}
   - component: {fileID: 103677687}
+  - component: {fileID: 103677688}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -376,8 +377,6 @@ MonoBehaviour:
   OnBlockBreaked: {fileID: 11400000, guid: a4c94a3830b57314bb3e350a31d4a50a, type: 2}
   TaskProcess: {fileID: 11400000, guid: 52afa077a40389e43b4e46cd4fdaea66, type: 2}
   LevelLoadEventChannel: {fileID: 11400000, guid: c6fff04a5008cc84080380c378b84322, type: 2}
-  gridController: {fileID: 425005845}
-  mergeService: {fileID: 425005846}
   collected: 0
   blockBreaked: 0
   maxCollected: 0
@@ -431,6 +430,21 @@ MonoBehaviour:
   - {fileID: 1015426216}
   - {fileID: 625346833}
   - {fileID: 254801546}
+--- !u!114 &103677688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103677681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9638b06fe6cf4451bd89a42aeec627a3, type: 3}
+  m_Name: WinLoseManager
+  m_EditorClassIdentifier: Assembly-CSharp::WinLoseManager
+  taskManager: {fileID: 103677685}
+  gridController: {fileID: 425005845}
+  mergeService: {fileID: 425005846}
 --- !u!1 &254801541
 GameObject:
   m_ObjectHideFlags: 0

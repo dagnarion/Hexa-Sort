@@ -16,15 +16,18 @@ public class PlayingState : IState
 
     public void Tick()
     {
-        if (gameManager.TaskManager.IsLose())
+        WinLoseManager.Result result = gameManager.WinLoseManager.Evaluate(
+            gameManager.InputManager.InputAction.GamePlay.Press.IsPressed());
+
+        if (result == WinLoseManager.Result.Win)
         {
-            gameManager.StateMachine.ChangeState(gameManager.LoseState);
+            gameManager.StateMachine.ChangeState(gameManager.WinState);
             return;
         }
 
-        if (gameManager.TaskManager.IsWin())
+        if (result == WinLoseManager.Result.Lose)
         {
-            gameManager.StateMachine.ChangeState(gameManager.WinState);
+            gameManager.StateMachine.ChangeState(gameManager.LoseState);
         }
     }
 
