@@ -47,7 +47,18 @@ public class WinLoseManager : MonoBehaviour
 
     public void ShowWin()
     {
-        ShowResult(Result.Win);
+        int awardedReward = 0;
+        if (gameManager.LevelLoader != null)
+        {
+            bool rewardGranted = gameManager.SaveLoadServices.CompleteLevelAndSave(
+                gameManager.LevelLoader.CurrentLevelID,
+                gameManager.LevelLoader.CurrentLevelReward);
+            if (rewardGranted)
+            {
+                awardedReward = Mathf.Max(0, gameManager.LevelLoader.CurrentLevelReward);
+            }
+        }
+        ShowResult(Result.Win, awardedReward);
     }
 
     public void ShowLose()
@@ -55,11 +66,13 @@ public class WinLoseManager : MonoBehaviour
         ShowResult(Result.Lose);
     }
 
-    private void ShowResult(Result result)
+    private void ShowResult(Result result, int awardedReward = 0)
     {
         currentResult = result;
         isTransitioning = false;
-        resultText.text = result == Result.Win ? "WIN" : "LOSE";
+        resultText.text = result == Result.Win
+            ? awardedReward > 0 ? $"WIN\n+{awardedReward} GOLD" : "WIN"
+            : "LOSE";
         continueButton.gameObject.SetActive(result == Result.Win);
         retryButton.gameObject.SetActive(result == Result.Lose);
         backToMenuButton.gameObject.SetActive(result == Result.Lose);
@@ -72,7 +85,6 @@ public class WinLoseManager : MonoBehaviour
         if (currentResult != Result.Win || isTransitioning) return;
         isTransitioning = true;
         resultPanel.SetActive(false);
-        gameManager.SaveLoadServices.Save();
         gameManager.StateMachine.ChangeState(gameManager.PreparePlayingState);
     }
 
@@ -122,6 +134,8 @@ public class WinLoseManager : MonoBehaviour
         cardImage.color = new Color(1f, 0.94f, 0.78f, 1f);
 
         resultText = CreateText("Result Text", card.transform, "WIN", 46f, new Vector2(0f, 95f), new Vector2(280f, 72f));
+        resultText.fontSize = 38f;
+        resultText.rectTransform.sizeDelta = new Vector2(280f, 100f);
         resultText.color = new Color(0.25f, 0.16f, 0.08f, 1f);
         resultText.fontStyle = FontStyles.Bold;
 

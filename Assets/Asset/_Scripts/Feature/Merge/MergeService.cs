@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using Cysharp.Threading.Tasks;
-using NaughtyAttributes;
 using UnityEngine;
 
 public class MergeService : MonoBehaviour
@@ -20,39 +18,65 @@ public class MergeService : MonoBehaviour
     private Queue<Vector2Int> mergeQueue = new Queue<Vector2Int>();
     private bool isRunning;
     private bool canMerge;
+    private bool acceptingCommands;
+    private Grid<Slot> currentGrid;
+
+    public bool IsAcceptingCommands => acceptingCommands;
 
     private void OnEnable()
     {
-        dropChannel.OnEventRaise += PushMergeCommand;
+        if (dropChannel != null) dropChannel.OnEventRaise += PushMergeCommand;
     }
 
     private void OnDisable()
     {
-        dropChannel.OnEventRaise -= PushMergeCommand;
-        RemoveAllCommand();
+        if (dropChannel != null) dropChannel.OnEventRaise -= PushMergeCommand;
+        acceptingCommands = false;
+        canMerge = false;
+        mergeQueue.Clear();
     }
 
     public void Init(Grid<Slot> grid)
     {
-        RemoveAllCommand();
+        if (isRunning)
+        {
+            Debug.LogError("Cannot initialize a merge board while a merge is running.", this);
+            return;
+        }
+
+        mergeQueue.Clear();
+        canMerge = false;
+        currentGrid = grid;
         slotScoring = new SlotScoring(grid);
         chainResolver = new MergeChainResolver(slotScoring);
         connectedSlotFinder = new ConnectedSlotFinder(grid);
         mergeVisual = new MergeVisual();
         mergeResolve = new MergeResolve(mergeVisual, grid, hexagonStackPool, holder);
         mergeHandler = new MergeHandler(mergeVisual, holder);
+        acceptingCommands = true;
     }
 
     public bool IsFinishAllMerge() => !isRunning && mergeQueue.Count == 0;
 
-    public void RemoveAllCommand()
+    public async UniTask StopAcceptingAndWaitAsync()
     {
-        canMerge = false;
+        acceptingCommands = false;
+        while (isRunning)
+        {
+            await UniTask.Yield();
+        }
+
         mergeQueue.Clear();
+        canMerge = false;
     }
 
     private void PushMergeCommand(Vector2Int pos)
     {
+        if (!acceptingCommands || currentGrid == null || !currentGrid.IsOnGrid(pos) || currentGrid.GetValue(pos) == null)
+        {
+            return;
+        }
+
         canMerge = true;
         mergeQueue.Enqueue(pos);
         if (!isRunning)

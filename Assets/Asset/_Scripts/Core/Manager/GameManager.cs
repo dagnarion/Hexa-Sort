@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -11,7 +12,9 @@ public class GameManager : MonoBehaviour
 
     [field: SerializeField] public SaveLoadServices SaveLoadServices { get; private set; }
     [field: SerializeField] public GridClearServices GridClearServices { get; private set; }
+    [field: SerializeField] public GridController GridController { get; private set; }
     [field: SerializeField] public TaskManager TaskManager { get; private set; }
+    public LevelLoader LevelLoader { get; private set; }
     public WinLoseManager WinLoseManager { get; private set; }
     [field: SerializeField] public InputManager InputManager { get; private set; }
     [field: SerializeField] public HexagonStackSpawner HexagonStackSpawner { get; private set; }
@@ -41,6 +44,7 @@ public class GameManager : MonoBehaviour
     private void Init()
     {
         WinLoseManager = GetComponent<WinLoseManager>();
+        LevelLoader = GetComponent<LevelLoader>();
         StateMachine = new StateMachine();
         WinState = new WinState(this);
         LoseState = new LoseState(this);
@@ -60,8 +64,17 @@ public class GameManager : MonoBehaviour
         StateMachine?.FixedTick();
     }
 
-    public void ReleaseHolder()
+    public async UniTask<bool> ReleaseHolderAsync()
     {
+        if (GridController == null)
+        {
+            Debug.LogError("GameManager requires a GridController before releasing the board.", this);
+            return false;
+        }
+
+        await GridController.StopMergesAndWaitAsync();
+        GridController.ClearGridReference();
+
         for (int i = holder.childCount - 1; i >= 0; i--)
         {
             Transform child = holder.GetChild(i);
@@ -74,16 +87,6 @@ public class GameManager : MonoBehaviour
                 {
                     ReleaseStackElements(slotStack);
                     slotStack.Release();
-                }
-
-                for (int j = child.childCount - 1; j >= 0; j--)
-                {
-                    Transform slotChild = child.GetChild(j);
-                    if (slotChild.TryGetComponent<HexagonStack>(out var childStack))
-                    {
-                        ReleaseStackElements(childStack);
-                        childStack.Release();
-                    }
                 }
 
                 slot.ReleaseLock();
@@ -111,6 +114,8 @@ public class GameManager : MonoBehaviour
                 lockItem.ReleaseLock();
             }
         }
+
+        return true;
     }
 
     private void ReleaseStackElements(HexagonStack hexagonStack)

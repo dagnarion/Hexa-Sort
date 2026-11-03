@@ -11,6 +11,7 @@ public class GridClearServices : MonoBehaviour
     public async UniTask Release()
     {
         if (gridController == null || gridController.grid == null) return;
+        await gridController.StopMergesAndWaitAsync();
         uni.Clear();
         gridController.grid.GridTraversal((pos, slot) =>
             {
@@ -48,7 +49,7 @@ public class GridClearServices : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
         for (int i = 0; i < hexagons.Count; i++)
         {
-            sequence.Insert(0.05f * i, hexagons[i].render.ReleaseHexagon());
+            sequence.Insert(0.05f * i, hexagons[i].render.ReleaseHexagon(false));
         }
 
         await sequence.ToUniTask();

@@ -14,6 +14,7 @@ public class HexagonRender : MonoBehaviour
     private Vector3 baseScale;
     private Transform hexagonTransform;
     private Material materialInstance;
+    private bool isReleasing;
 
     private void Awake()
     {
@@ -27,6 +28,7 @@ public class HexagonRender : MonoBehaviour
 
     public void Init()
     {
+        isReleasing = false;
         this.transform.localScale = baseScale;
         hexagonTransform.localScale = Vector3.one;
         hexagonTransform.localRotation = Quaternion.identity;
@@ -88,15 +90,21 @@ public class HexagonRender : MonoBehaviour
         return sequence;
     }
 
-    public Sequence ReleaseHexagon()
+    public Sequence ReleaseHexagon(bool countAsCollected = true)
     {
+        if (isReleasing) return DOTween.Sequence();
+        isReleasing = true;
         Sequence sequence = DOTween.Sequence();
         sequence.Append(
             transform.DOScale(0f, disappearDuration).SetEase(Ease.InBack)
         );
         sequence.OnComplete(() =>
         {
-            OnHexagonCollected.Raise(1);
+            if (countAsCollected)
+            {
+                OnHexagonCollected?.Raise(1);
+            }
+
             hexagon.gameObject.SetActive(false);
         });
         return sequence;

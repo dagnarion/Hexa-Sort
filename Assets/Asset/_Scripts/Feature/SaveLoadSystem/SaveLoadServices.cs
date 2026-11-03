@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SaveLoadServices : MonoBehaviour
@@ -27,31 +28,63 @@ public class SaveLoadServices : MonoBehaviour
     public void Save()
     {
         if (gameData == null) gameData = new GameData();
-        foreach (var tmp in saveLoadAbstract)
+        gameData.Normalize();
+        if (saveLoadAbstract != null)
         {
-            tmp?.Save(gameData);
+            foreach (var tmp in saveLoadAbstract) tmp?.Save(gameData);
         }
         JsonSave();
     }
 
+    public bool CompleteLevelAndSave(int levelID, int reward)
+    {
+        if (gameData == null) gameData = new GameData();
+        gameData.Normalize();
+        if (levelID < 0) return false;
+
+        bool rewardGranted = !gameData.RewardedLevelIDs.Contains(levelID);
+        if (rewardGranted)
+        {
+            gameData.RewardedLevelIDs.Add(levelID);
+            gameData.Gold = (int)Math.Min(int.MaxValue, (long)gameData.Gold + Math.Max(0, reward));
+        }
+
+        if (saveLoadAbstract != null)
+        {
+            foreach (var system in saveLoadAbstract) system?.SaveCompletedLevel(gameData);
+        }
+        JsonSave();
+        return rewardGranted;
+    }
+
     public void Load()
     {
+        gameData = null;
         if (File.Exists(PathFile))
         {
-            string json = File.ReadAllText(PathFile);
-            gameData = JsonUtility.FromJson<GameData>(json);
+            try
+            {
+                string json = File.ReadAllText(PathFile);
+                if (!string.IsNullOrWhiteSpace(json)) gameData = JsonUtility.FromJson<GameData>(json);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError($"[SaveLoadServices] Save file could not be read. Starting from the first level. {exception.Message}", this);
+            }
         }
 
         if (gameData == null)
         {
             gameData = new GameData();
-            JsonSave();
         }
 
-        foreach (var system in saveLoadAbstract)
+        gameData.Normalize();
+
+        if (saveLoadAbstract != null)
         {
-            system?.Load(gameData);
+            foreach (var system in saveLoadAbstract) system?.Load(gameData);
         }
+        JsonSave();
     }
 
     private void JsonSave()
@@ -61,7 +94,14 @@ public class SaveLoadServices : MonoBehaviour
         {
             Directory.CreateDirectory(dir);
         }
-        string json = JsonUtility.ToJson(gameData, true);
-        File.WriteAllText(PathFile, json);
+        try
+        {
+            string json = JsonUtility.ToJson(gameData, true);
+            File.WriteAllText(PathFile, json);
+        }
+        catch (Exception exception)
+        {
+            Debug.LogError($"[SaveLoadServices] Save file could not be written. {exception.Message}", this);
+        }
     }
 }

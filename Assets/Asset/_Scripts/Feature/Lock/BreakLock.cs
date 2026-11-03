@@ -10,6 +10,7 @@ public class BreakLock : MonoBehaviour, IHittableLock
     [SerializeField] private int remain;
     private ComponentPoolSO<BreakLock> pool;
     private bool isUnlocking;
+    private bool unlockEffectStarted;
 
     public void SetPool(ComponentPoolSO<BreakLock> lockPool) => pool = lockPool;
 
@@ -17,6 +18,7 @@ public class BreakLock : MonoBehaviour, IHittableLock
     {
         OnUnlocked = null;
         isUnlocking = false;
+        unlockEffectStarted = false;
         transform.DOKill();
         transform.SetPositionAndRotation(position, rotation);
         transform.localScale = Vector3.one;
@@ -41,6 +43,8 @@ public class BreakLock : MonoBehaviour, IHittableLock
 
     public async UniTask UnlockAsync()
     {
+        if (unlockEffectStarted) return;
+        unlockEffectStarted = true;
         isUnlocking = true;
         await lockRender.PlayUnlockEffect();
         if (this == null) return;
@@ -52,6 +56,7 @@ public class BreakLock : MonoBehaviour, IHittableLock
     {
         OnUnlocked = null;
         isUnlocking = false;
+        unlockEffectStarted = false;
         if (lockRender != null) lockRender.Init();
         transform.DOKill();
         if (pool != null) pool.Release(this);

@@ -16,6 +16,8 @@ public class PlayingState : IState
 
     public void Tick()
     {
+        if (gameManager.InputManager.IsBoosterInputLocked) return;
+
         WinLoseManager.Result result = gameManager.WinLoseManager.Evaluate(
             gameManager.InputManager.InputAction.GamePlay.Press.IsPressed());
 

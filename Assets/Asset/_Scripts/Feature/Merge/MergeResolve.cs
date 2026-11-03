@@ -21,7 +21,7 @@ public class MergeResolve
     {
         if (slot == null) return;
         HexagonStack hexagonStack = slot.GetHexagonStack();
-        if (hexagonStack == null || hexagonStack.IsEmpty) return;
+        if (hexagonStack == null || !hexagonStack.gameObject.activeInHierarchy || hexagonStack.IsEmpty) return;
 
         List<Hexagon> hexagons = new List<Hexagon>();
         Hexagon topHexagon = hexagonStack.GetTopElement();
@@ -43,11 +43,16 @@ public class MergeResolve
 
         await mergeVisual.ReleaseHexagon(hexagons);
 
+        if (slot.GetHexagonStack() != hexagonStack || !hexagonStack.gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         await TryDamageNeighbourLocksAsync(slot);
 
-        if (hexagonStack.IsEmpty)
+        if (slot.GetHexagonStack() == hexagonStack && hexagonStack.IsEmpty)
         {
-            slot?.ReleaseSlot();
+            slot.ReleaseSlot();
             hexagonStack.Release();
         }
     }
@@ -55,6 +60,7 @@ public class MergeResolve
 
     private async UniTask TryDamageNeighbourLocksAsync(Slot slot)
     {
+        if (grid == null || slot == null || grid.GetValue(slot.Position) != slot) return;
         Vector2Int currentPosition = slot.Position;
         List<UniTask> damageTasks = new List<UniTask>();
         foreach (Vector2Int direct in Direction.GetDirections(currentPosition))

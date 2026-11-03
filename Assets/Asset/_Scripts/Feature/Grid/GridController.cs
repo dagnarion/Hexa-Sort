@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -26,16 +27,16 @@ public class GridController : MonoBehaviour
     private Slot currentSlot;
     private void OnEnable()
     {
-        dragEventChannel.OnEventRaise += SlotSelected;
-        dropEventChannel.OnEventRaise += OnDropProccessing;
-        levelLoadEventChannel.OnEventRaise += GenerateGrid;
+        if (dragEventChannel != null) dragEventChannel.OnEventRaise += SlotSelected;
+        if (dropEventChannel != null) dropEventChannel.OnEventRaise += OnDropProccessing;
+        if (levelLoadEventChannel != null) levelLoadEventChannel.OnEventRaise += GenerateGrid;
     }
 
     private void OnDisable()
     {
-        dragEventChannel.OnEventRaise -= SlotSelected;
-        dropEventChannel.OnEventRaise -= OnDropProccessing;
-        levelLoadEventChannel.OnEventRaise -= GenerateGrid;
+        if (dragEventChannel != null) dragEventChannel.OnEventRaise -= SlotSelected;
+        if (dropEventChannel != null) dropEventChannel.OnEventRaise -= OnDropProccessing;
+        if (levelLoadEventChannel != null) levelLoadEventChannel.OnEventRaise -= GenerateGrid;
     }
 
     private void Awake()
@@ -45,6 +46,12 @@ public class GridController : MonoBehaviour
     
     void GenerateGrid(LevelData data)
     {
+        if (mergeService != null && !mergeService.IsFinishAllMerge())
+        {
+            Debug.LogError("Cannot rebuild the board while a merge is still running.", this);
+            return;
+        }
+
         currentSlot?.Deselected();
         currentSlot = null;
         grid = boardBuilder.Build(data.Level);
@@ -53,9 +60,14 @@ public class GridController : MonoBehaviour
     
     void SlotSelected(Vector3 pos)
     {
+        if (grid == null || gridComponent == null)
+        {
+            ClearCurrentSelection();
+            return;
+        }
+
         Vector3Int cell = gridComponent.WorldToCell(pos);
         Vector2Int gridPos = new Vector2Int(cell.y, cell.x);
-        if(grid == null) return;
         if (!grid.IsOnGrid(gridPos))
         {
             currentSlot?.Deselected();
@@ -83,24 +95,37 @@ public class GridController : MonoBehaviour
     {
         HexagonStack hexaStack = value.Item1;
         Vector3 pos = value.Item2;
+        if (hexaStack == null || !hexaStack.gameObject.activeInHierarchy) return;
+        if (hexaStack.GetComponentInParent<Slot>() != null) return;
+        if (mergeService == null || !mergeService.IsAcceptingCommands || !mergeService.IsFinishAllMerge())
+        {
+            ReturnToOrigin(hexaStack);
+            ClearCurrentSelection();
+            return;
+        }
+
+        if (grid == null || gridComponent == null)
+        {
+            ReturnToOrigin(hexaStack);
+            ClearCurrentSelection();
+            return;
+        }
+
         Vector3Int cell = gridComponent.WorldToCell(pos);
         Vector2Int gridPos = new Vector2Int(cell.y, cell.x);
-        if(hexaStack == null) return;
         
-        if (grid == null || !grid.IsOnGrid(gridPos))
+        if (!grid.IsOnGrid(gridPos))
         {
-            currentSlot?.Deselected();
-            currentSlot = null;
-            hexaStack.Render.ReturnToOriginPosition();
+            ClearCurrentSelection();
+            ReturnToOrigin(hexaStack);
             return;
         }
 
         Slot slot = grid.GetValue(gridPos);
         if(slot == null || !slot.IsEmpty || slot.IsLocked || slot.Type == SlotType.Block)
         {
-            currentSlot?.Deselected();
-            currentSlot = null;
-            hexaStack.Render.ReturnToOriginPosition();
+            ClearCurrentSelection();
+            ReturnToOrigin(hexaStack);
             return;
         }
         
@@ -108,17 +133,53 @@ public class GridController : MonoBehaviour
         
         hexaStack.Render.DropToTargetPosition(slot.transform.position);
         hexaStack.transform.SetParent(slot.transform);
-        
-        dropHexagonChannel.Raise(gridPos);
         hexaStack.DisableAllCollider();
-        
+        ClearCurrentSelection();
+        dropHexagonChannel?.Raise(gridPos);
+    }
+
+    public UniTask StopMergesAndWaitAsync()
+    {
+        return mergeService == null ? UniTask.CompletedTask : mergeService.StopAcceptingAndWaitAsync();
+    }
+
+    public bool IsMergeIdle => mergeService == null || mergeService.IsFinishAllMerge();
+
+    public Plane GetBoardPlane(Vector3 point)
+    {
+        Vector3 normal = gridComponent == null ? Vector3.up : gridComponent.transform.up;
+        return new Plane(normal, point);
+    }
+
+    public Plane GetBoardSurfacePlane()
+    {
+        if (gridComponent == null) return new Plane(Vector3.up, Vector3.up * 1f);
+        return new Plane(gridComponent.transform.up, gridComponent.transform.position);
+    }
+
+    public void ClearGridReference()
+    {
+        ClearCurrentSelection();
+        grid = null;
+    }
+
+    private void ClearCurrentSelection()
+    {
         currentSlot?.Deselected();
         currentSlot = null;
+    }
+
+    private static void ReturnToOrigin(HexagonStack stack)
+    {
+        if (stack != null && stack.gameObject.activeInHierarchy && stack.GetComponentInParent<Slot>() == null)
+        {
+            stack.Render.ReturnToOriginPosition();
+        }
     }
     
     public Slot GetSlotOnPosition(Vector3 pos)
     {
-        if (grid == null) return null;
+        if (grid == null || gridComponent == null) return null;
         Vector3Int cell = gridComponent.WorldToCell(pos);
         Vector2Int gridPos = new Vector2Int(cell.y, cell.x);
         Slot slot = grid.GetValue(gridPos);

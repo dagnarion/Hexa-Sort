@@ -52,7 +52,10 @@ public class Slot : MonoBehaviour
         {
             IsLocked = false;
             currentLock.OnUnlocked -= HandleLockUnlocked;
-            OnLockBreaked?.Raise(1);
+            if (unlockedLock is BreakLock)
+            {
+                OnLockBreaked?.Raise(1);
+            }
             currentLock = null;
         }
     }

@@ -16,14 +16,16 @@ public class MergeHandler
     public async UniTask<List<Slot>> Merge(List<MergeNode> chain)
     {
         List<Slot> potentialSlot = new List<Slot>();
-        if(chain == null || chain.Count <= 1) return potentialSlot;
+        if (chain == null || chain.Count <= 1) return potentialSlot;
         
         foreach (var node in chain)
         {
+            if (node == null || node.Slot == null) continue;
             if (node.Parent != null)
             {
-               await MergeStack(node.Slot.GetHexagonStack(),node.Parent.Slot.GetHexagonStack(),node.Slot); 
-               if(!node.Slot.IsEmpty && !potentialSlot.Contains(node.Slot)) potentialSlot.Add(node.Slot);
+                if (node.Parent.Slot == null) continue;
+                await MergeStack(node.Slot.GetHexagonStack(), node.Parent.Slot.GetHexagonStack(), node.Slot);
+                if (!node.Slot.IsEmpty && !potentialSlot.Contains(node.Slot)) potentialSlot.Add(node.Slot);
             }
             else if(!node.Slot.IsEmpty && !potentialSlot.Contains(node.Slot)) potentialSlot.Add(node.Slot);
         }
@@ -33,7 +35,9 @@ public class MergeHandler
 
     private async UniTask MergeStack(HexagonStack currentStack,HexagonStack targetStack,Slot currentSlot)
     {
-        if (targetStack == null || currentStack == null) return;
+        if (targetStack == null || currentStack == null || currentSlot == null ||
+            !targetStack.gameObject.activeInHierarchy || !currentStack.gameObject.activeInHierarchy ||
+            currentSlot.GetHexagonStack() != currentStack) return;
         Hexagon topTargetCell = targetStack.GetTopElement();
         
         if (topTargetCell == null) return;
@@ -53,11 +57,16 @@ public class MergeHandler
         await mergeVisual.VisualHandler(hexagons,targetPos);
         
         for(int i = 0;i<hexagons.Count;i++)
-            hexagons[i].SetParent(targetStack.transform);
-
-        if (currentStack.IsEmpty)
         {
-            currentSlot?.ReleaseSlot();
+            if (hexagons[i] != null && hexagons[i].gameObject.activeInHierarchy && targetStack.gameObject.activeInHierarchy)
+            {
+                hexagons[i].SetParent(targetStack.transform);
+            }
+        }
+
+        if (currentStack.gameObject.activeInHierarchy && currentStack.IsEmpty && currentSlot.GetHexagonStack() == currentStack)
+        {
+            currentSlot.ReleaseSlot();
             currentStack.Release();
         }
     }

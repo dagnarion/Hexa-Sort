@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ConnectedSlotFinder
 {
-    private Grid<Slot> grid;
+    private readonly Grid<Slot> grid;
 
     public ConnectedSlotFinder(Grid<Slot> grid)
     {
@@ -13,33 +13,34 @@ public class ConnectedSlotFinder
     public List<Slot> FindConnectedSameColorSlots(Vector2Int startPos)
     {
         List<Slot> results = new List<Slot>();
+        if (grid == null || !grid.IsOnGrid(startPos)) return results;
+
         Slot originSlot = grid.GetValue(startPos);
         if (originSlot == null || originSlot.IsEmpty) return results;
-            
-        FloodFill(startPos,originSlot,results);
+
+        Queue<Vector2Int> positions = new Queue<Vector2Int>();
+        HashSet<Slot> visited = new HashSet<Slot>();
+        positions.Enqueue(startPos);
+
+        while (positions.Count > 0)
+        {
+            Vector2Int currentPosition = positions.Dequeue();
+            Slot currentSlot = grid.GetValue(currentPosition);
+            if (!MergeRule.CanMerge(currentSlot, originSlot) || !visited.Add(currentSlot)) continue;
+
+            results.Add(currentSlot);
+            foreach (Vector2Int direction in Direction.GetDirections(currentPosition))
+            {
+                Vector2Int nextPosition = currentPosition + direction;
+                if (!grid.IsOnGrid(nextPosition)) continue;
+                Slot nextSlot = grid.GetValue(nextPosition);
+                if (nextSlot != null && !nextSlot.IsEmpty && !visited.Contains(nextSlot))
+                {
+                    positions.Enqueue(nextPosition);
+                }
+            }
+        }
+
         return results;
     }
-        
-        
-    private void FloodFill(Vector2Int currentPosition, Slot originSlot, List<Slot> slotHolder)
-    {
-        Slot currentSlot = grid.GetValue(currentPosition);
-        if(!MergeRule.CanMerge(currentSlot,originSlot)) return;
-            
-        slotHolder.Add(currentSlot);
-            
-        foreach (Vector2Int direct in Direction.GetDirections(currentPosition))
-        {
-            Vector2Int nextPosition = new Vector2Int(currentPosition.x + direct.x, currentPosition.y + direct.y);
-                
-            if(!grid.IsOnGrid(nextPosition)) continue;
-            Slot nextSlot = grid.GetValue(nextPosition);
-                
-            if(nextSlot == null || nextSlot.IsEmpty) continue;
-            if(slotHolder.Contains(nextSlot)) continue;
-                
-            FloodFill(nextPosition,currentSlot,slotHolder);
-        }
-    }
-        
 }

@@ -8,7 +8,6 @@ public class WinState : IState
     public async void Enter()
     {
         gameManager.InputManager.ChangeToUI();
-        gameManager.SaveLoadServices.Save();
         await gameManager.GridClearServices.Release();
         gameManager.WinLoseManager.ShowWin();
     }

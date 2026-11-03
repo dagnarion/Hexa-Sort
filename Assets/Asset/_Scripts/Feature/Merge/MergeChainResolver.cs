@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class MergeChainResolver
 {
@@ -28,12 +26,25 @@ public class MergeChainResolver
     private void TraversePostOrder(MergeNode node, List<MergeNode> result)
     {
         if (node == null) return;
-        foreach (var child in node.Child)
-        {
-            TraversePostOrder(child, result);
-        }
 
-        result.Add(node);
+        Stack<(MergeNode node, bool visited)> stack = new Stack<(MergeNode, bool)>();
+        stack.Push((node, false));
+        while (stack.Count > 0)
+        {
+            (MergeNode current, bool visited) = stack.Pop();
+            if (current == null) continue;
+            if (visited)
+            {
+                result.Add(current);
+                continue;
+            }
+
+            stack.Push((current, true));
+            for (int i = current.Child.Count - 1; i >= 0; i--)
+            {
+                stack.Push((current.Child[i], false));
+            }
+        }
     }
 
 

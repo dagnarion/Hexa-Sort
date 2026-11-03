@@ -17,6 +17,8 @@ public class HexagonStackSpawner : MonoBehaviour
     private bool canSpawn;
     private bool isSpawning;
     private CancellationTokenSource spawnCts;
+    public bool IsReady => color != null && color.Length > 0 && spawnPoint != null && spawnPoint.Length > 0;
+    public bool IsSpawning => isSpawning;
 
     private void OnEnable()
     {
@@ -45,9 +47,9 @@ public class HexagonStackSpawner : MonoBehaviour
         isSpawning = false;
     }
     
-    public async UniTask Spawn()
+    public async UniTask<bool> Spawn()
     {
-        if (color == null || color.Length == 0) return;
+        if (!IsReady || isSpawning) return false;
         CancelSpawn();
         spawnCts = CancellationTokenSource.CreateLinkedTokenSource(this.GetCancellationTokenOnDestroy());
         CancellationToken token = spawnCts.Token;
@@ -57,7 +59,8 @@ public class HexagonStackSpawner : MonoBehaviour
         {
             for (int i = 0; i < spawnPoint.Length; i++)
             {
-                if (token.IsCancellationRequested) return;
+                if (token.IsCancellationRequested) return false;
+                if (spawnPoint[i] == null) return false;
                 for (int j = spawnPoint[i].childCount - 1; j >= 0; j--)
                 {
                     if (spawnPoint[i].GetChild(j).TryGetComponent<HexagonStack>(out var oldStack))
@@ -65,12 +68,13 @@ public class HexagonStackSpawner : MonoBehaviour
                         ReleaseStack(oldStack);
                     }
                 }
-                SpawnHexagonStack(spawnPoint[i]);
+                if (!SpawnHexagonStack(spawnPoint[i])) return false;
                 await UniTask.WaitForSeconds(0.1f, cancellationToken: token);
             }
         }
         catch (System.OperationCanceledException)
         {
+            return false;
         }
         finally
         {
@@ -79,6 +83,14 @@ public class HexagonStackSpawner : MonoBehaviour
                 isSpawning = false;
             }
         }
+        return true;
+    }
+
+    public async UniTask<bool> ReshuffleAsync()
+    {
+        if (!IsReady || isSpawning) return false;
+        Release();
+        return await Spawn();
     }
 
     public void Release()
@@ -86,6 +98,7 @@ public class HexagonStackSpawner : MonoBehaviour
         CancelSpawn();
         foreach (var point in spawnPoint)
         {
+            if (point == null) continue;
             for (int i = point.childCount - 1; i >= 0; i--)
             {
                 HexagonStack hexagonStack = point.GetChild(i).gameObject.GetComponent<HexagonStack>();
@@ -130,10 +143,10 @@ public class HexagonStackSpawner : MonoBehaviour
         return true;
     }
 
-    private void SpawnHexagonStack(Transform target)
+    private bool SpawnHexagonStack(Transform target)
     {
         Color[] colorHolder = GetRandColour();
-        if (colorHolder == null) return;
+        if (colorHolder == null) return false;
 
         HexagonStack hexagonStack = HexagonStackPool.Get();
         hexagonStack.transform.DOKill();
@@ -158,6 +171,7 @@ public class HexagonStackSpawner : MonoBehaviour
         }
 
         hexagonStack.Render.Appear();
+        return true;
     }
 
     private void FillHexagonToHexagonStack(HexagonStack hexagonStack, Transform target, Color color)
