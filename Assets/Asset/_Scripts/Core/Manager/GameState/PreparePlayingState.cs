@@ -15,6 +15,7 @@ public class PreparePlayingState : IState
         isReady = false;
         if (isPreparing) return;
         isPreparing = true;
+        gameManager.LevelPopup.gameObject.SetActive(true);
         PrepareAsync().Forget();
     }
 
@@ -33,6 +34,9 @@ public class PreparePlayingState : IState
             gameManager.HexagonStackSpawner.Release();
             gameManager.SaveLoadServices.Load();
             await gameManager.HexagonStackSpawner.Spawn();
+            gameManager.LevelPopup.PopUp();
+            await UniTask.WaitForSeconds(1);
+            await gameManager.LevelPopup.FlyUp().ToUniTask();
             isReady = true;
         }
         finally

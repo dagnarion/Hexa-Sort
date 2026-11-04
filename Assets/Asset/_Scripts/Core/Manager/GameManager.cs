@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [field:SerializeField] public LevelPopup LevelPopup { get; private set; }
     [field: SerializeField] public Transform holder { get; private set; }
     [SerializeField] private ComponentPoolSO<Hexagon> hexagonPool;
     [SerializeField] private ComponentPoolSO<HexagonStack> hexagonStackPool;
