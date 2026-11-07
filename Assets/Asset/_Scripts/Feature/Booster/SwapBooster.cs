@@ -21,6 +21,7 @@ public class SwapBooster : SaveLoadAbstract
     private void Awake()
     {
         if (buttonLabel == null) buttonLabel = GetComponentInChildren<TMP_Text>();
+        UpdateButtonLabel();
     }
 
     private void OnEnable()
@@ -170,6 +171,7 @@ public class SwapBooster : SaveLoadAbstract
 
             selectedSlot = null;
             remain = Mathf.Max(0, remain - 1);
+            UpdateButtonLabel();
             isSelected = false;
             inputManager.CancelBoosterMode(this);
             dropEvent?.Raise(originSlot.Position);
@@ -209,5 +211,11 @@ public class SwapBooster : SaveLoadAbstract
         isProcessing = false;
         isCommitting = false;
         remain = Mathf.Max(0, gameData.SwapBoosterRemain);
+        UpdateButtonLabel();
+    }
+
+    private void UpdateButtonLabel()
+    {
+        if (buttonLabel != null) buttonLabel.text = remain.ToString();
     }
 }

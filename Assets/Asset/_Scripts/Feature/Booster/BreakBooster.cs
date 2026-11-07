@@ -19,6 +19,7 @@ public class BreakBooster : SaveLoadAbstract
     private void Awake()
     {
         if (buttonLabel == null) buttonLabel = GetComponentInChildren<TMP_Text>();
+        UpdateButtonLabel();
     }
 
     private void OnEnable()
@@ -100,6 +101,7 @@ public class BreakBooster : SaveLoadAbstract
             await ReleaseHexagonsAsync(hexagons);
 
             amount = Mathf.Max(0, amount - 1);
+            UpdateButtonLabel();
             inputManager?.CancelBoosterMode(this);
             saveLoadServices?.Save();
         }
@@ -139,5 +141,11 @@ public class BreakBooster : SaveLoadAbstract
         isSelected = false;
         isApplying = false;
         amount = Mathf.Max(0, gameData.BreakBoosterRemain);
+        UpdateButtonLabel();
+    }
+
+    private void UpdateButtonLabel()
+    {
+        if (buttonLabel != null) buttonLabel.text = amount.ToString();
     }
 }

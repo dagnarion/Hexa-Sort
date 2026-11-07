@@ -2,7 +2,7 @@
     "LevelID": 1,
     "Gold": 0,
     "RewardedLevelIDs": [],
-    "BreakBoosterRemain": 26,
-    "SwapBoosterRemain": 23,
-    "ShuffleBoosterRemain": 38
+    "BreakBoosterRemain": 23,
+    "SwapBoosterRemain": 16,
+    "ShuffleBoosterRemain": 37
 }

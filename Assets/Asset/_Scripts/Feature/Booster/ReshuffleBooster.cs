@@ -17,6 +17,7 @@ public class ReshuffleBooster : SaveLoadAbstract
     private void Awake()
     {
         if (buttonLabel == null) buttonLabel = GetComponentInChildren<TMP_Text>();
+        UpdateButtonLabel();
     }
 
     private void OnEnable()
@@ -66,6 +67,7 @@ public class ReshuffleBooster : SaveLoadAbstract
             if (!completed || !inputManager.IsGameplayEnabled || !inputManager.IsBoosterModeActive(this)) return;
 
             remain = Mathf.Max(0, remain - 1);
+            UpdateButtonLabel();
             saveLoadServices?.Save();
         }
         finally
@@ -96,5 +98,11 @@ public class ReshuffleBooster : SaveLoadAbstract
         isSelected = false;
         isProcessing = false;
         remain = Mathf.Max(0, gameData.ShuffleBoosterRemain);
+        UpdateButtonLabel();
+    }
+
+    private void UpdateButtonLabel()
+    {
+        if (buttonLabel != null) buttonLabel.text = remain.ToString();
     }
 }
