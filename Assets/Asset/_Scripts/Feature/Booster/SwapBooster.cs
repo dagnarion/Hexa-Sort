@@ -142,6 +142,7 @@ public class SwapBooster : SaveLoadAbstract
                 sequence.Kill();
                 originStack.transform.SetParent(slot.transform);
                 originStack.Render.SetUpAndDownPosition(slot.transform.position);
+                originStack.Render.SetOriginPosition(slot.transform.position);
                 originSlot.FillHexagonStackToSlot(null);
                 slot.FillHexagonStackToSlot(originStack);
                 await originStack.Render.MoveDown().ToUniTask();
@@ -164,6 +165,8 @@ public class SwapBooster : SaveLoadAbstract
                 targetStack.transform.SetParent(originSlot.transform);
                 originStack.Render.SetUpAndDownPosition(slot.transform.position);
                 targetStack.Render.SetUpAndDownPosition(originSlot.transform.position);
+                originStack.Render.SetOriginPosition(slot.transform.position);
+                targetStack.Render.SetOriginPosition(originSlot.transform.position);
                 originSlot.FillHexagonStackToSlot(targetStack);
                 slot.FillHexagonStackToSlot(originStack);
                 await UniTask.WhenAll(originStack.Render.MoveDown().ToUniTask(), targetStack.Render.MoveDown().ToUniTask());

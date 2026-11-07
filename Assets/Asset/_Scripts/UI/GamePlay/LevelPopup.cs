@@ -7,6 +7,7 @@ public class LevelPopup : MonoBehaviour
 {
     [SerializeField] private Image Panel;
     private Vector3 icon1Local, icon2Local;
+    private Vector3 icon1Scale, icon2Scale;
     private bool hasSavedLocal;
     [SerializeField] private float rotateDuration = 0.35f;
     private Sequence rotSq;
@@ -65,14 +66,12 @@ public class LevelPopup : MonoBehaviour
         CleanupSlots();
         icon1Local = Task1Icon.localPosition;
         icon2Local = Task2Icon.localPosition;
+        icon1Scale = Task1Icon.localScale;
+        icon2Scale = Task2Icon.localScale;
         hasSavedLocal = true;
-        Vector3 center = (icon1Local + icon2Local) * 0.5f;
-        Vector3 off1 = icon1Local - center;
-        Vector3 off2 = icon2Local - center;
         slot1 = MakeSlot(Task1Icon, RowBreak);
         slot2 = MakeSlot(Task2Icon, RowObstacle);
         LayoutRebuilder.ForceRebuildLayoutImmediate(TaskBG);
-
         sq = DOTween.Sequence();
         TaskBG.localScale = Vector3.zero;
         sq.Append(Panel.DOFade(0, 0.5f).SetEase(Ease.InOutCubic));
@@ -84,15 +83,9 @@ public class LevelPopup : MonoBehaviour
         sq.Join(goalText.DOFade(0, fadeDuration).SetEase(Ease.OutCubic));
         sq.Join(levelText.DOFade(0, fadeDuration).SetEase(Ease.OutCubic));
         sq.Insert(taskBGZoomTime, TaskBG.DOScale(1, taskBGZoomDuration).SetEase(Ease.OutSine));
-        sq.Insert(flyDownDuration, DOVirtual.Float(0f, -90f, flyUpDuration, a =>
-        {
-            var q = Quaternion.Euler(0f, 0f, a);
-            Task1Icon.localPosition = center + q * off1;
-            Task2Icon.localPosition = center + q * off2;
-        }).SetEase(Ease.OutCubic));
 
         float flyStart = Mathf.Max(taskBGZoomTime + taskBGZoomDuration, flyDownDuration + flyUpDuration);
-        sq.InsertCallback(flyStart, FlyIconsToRows);
+        sq.InsertCallback(flyStart, RotateIconsIntoGoalHud);
         sq.OnComplete(() =>
         {
             Panel.enabled = false;
@@ -102,11 +95,30 @@ public class LevelPopup : MonoBehaviour
         return sq;
     }
 
+    private void RotateIconsIntoGoalHud()
+    {
+        RectTransform goalHud = RowBreak.parent as RectTransform;
+        Vector3 center = goalHud.TransformPoint(goalHud.rect.center);
+        Vector3 pairCenter = (Task1Icon.position + Task2Icon.position) * 0.5f;
+        Vector3 off1 = (Task1Icon.position - pairCenter) * 0.55f;
+        Vector3 off2 = (Task2Icon.position - pairCenter) * 0.55f;
+
+        rotSq = DOTween.Sequence();
+        rotSq.Append(Task1Icon.DOMove(center + off1, rotateDuration).SetEase(Ease.OutCubic));
+        rotSq.Join(Task2Icon.DOMove(center + off2, rotateDuration).SetEase(Ease.OutCubic));
+        rotSq.Join(Task1Icon.DORotate(Task1Icon.eulerAngles + Vector3.forward * 360f, rotateDuration, RotateMode.FastBeyond360)
+            .SetEase(Ease.OutCubic));
+        rotSq.Join(Task2Icon.DORotate(Task2Icon.eulerAngles + Vector3.forward * 360f, rotateDuration, RotateMode.FastBeyond360)
+            .SetEase(Ease.OutCubic));
+        rotSq.OnComplete(FlyIconsToRows);
+    }
+
     private void FlyIconsToRows()
     {
         iconSq = DOTween.Sequence();
         Fly(Task1Icon, slot1, 0f);
         Fly(Task2Icon, slot2, 0.05f);
+        iconSq.OnComplete(() => hasSavedLocal = false);
     }
 
     private void Fly(RectTransform icon, RectTransform slot, float delay)
@@ -115,18 +127,34 @@ public class LevelPopup : MonoBehaviour
             .SetEase(Ease.OutCubic)
             .OnComplete(() =>
             {
-                slot.GetComponent<CanvasGroup>().alpha = 1f;
-                icon.gameObject.SetActive(false);
+                Transform row = slot.parent;
+                int siblingIndex = slot.GetSiblingIndex();
+                icon.SetParent(row, false);
+                icon.anchorMin = slot.anchorMin;
+                icon.anchorMax = slot.anchorMax;
+                icon.pivot = slot.pivot;
+                icon.sizeDelta = slot.sizeDelta;
+                icon.anchoredPosition3D = slot.anchoredPosition3D;
+                icon.localRotation = slot.localRotation;
+                icon.localScale = slot.localScale;
+                icon.SetSiblingIndex(siblingIndex);
+                icon.gameObject.SetActive(true);
+                slot.gameObject.SetActive(false);
+                Destroy(slot.gameObject);
+                if (slot == slot1) slot1 = null;
+                if (slot == slot2) slot2 = null;
+                LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)row);
             }));
     }
 
     private RectTransform MakeSlot(RectTransform src, RectTransform row)
     {
-        var s = Instantiate(src, row, false);
-        s.gameObject.SetActive(true);
-        if (!s.TryGetComponent(out CanvasGroup cg)) cg = s.gameObject.AddComponent<CanvasGroup>();
-        cg.alpha = 0f;
-        return s;
+        RectTransform slot = Instantiate(src, row, false);
+        slot.gameObject.SetActive(true);
+        if (!slot.TryGetComponent(out CanvasGroup canvasGroup))
+            canvasGroup = slot.gameObject.AddComponent<CanvasGroup>();
+        canvasGroup.alpha = 0f;
+        return slot;
     }
 
     private void CleanupSlots()
@@ -135,6 +163,8 @@ public class LevelPopup : MonoBehaviour
         {
             Task1Icon.localPosition = icon1Local;
             Task2Icon.localPosition = icon2Local;
+            Task1Icon.localScale = icon1Scale;
+            Task2Icon.localScale = icon2Scale;
         }
 
         DestroySlot(ref slot1);
@@ -143,11 +173,11 @@ public class LevelPopup : MonoBehaviour
         Task2Icon.gameObject.SetActive(true);
     }
 
-    private static void DestroySlot(ref RectTransform s)
+    private static void DestroySlot(ref RectTransform slot)
     {
-        if (!s) return;
-        s.SetParent(null);
-        Destroy(s.gameObject);
-        s = null;
+        if (!slot) return;
+        slot.SetParent(null);
+        Destroy(slot.gameObject);
+        slot = null;
     }
 }

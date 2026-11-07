@@ -97,7 +97,7 @@ public class GridController : MonoBehaviour
         Vector3 pos = value.Item2;
         if (hexaStack == null || !hexaStack.gameObject.activeInHierarchy) return;
         if (hexaStack.GetComponentInParent<Slot>() != null) return;
-        if (mergeService == null || !mergeService.IsAcceptingCommands || !mergeService.IsFinishAllMerge())
+        if (mergeService == null || !mergeService.IsAcceptingCommands)
         {
             ReturnToOrigin(hexaStack);
             ClearCurrentSelection();
@@ -133,6 +133,7 @@ public class GridController : MonoBehaviour
         
         hexaStack.Render.DropToTargetPosition(slot.transform.position);
         hexaStack.transform.SetParent(slot.transform);
+        hexaStack.Render.SetOriginPosition(slot.transform.position);
         hexaStack.DisableAllCollider();
         ClearCurrentSelection();
         dropHexagonChannel?.Raise(gridPos);
