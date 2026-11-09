@@ -34,11 +34,87 @@ public class LevelPopup : MonoBehaviour
     private RectTransform slot1, slot2;
     private float originalAlpha;
 
-    private void Start()
+    private RectTransformState bgState, taskRectState, taskBgState;
+    private RectTransformState task1State, task2State;
+    private Color panelColor, bgColor, goalColor, levelColor;
+    private bool initialPanelEnabled, initialRaycastTarget;
+
+    private struct RectTransformState
     {
-        originalAlpha = Panel.color.a;
+        public Transform parent;
+        public int siblingIndex;
+        public Vector2 anchorMin, anchorMax, pivot, sizeDelta, anchoredPosition;
+        public Vector3 anchoredPosition3D, localPosition, localScale;
+        public Quaternion localRotation;
+
+        public RectTransformState(RectTransform rect)
+        {
+            parent = rect.parent;
+            siblingIndex = rect.GetSiblingIndex();
+            anchorMin = rect.anchorMin;
+            anchorMax = rect.anchorMax;
+            pivot = rect.pivot;
+            sizeDelta = rect.sizeDelta;
+            anchoredPosition = rect.anchoredPosition;
+            anchoredPosition3D = rect.anchoredPosition3D;
+            localPosition = rect.localPosition;
+            localScale = rect.localScale;
+            localRotation = rect.localRotation;
+        }
+
+        public void Restore(RectTransform rect)
+        {
+            rect.SetParent(parent, false);
+            rect.anchorMin = anchorMin;
+            rect.anchorMax = anchorMax;
+            rect.pivot = pivot;
+            rect.sizeDelta = sizeDelta;
+            rect.anchoredPosition3D = anchoredPosition3D;
+            rect.localPosition = localPosition;
+            rect.localRotation = localRotation;
+            rect.localScale = localScale;
+            rect.SetSiblingIndex(siblingIndex);
+        }
     }
 
+    private void Awake()
+    {
+        originalAlpha = Panel.color.a;
+        panelColor = Panel.color;
+        bgColor = bgImage.color;
+        goalColor = goalText.color;
+        levelColor = levelText.color;
+        initialPanelEnabled = Panel.enabled;
+        initialRaycastTarget = Panel.raycastTarget;
+        bgState = new RectTransformState(BG);
+        taskRectState = new RectTransformState(TaskRect);
+        taskBgState = new RectTransformState(TaskBG);
+        task1State = new RectTransformState(Task1Icon);
+        task2State = new RectTransformState(Task2Icon);
+    }
+    public void ResetValues()
+    {
+        if (sq != null) sq.Kill();
+        if (iconSq != null) iconSq.Kill();
+        if (rotSq != null) rotSq.Kill();
+        CleanupSlots();
+
+        bgState.Restore(BG);
+        taskRectState.Restore(TaskRect);
+        taskBgState.Restore(TaskBG);
+        task1State.Restore(Task1Icon);
+        task2State.Restore(Task2Icon);
+
+        Panel.color = panelColor;
+        Panel.enabled = initialPanelEnabled;
+        Panel.raycastTarget = initialRaycastTarget;
+        bgImage.color = bgColor;
+        goalText.color = goalColor;
+        levelText.color = levelColor;
+        hasSavedLocal = false;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(TaskBG);
+    }
+    
     public void PopUp()
     {
         sq.Kill();

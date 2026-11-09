@@ -103,7 +103,6 @@ public class BreakBooster : SaveLoadAbstract
             amount = Mathf.Max(0, amount - 1);
             UpdateButtonLabel();
             inputManager?.CancelBoosterMode(this);
-            saveLoadServices?.Save();
         }
         finally
         {

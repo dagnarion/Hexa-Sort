@@ -68,7 +68,6 @@ public class ReshuffleBooster : SaveLoadAbstract
 
             remain = Mathf.Max(0, remain - 1);
             UpdateButtonLabel();
-            saveLoadServices?.Save();
         }
         finally
         {

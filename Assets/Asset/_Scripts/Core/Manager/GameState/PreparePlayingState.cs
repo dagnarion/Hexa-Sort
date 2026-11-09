@@ -15,6 +15,7 @@ public class PreparePlayingState : IState
         isReady = false;
         if (isPreparing) return;
         isPreparing = true;
+        gameManager.LevelPopup.ResetValues();
         gameManager.LevelPopup.gameObject.SetActive(true);
         PrepareAsync().Forget();
     }
@@ -52,6 +53,5 @@ public class PreparePlayingState : IState
 
     public void Exit()
     {
-       
     }
 }

@@ -179,7 +179,6 @@ public class SwapBooster : SaveLoadAbstract
             inputManager.CancelBoosterMode(this);
             dropEvent?.Raise(originSlot.Position);
             dropEvent?.Raise(slot.Position);
-            saveLoadServices?.Save();
         }
         finally
         {
