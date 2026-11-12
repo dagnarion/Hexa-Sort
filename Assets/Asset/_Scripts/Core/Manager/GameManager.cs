@@ -2,6 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using NaughtyAttributes;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,7 +11,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ComponentPoolSO<Hexagon> hexagonPool;
     [SerializeField] private ComponentPoolSO<HexagonStack> hexagonStackPool;
     [SerializeField] private ComponentPoolSO<Slot> slotPool;
-
+    [SerializeField] private Canvas MainMenuCanvas;
+    [SerializeField] private Canvas GamePlayCanvas;
     [field: SerializeField] public SaveLoadServices SaveLoadServices { get; private set; }
     [field: SerializeField] public GridClearServices GridClearServices { get; private set; }
     [field: SerializeField] public GridController GridController { get; private set; }
@@ -19,18 +21,23 @@ public class GameManager : MonoBehaviour
     public WinLoseManager WinLoseManager { get; private set; }
     [field: SerializeField] public InputManager InputManager { get; private set; }
     [field: SerializeField] public HexagonStackSpawner HexagonStackSpawner { get; private set; }
+    [Header("Main Menu Flow")]
+    [SerializeField] private Button playButton;
+    [SerializeField] private CanvasTransition canvasTransition;
     public StateMachine StateMachine { get; private set; }
 
     public WinState WinState { get; private set; }
     public LoseState LoseState { get; private set; }
     public PlayingState PlayingState { get; private set; }
-    public UIState UIState { get; private set; }
+    public MainMenuState MainMenuState { get; private set; }
     public PausedState PausedState { get; private set; }
     public PreparePlayingState PreparePlayingState { get; private set; }
+    private bool isStartingGame;
 
     private void Awake()
     {
         Init();
+        BindMainMenuPlayButton();
     }
 
     private void Start()
@@ -38,7 +45,7 @@ public class GameManager : MonoBehaviour
         hexagonPool.InitPool(holder);
         hexagonStackPool.InitPool(holder);
         slotPool.InitPool(holder);
-        StateMachine.ForceChangeState(PreparePlayingState);
+        StateMachine.ForceChangeState(MainMenuState);
         InputManager.ChangeToUI();
     }
 
@@ -50,9 +57,68 @@ public class GameManager : MonoBehaviour
         WinState = new WinState(this);
         LoseState = new LoseState(this);
         PlayingState = new PlayingState(this);
-        UIState = new UIState(this);
+        MainMenuState = new MainMenuState(this);
         PausedState = new PausedState(this);
         PreparePlayingState = new PreparePlayingState(this);
+    }
+
+    private void BindMainMenuPlayButton()
+    {
+        if (playButton == null)
+        {
+            foreach (Button button in FindObjectsByType<Button>(FindObjectsSortMode.None))
+            {
+                if (button.gameObject.name != "PlayButton_Level6") continue;
+                playButton = button;
+                break;
+            }
+        }
+
+        if (canvasTransition == null)
+            canvasTransition = FindFirstObjectByType<CanvasTransition>();
+
+        if (playButton == null)
+        {
+            Debug.LogWarning("GameManager could not find a Button named PlayButton_Level6.", this);
+            return;
+        }
+
+        playButton.onClick.RemoveListener(MainMenuState.OnPlayPressed);
+        playButton.onClick.AddListener(MainMenuState.OnPlayPressed);
+    }
+
+    internal async void StartGameFromMainMenu()
+    {
+        if (isStartingGame || StateMachine.CurrentState != MainMenuState)
+            return;
+
+        isStartingGame = true;
+
+        if (canvasTransition == null)
+        {
+            Debug.LogWarning("CanvasTransition is not present or assigned. Starting without the transition effect.", this);
+            StateMachine.ChangeState(PreparePlayingState);
+            isStartingGame = false;
+            return;
+        }
+
+        try
+        {
+
+            await canvasTransition.PlayAsync(() =>
+            {
+                if (StateMachine.CurrentState == MainMenuState)
+                {
+                    MainMenuCanvas.gameObject.SetActive(false);
+                    GamePlayCanvas.gameObject.SetActive(true);
+                    StateMachine.ChangeState(PreparePlayingState);
+                }
+            });
+        }
+        finally
+        {
+            isStartingGame = false;
+        }
     }
 
     private void Update()

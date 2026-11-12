@@ -1,4 +1,5 @@
 using System;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -67,6 +68,8 @@ public class CanvasTransition : MonoBehaviour
         squareCover.anchoredPosition = squareStartPos;
         if (!SetCircleRadius(0f))
         {
+            onCovered?.Invoke();
+            gameObject.SetActive(false);
             isPlaying = false;
             return;
         }
@@ -75,7 +78,6 @@ public class CanvasTransition : MonoBehaviour
 
         onCovered?.Invoke();
 
-        // Đợi 1 frame để Unity tải xong Level và dựng xong UI mới dưới mặt nạ che màn hình
         await Awaitable.NextFrameAsync();
 
         squareCover.gameObject.SetActive(false);
@@ -126,7 +128,7 @@ public class CanvasTransition : MonoBehaviour
 
         SetCircleRadius(radiusCurve.Evaluate(1f));
     }
-
+    
     public void Preview(float normalizedTime)
     {
         EnsureCircleMaterial();
