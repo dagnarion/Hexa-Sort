@@ -1,8 +1,10 @@
 {
     "LevelID": 1,
     "Gold": 0,
-    "RewardedLevelIDs": [],
-    "BreakBoosterRemain": 22,
-    "SwapBoosterRemain": 7,
-    "ShuffleBoosterRemain": 19
+    "RewardedLevelIDs": [
+        0
+    ],
+    "BreakBoosterRemain": 19,
+    "SwapBoosterRemain": 5,
+    "ShuffleBoosterRemain": 17
 }

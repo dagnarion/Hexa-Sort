@@ -47,18 +47,18 @@ public class WinLoseManager : MonoBehaviour
 
     public void ShowWin()
     {
-        int awardedReward = 0;
-        if (gameManager.LevelLoader != null)
-        {
-            bool rewardGranted = gameManager.SaveLoadServices.CompleteLevelAndSave(
-                gameManager.LevelLoader.CurrentLevelID,
-                gameManager.LevelLoader.CurrentLevelReward);
-            if (rewardGranted)
-            {
-                awardedReward = Mathf.Max(0, gameManager.LevelLoader.CurrentLevelReward);
-            }
-        }
+        int awardedReward = CompleteWinAndSave();
         ShowResult(Result.Win, awardedReward);
+    }
+
+    public int CompleteWinAndSave()
+    {
+        if (gameManager.LevelLoader == null || gameManager.SaveLoadServices == null) return 0;
+
+        bool rewardGranted = gameManager.SaveLoadServices.CompleteLevelAndSave(
+            gameManager.LevelLoader.CurrentLevelID,
+            gameManager.LevelLoader.CurrentLevelReward);
+        return rewardGranted ? Mathf.Max(0, gameManager.LevelLoader.CurrentLevelReward) : 0;
     }
 
     public void ShowLose()

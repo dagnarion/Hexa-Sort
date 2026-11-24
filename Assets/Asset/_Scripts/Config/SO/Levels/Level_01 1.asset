@@ -66,7 +66,7 @@ MonoBehaviour:
     stackColors: []
   - isActive: 1
     slotType: 0
-    lockType: 2
+    lockType: 0
     breakHitCount: 5
     taskTargetScore: 78
     hasStack: 0
@@ -74,7 +74,7 @@ MonoBehaviour:
     stackColors: []
   - isActive: 1
     slotType: 0
-    lockType: 2
+    lockType: 0
     breakHitCount: 5
     taskTargetScore: 50
     hasStack: 0

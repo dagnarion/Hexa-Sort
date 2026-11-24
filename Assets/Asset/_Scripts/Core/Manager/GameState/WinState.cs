@@ -9,7 +9,8 @@ public class WinState : IState
     {
         gameManager.InputManager.ChangeToUI();
         await gameManager.GridClearServices.Release();
-        gameManager.WinLoseManager.ShowWin();
+        gameManager.WinLoseManager.CompleteWinAndSave();
+        gameManager.StateMachine.ChangeState(gameManager.PreparePlayingState);
     }
 
     public void Tick()
