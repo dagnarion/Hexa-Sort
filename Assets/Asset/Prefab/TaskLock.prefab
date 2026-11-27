@@ -5001,8 +5001,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2017938491565198891}
-  - component: {fileID: 2858503902660748324}
-  - component: {fileID: 2233775366573672126}
   - component: {fileID: 2081290607865263419}
   m_Layer: 0
   m_Name: TaskLockRender
@@ -5024,8 +5022,42 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 6923872267048800132}
   - {fileID: 8209493641791514792}
   m_Father: {fileID: 3894878752781459757}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6923872267048800131
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6923872267048800132}
+  - component: {fileID: 2858503902660748324}
+  - component: {fileID: 2233775366573672126}
+  m_Layer: 0
+  m_Name: Glass plate
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6923872267048800132
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6923872267048800131}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.06, z: 0}
+  m_LocalScale: {x: 1, y: 0.4, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2017938491565198891}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2858503902660748324
 MeshFilter:
@@ -5033,7 +5065,7 @@ MeshFilter:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332414174810631370}
+  m_GameObject: {fileID: 6923872267048800131}
   m_Mesh: {fileID: -4575734979276873811, guid: cd6af039c671a384f8e6644b12f7a4e5, type: 3}
 --- !u!23 &2233775366573672126
 MeshRenderer:
@@ -5041,10 +5073,10 @@ MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332414174810631370}
+  m_GameObject: {fileID: 6923872267048800131}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
@@ -5060,7 +5092,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9aa56db9b69e4a5689d1e016cae55fea, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5096,7 +5128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c46974504f2c4bd3a15eac5950d7b961, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TaskLockRender
-  lockColor: {r: 0.0950673, g: 0, b: 0.16037738, a: 1}
   render: {fileID: 2233775366573672126}
   icon: {fileID: 1920904696012131152}
   label: {fileID: 2049136168237628651}
@@ -5415,7 +5446,7 @@ Transform:
   m_GameObject: {fileID: 5377450864130560429}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.14, z: 0}
+  m_LocalPosition: {x: 0, y: 0.02, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5590,7 +5621,7 @@ Transform:
   m_GameObject: {fileID: 7191804494393785582}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.25881907, z: 0, w: 0.9659259}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

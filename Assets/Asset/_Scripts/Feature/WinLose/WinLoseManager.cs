@@ -18,6 +18,9 @@ public class WinLoseManager : MonoBehaviour
     private Button backToMenuButton;
     private Result currentResult;
     private bool isTransitioning;
+    private bool winRecorded;
+
+    public void BeginAttempt() => winRecorded = false;
 
     private void Awake()
     {
@@ -53,7 +56,9 @@ public class WinLoseManager : MonoBehaviour
 
     public int CompleteWinAndSave()
     {
-        if (gameManager.LevelLoader == null || gameManager.SaveLoadServices == null) return 0;
+        if (winRecorded || gameManager.LevelLoader == null || gameManager.SaveLoadServices == null ||
+            gameManager.LevelLoader.CurrentLevelID < 0) return 0;
+        winRecorded = true;
 
         bool rewardGranted = gameManager.SaveLoadServices.CompleteLevelAndSave(
             gameManager.LevelLoader.CurrentLevelID,
@@ -91,6 +96,7 @@ public class WinLoseManager : MonoBehaviour
     private void RetryAfterLose()
     {
         if (currentResult != Result.Lose || isTransitioning) return;
+        if (!OutOfLivesPopup.CanPlay(gameManager.SaveLoadServices)) return;
         isTransitioning = true;
         resultPanel.SetActive(false);
         gameManager.StateMachine.ChangeState(gameManager.PreparePlayingState);

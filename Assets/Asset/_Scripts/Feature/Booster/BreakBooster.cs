@@ -98,10 +98,10 @@ public class BreakBooster : SaveLoadAbstract
 
             stack.Clear();
             stack.Release();
-            await ReleaseHexagonsAsync(hexagons);
-
             amount = Mathf.Max(0, amount - 1);
+            saveLoadServices.SaveInventory(this);
             UpdateButtonLabel();
+            await ReleaseHexagonsAsync(hexagons);
             inputManager?.CancelBoosterMode(this);
         }
         finally
@@ -129,8 +129,6 @@ public class BreakBooster : SaveLoadAbstract
 
     public override void Save(GameData gameData)
     {
-        inputManager?.CancelBoosterMode(this);
-        isSelected = false;
         gameData.BreakBoosterRemain = amount;
     }
 
@@ -139,6 +137,11 @@ public class BreakBooster : SaveLoadAbstract
         inputManager?.CancelBoosterMode(this);
         isSelected = false;
         isApplying = false;
+        RefreshInventory(gameData);
+    }
+
+    public override void RefreshInventory(GameData gameData)
+    {
         amount = Mathf.Max(0, gameData.BreakBoosterRemain);
         UpdateButtonLabel();
     }

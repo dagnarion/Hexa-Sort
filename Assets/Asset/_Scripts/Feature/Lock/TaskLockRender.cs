@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class TaskLockRender : MonoBehaviour
 {
-    [SerializeField] private Color lockColor;
     [SerializeField] private MeshRenderer render;
     [SerializeField] private SpriteRenderer icon;
     [SerializeField] private TextMeshPro label;
@@ -40,6 +39,7 @@ public class TaskLockRender : MonoBehaviour
         iconScale = icon.transform.localScale;
         iconRotation = icon.transform.localRotation;
         tint = new MaterialPropertyBlock();
+        plateColor = render.sharedMaterial.GetColor(BaseColor);
         var particles = stars.main;
         particles.cullingMode = ParticleSystemCullingMode.AlwaysSimulate;
         for (int i = 0; i < ring.positionCount; i++)
@@ -53,7 +53,7 @@ public class TaskLockRender : MonoBehaviour
     {
         ResetRender();
         label.SetText("{0}", target);
-        SetStack(null);
+        SetGlow(0f);
     }
 
     public void SetStack(HexagonStack stack)
@@ -61,8 +61,6 @@ public class TaskLockRender : MonoBehaviour
         var top = stack != null ? stack.GetTopElement() : null;
         topVisual = top != null ? top.render.transform : null;
         if (topVisual != null) topPosition = topVisual.localPosition;
-        plateColor = top != null ? top.ColorType : lockColor;
-        SetGlow(0f);
     }
 
     private void SetGlow(float amount)

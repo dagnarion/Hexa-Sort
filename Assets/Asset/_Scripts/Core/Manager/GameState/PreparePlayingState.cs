@@ -14,6 +14,7 @@ public class PreparePlayingState : IState
         gameManager.InputManager.ChangeToUI();
         isReady = false;
         if (isPreparing) return;
+        gameManager.WinLoseManager.BeginAttempt();
         isPreparing = true;
         gameManager.LevelPopup.ResetValues();
         gameManager.LevelPopup.gameObject.SetActive(true);

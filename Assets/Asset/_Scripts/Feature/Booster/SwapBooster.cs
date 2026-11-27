@@ -143,6 +143,9 @@ public class SwapBooster : SaveLoadAbstract
 
             originSlot.FillHexagonStackToSlot(targetStack);
             slot.FillHexagonStackToSlot(originStack);
+            remain = Mathf.Max(0, remain - 1);
+            saveLoadServices.SaveInventory(this);
+            UpdateButtonLabel();
             Sequence landing = DOTween.Sequence();
             landing.Join(originStack.Render.MoveDown());
             if (targetStack != null)
@@ -150,8 +153,6 @@ public class SwapBooster : SaveLoadAbstract
             await landing.ToUniTask();
 
             selectedSlot = null;
-            remain = Mathf.Max(0, remain - 1);
-            UpdateButtonLabel();
             isSelected = false;
             inputManager.CancelBoosterMode(this);
             dropEvent?.Raise(originSlot.Position);
@@ -176,9 +177,6 @@ public class SwapBooster : SaveLoadAbstract
 
     public override void Save(GameData gameData)
     {
-        inputManager?.CancelBoosterMode(this);
-        ClearSelectedSlot(false);
-        isSelected = false;
         gameData.SwapBoosterRemain = remain;
     }
 
@@ -189,6 +187,11 @@ public class SwapBooster : SaveLoadAbstract
         isSelected = false;
         isProcessing = false;
         isCommitting = false;
+        RefreshInventory(gameData);
+    }
+
+    public override void RefreshInventory(GameData gameData)
+    {
         remain = Mathf.Max(0, gameData.SwapBoosterRemain);
         UpdateButtonLabel();
     }

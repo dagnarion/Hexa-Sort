@@ -1,10 +1,15 @@
 {
+    "MissingLives": 0,
+    "NextLifeUtcSeconds": 0,
     "LevelID": 1,
+    "WheelWins": 1,
+    "WheelSpins": 0,
+    "WheelProgressInitialized": true,
     "Gold": 0,
     "RewardedLevelIDs": [
         0
     ],
     "BreakBoosterRemain": 19,
     "SwapBoosterRemain": 5,
-    "ShuffleBoosterRemain": 17
+    "ShuffleBoosterRemain": 16
 }

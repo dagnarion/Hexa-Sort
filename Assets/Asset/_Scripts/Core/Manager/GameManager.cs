@@ -33,6 +33,17 @@ public class GameManager : MonoBehaviour
     public PausedState PausedState { get; private set; }
     public PreparePlayingState PreparePlayingState { get; private set; }
     private bool isStartingGame;
+    private static bool playOnSceneStart;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetPlayRequest() => playOnSceneStart = false;
+
+    public static void PlayFromStandaloneMenu(SaveLoadServices save)
+    {
+        if (playOnSceneStart || !OutOfLivesPopup.CanPlay(save)) return;
+        playOnSceneStart = true;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("GamePlay");
+    }
 
     private void Awake()
     {
@@ -47,6 +58,11 @@ public class GameManager : MonoBehaviour
         slotPool.InitPool(holder);
         StateMachine.ForceChangeState(MainMenuState);
         InputManager.ChangeToUI();
+        if (playOnSceneStart)
+        {
+            playOnSceneStart = false;
+            StartGameFromMainMenu();
+        }
     }
 
     private void Init()
@@ -92,6 +108,7 @@ public class GameManager : MonoBehaviour
         if (isStartingGame || StateMachine.CurrentState != MainMenuState)
             return;
 
+        if (!OutOfLivesPopup.CanPlay(SaveLoadServices)) return;
         isStartingGame = true;
 
         if (canvasTransition == null)

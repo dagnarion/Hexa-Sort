@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using RewardKind = SaveLoadServices.RewardKind;
 
 namespace HexaSort.UI
 {
@@ -23,31 +24,45 @@ namespace HexaSort.UI
         [SerializeField] private int maxFullTurns = 7;
 
         private bool m_IsSpinning = false;
-        private float m_LastTickAngle = 0f;
+        private SaveLoadServices save;
+        private TMP_Text progressText;
+        private TMP_Text spinText;
+        private RectTransform progressFill;
+        private RectTransform celebratingPrize;
+        private Vector3 originalScale;
         private Coroutine m_SpinCoroutine;
 
-        [System.Serializable]
-        public struct PrizeData
+        private readonly struct PrizeData
         {
-            public string name;
-            public int amount;
-            public int segmentIndex; // 0 to 7
+            public readonly RewardKind Kind;
+            public readonly int Amount;
+
+            public PrizeData(RewardKind kind, int amount)
+            {
+                Kind = kind;
+                Amount = amount;
+            }
         }
 
-        private readonly PrizeData[] m_Prizes = new PrizeData[]
+        // Clockwise from the first segment to the right of the pointer.
+        private static readonly PrizeData[] m_Prizes =
         {
-            new PrizeData { name = "Coins", amount = 100, segmentIndex = 0 },      // Yellow (Top)
-            new PrizeData { name = "Hand Booster", amount = 1, segmentIndex = 1 }, // Cyan (Top-Right)
-            new PrizeData { name = "Coins", amount = 10, segmentIndex = 2 },       // Blue (Right)
-            new PrizeData { name = "Swap Booster", amount = 1, segmentIndex = 3 }, // Violet (Bottom-Right)
-            new PrizeData { name = "Coins", amount = 5, segmentIndex = 4 },        // Purple (Bottom)
-            new PrizeData { name = "Hammer Booster", amount = 1, segmentIndex = 5 },// Magenta (Bottom-Left)
-            new PrizeData { name = "Coins", amount = 5, segmentIndex = 6 },        // Hot Pink (Left)
-            new PrizeData { name = "Coins", amount = 10, segmentIndex = 7 }       // Coral/Orange (Top-Left)
+            new PrizeData(RewardKind.Coins, 100),
+            new PrizeData(RewardKind.Swap, 1),
+            new PrizeData(RewardKind.Coins, 10),
+            new PrizeData(RewardKind.Reshuffle, 1),
+            new PrizeData(RewardKind.Coins, 5),
+            new PrizeData(RewardKind.Break, 1),
+            new PrizeData(RewardKind.Coins, 5),
+            new PrizeData(RewardKind.Coins, 10)
         };
 
         private void Awake()
         {
+            save = SaveLoadServices.FindForMenu(gameObject);
+            progressText = transform.Find("ProgressCapsule/ProgressText").GetComponent<TMP_Text>();
+            progressFill = (RectTransform)transform.Find("ProgressCapsule/Fill");
+            spinText = transform.Find("SpinButton/SpinText").GetComponent<TMP_Text>();
             if (wheelDiscTransform == null)
             {
                 var rotator = transform.Find("WheelArea/WheelRotator");
@@ -71,13 +86,9 @@ namespace HexaSort.UI
             }
             if (prizeItemTransforms == null || prizeItemTransforms.Length == 0 || prizeItemTransforms[0] == null)
             {
-                var list = new System.Collections.Generic.List<RectTransform>();
-                for (int i = 0; i < 8; i++)
-                {
-                    var p = transform.Find($"WheelArea/WheelRotator/Prize_{i}");
-                    if (p != null) list.Add(p.GetComponent<RectTransform>());
-                }
-                prizeItemTransforms = list.ToArray();
+                prizeItemTransforms = new RectTransform[m_Prizes.Length];
+                for (int i = 0; i < prizeItemTransforms.Length; i++)
+                    prizeItemTransforms[i] = wheelDiscTransform.Find($"DiscImage/Prize_{i}") as RectTransform;
             }
 
             if (spinButton != null)
@@ -89,6 +100,24 @@ namespace HexaSort.UI
             {
                 closeButton.onClick.AddListener(OnCloseClicked);
             }
+        }
+
+        private void OnEnable()
+        {
+            save.WheelChanged += RefreshWheel;
+            RefreshWheel();
+        }
+
+        private void RefreshWheel()
+        {
+            int wins = save.WheelWins;
+            int spins = save.WheelSpins;
+            progressText.text = $"{wins}/{GameData.WinsPerSpin}";
+            spinText.text = $"SPIN ({spins})";
+            var bar = (RectTransform)progressFill.parent;
+            float width = Mathf.Max(0f, bar.rect.width - 2f * progressFill.anchoredPosition.x);
+            progressFill.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width * wins / GameData.WinsPerSpin);
+            spinButton.interactable = !m_IsSpinning && spins > 0;
         }
 
         private void OnDestroy()
@@ -106,15 +135,17 @@ namespace HexaSort.UI
 
         private void OnDisable()
         {
+            save.WheelChanged -= RefreshWheel;
             if (m_SpinCoroutine != null)
             {
                 StopCoroutine(m_SpinCoroutine);
                 m_SpinCoroutine = null;
             }
             m_IsSpinning = false;
-            if (spinButton != null)
+            if (celebratingPrize != null)
             {
-                spinButton.interactable = true;
+                celebratingPrize.localScale = originalScale;
+                celebratingPrize = null;
             }
         }
 
@@ -129,7 +160,8 @@ namespace HexaSort.UI
 
         public void SpinToPrize(int prizeIndex)
         {
-            if (m_IsSpinning) return;
+            if (m_IsSpinning || !isActiveAndEnabled || save.WheelSpins == 0 ||
+                prizeIndex < 0 || prizeIndex >= m_Prizes.Length) return;
 
             if (m_SpinCoroutine != null)
             {
@@ -161,7 +193,6 @@ namespace HexaSort.UI
                 float totalDelta = fullTurns * 360f + degreesToTarget;
                 float endAngle = currentAngle - totalDelta;
 
-                m_LastTickAngle = currentAngle;
                 float elapsed = 0f;
 
                 while (elapsed < spinDuration)
@@ -173,11 +204,14 @@ namespace HexaSort.UI
 
                     wheelDiscTransform.localEulerAngles = new Vector3(0f, 0f, angle);
 
-                    yield return null;
+                    if (elapsed < spinDuration) yield return null;
                 }
                 
                 wheelDiscTransform.localEulerAngles = new Vector3(0f, 0f, endAngle);
                 
+                var prize = m_Prizes[prizeIndex];
+                if (!save.TryCompleteWheelSpin(prize.Kind, prize.Amount)) yield break;
+
                 if (prizeItemTransforms != null && prizeIndex >= 0 && prizeIndex < prizeItemTransforms.Length)
                 {
                     var prizeTransform = prizeItemTransforms[prizeIndex];
@@ -187,16 +221,12 @@ namespace HexaSort.UI
                     }
                 }
 
-                var prize = m_Prizes[prizeIndex];
-                Debug.Log($"<color=yellow><b>[LuckyWheel]</b> Congratulations! You won <b>{prize.amount}x {prize.name}</b>!</color>");
+
             }
             finally
             {
                 m_IsSpinning = false;
-                if (spinButton != null)
-                {
-                    spinButton.interactable = true;
-                }
+                if (isActiveAndEnabled) RefreshWheel();
             }
         }
         
@@ -216,6 +246,7 @@ namespace HexaSort.UI
             }
 
             target.localScale = originalScale;
+            celebratingPrize = null;
         }
 
         public void OnCloseClicked()

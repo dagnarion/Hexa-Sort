@@ -19,9 +19,10 @@ namespace HexaSort.UI
 
         [Header("Currency Bar")]
         [SerializeField] private TMP_Text coinBalanceText;
+        [SerializeField] private TMP_Text mainMenuCoinText;
         [SerializeField] private Button coinPlusButton;
         [SerializeField] private RectTransform coinPillTransform;
-        [SerializeField] private int initialBalance = 219;
+        private SaveLoadServices wallet;
 
         [Header("Purchase Cancelled Popup")]
         [SerializeField] private ShopPurchasePopup purchasePopup;
@@ -30,8 +31,6 @@ namespace HexaSort.UI
         [SerializeField] private ShopNavTab[] navTabs;
         [SerializeField] private int defaultSelectedTabIndex = 1; // Shop tab
 
-        private int currentCoins;
-        private Tween coinTween;
 
         private void Awake()
         {
@@ -46,13 +45,24 @@ namespace HexaSort.UI
             }
 
             if (shopCanvas == null) shopCanvas = GetComponentInParent<Canvas>();
-            currentCoins = initialBalance;
-            UpdateCoinText(currentCoins);
+            wallet = SaveLoadServices.FindForMenu(gameObject);
 
             if (coinPlusButton != null)
             {
                 coinPlusButton.onClick.AddListener(OnCoinPlusClicked);
             }
+        }
+
+        private void OnEnable()
+        {
+            if (Instance != this) return;
+            wallet.GoldChanged += UpdateCoinText;
+            UpdateCoinText(wallet.Gold);
+        }
+
+        private void OnDisable()
+        {
+            if (wallet != null) wallet.GoldChanged -= UpdateCoinText;
         }
 
         private void Start()
@@ -157,12 +167,7 @@ namespace HexaSort.UI
 
         public void AddMockCoins(int amount)
         {
-            int startVal = currentCoins;
-            currentCoins += amount;
-
-            coinTween?.Kill();
-            coinTween = DOTween.To(() => startVal, x => UpdateCoinText(x), currentCoins, 0.5f)
-                .SetEase(Ease.OutQuad);
+            wallet.CreditGold(amount);
 
             if (coinPillTransform != null)
             {
@@ -172,10 +177,9 @@ namespace HexaSort.UI
 
         private void UpdateCoinText(int val)
         {
-            if (coinBalanceText != null)
-            {
-                coinBalanceText.text = val.ToString("N0");
-            }
+            string balance = val.ToString("N0");
+            if (coinBalanceText != null) coinBalanceText.text = balance;
+            if (mainMenuCoinText != null) mainMenuCoinText.text = balance;
         }
     }
 }

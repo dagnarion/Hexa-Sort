@@ -7475,7 +7475,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 4/15
+  m_text: 0/5
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cc7da015fd6b4c245abbd647ed8bc5df, type: 2}
   m_sharedMaterial: {fileID: 5683980856358487934, guid: cc7da015fd6b4c245abbd647ed8bc5df, type: 2}
@@ -19471,7 +19471,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Win 15 levels to Spin the Wheel
+  m_text: Win 5 levels to Spin the Wheel
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cc7da015fd6b4c245abbd647ed8bc5df, type: 2}
   m_sharedMaterial: {fileID: 5683980856358487934, guid: cc7da015fd6b4c245abbd647ed8bc5df, type: 2}
@@ -44475,6 +44475,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f11d3ff8fafc364e82cf59cbb73949f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CanvasMainMenu
+  heartCount: {fileID: 850799683}
+  refillTimer: {fileID: 361309798}
   panels:
   - {fileID: 1366356159}
   - {fileID: 2008080701}
@@ -44497,6 +44499,7 @@ MonoBehaviour:
   contentRect: {fileID: 1385084653}
   coinGridSection: {fileID: 804292179}
   coinBalanceText: {fileID: 1412019608}
+  mainMenuCoinText: {fileID: 145559776}
   coinPlusButton: {fileID: 0}
   coinPillTransform: {fileID: 1546454619}
   initialBalance: 219
@@ -61508,6 +61511,7 @@ GameObject:
   - component: {fileID: 1772629920}
   - component: {fileID: 1772629919}
   - component: {fileID: 1772629918}
+  - component: {fileID: 8901700311548}
   m_Layer: 0
   m_Name: Lucky Wheel Panel
   m_TagString: Untagged
@@ -61540,6 +61544,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8901700311548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772629916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eeb1b1beef44c2a4c86d9e0da36c5c2d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::HexaSort.UI.LuckyWheelController
+  wheelDiscTransform: {fileID: 1012907000}
+  spinButton: {fileID: 1066221937}
+  spinDuration: 4.5
+  minFullTurns: 5
+  maxFullTurns: 7
 --- !u!114 &1772629918
 MonoBehaviour:
   m_ObjectHideFlags: 0

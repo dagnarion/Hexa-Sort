@@ -7,6 +7,7 @@ public class LoseState : IState
     }
     public void Enter()
     {
+        gameManager.SaveLoadServices.LoseLife();
         gameManager.InputManager.ChangeToUI();
         gameManager.WinLoseManager.ShowLose();
     }

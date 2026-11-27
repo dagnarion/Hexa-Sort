@@ -64,9 +64,10 @@ public class ReshuffleBooster : SaveLoadAbstract
         try
         {
             bool completed = await hexagonStackSpawner.ReshuffleAsync();
-            if (!completed || !inputManager.IsGameplayEnabled || !inputManager.IsBoosterModeActive(this)) return;
+            if (!completed) return;
 
             remain = Mathf.Max(0, remain - 1);
+            saveLoadServices.SaveInventory(this);
             UpdateButtonLabel();
         }
         finally
@@ -86,8 +87,6 @@ public class ReshuffleBooster : SaveLoadAbstract
 
     public override void Save(GameData gameData)
     {
-        inputManager?.CancelBoosterMode(this);
-        isSelected = false;
         gameData.ShuffleBoosterRemain = remain;
     }
 
@@ -96,6 +95,11 @@ public class ReshuffleBooster : SaveLoadAbstract
         inputManager?.CancelBoosterMode(this);
         isSelected = false;
         isProcessing = false;
+        RefreshInventory(gameData);
+    }
+
+    public override void RefreshInventory(GameData gameData)
+    {
         remain = Mathf.Max(0, gameData.ShuffleBoosterRemain);
         UpdateButtonLabel();
     }
