@@ -10,8 +10,8 @@ public class HexagonStackRender : MonoBehaviour
     [SerializeField] private float lerpDuration;
     private HexagonStackArranger stackArranger;
     private Vector3 oldPosition;
-    private Vector3 targetUpPosition;
-    private Vector3 targetDownPosition;
+    public static readonly Vector3 RestingLocalPosition = Vector3.up * 0.2f;
+    private Vector3 RaisedLocalPosition => RestingLocalPosition + Vector3.up * upHeight;
     
     public void Init(HexagonStackArranger stackArranger)
     {
@@ -31,24 +31,10 @@ public class HexagonStackRender : MonoBehaviour
         this.transform.position = position.With(y: transform.position.y);
     }
 
-    public Sequence LerpToTargetPosition(Vector3 position)
+    public Tween MoveToRaisedSlot(Transform destinationSlot)
     {
-        Sequence sq = DOTween.Sequence();
-        sq.Append(transform.DOMove(position, lerpDuration).SetEase(Ease.OutSine));
-        return sq;
-    }
-
-    public void DropToTargetPosition(Vector3 position)
-    {
-        this.transform.position = position.With(y: position.y + .2f);
-        SetUpAndDownPosition(position);
-    }
-
-    public void SetUpAndDownPosition(Vector3 position)
-    {
-        Vector3 basePos = position.With(y: position.y + .2f);
-        targetUpPosition = basePos + new Vector3(0, upHeight, 0);
-        targetDownPosition = basePos;
+        transform.SetParent(destinationSlot, true);
+        return transform.DOLocalMove(RaisedLocalPosition, lerpDuration).SetEase(Ease.OutSine);
     }
 
     public Sequence Appear()
@@ -62,20 +48,16 @@ public class HexagonStackRender : MonoBehaviour
         return sequence;
     }
 
-    public Sequence MoveUp()
+    public Tween MoveUp()
     {
         transform.DOKill();
-        Sequence sq = DOTween.Sequence();
-        sq.Append(transform.DOMove(targetUpPosition, updownDuration).SetEase(Ease.OutSine));
-        return sq;
+        return transform.DOLocalMove(RaisedLocalPosition, updownDuration).SetEase(Ease.OutSine);
     }
 
-    public Sequence MoveDown()
+    public Tween MoveDown()
     {
         transform.DOKill();
-        Sequence sq = DOTween.Sequence();
-        sq.Append(transform.DOMove(targetDownPosition, updownDuration).SetEase(Ease.OutSine));
-        return sq;
+        return transform.DOLocalMove(RestingLocalPosition, updownDuration).SetEase(Ease.OutSine);
     }
 
     private void OnDestroy()

@@ -131,9 +131,9 @@ public class GridController : MonoBehaviour
         
         slot.FillHexagonStackToSlot(hexaStack);
         
-        hexaStack.Render.DropToTargetPosition(slot.transform.position);
         hexaStack.transform.SetParent(slot.transform);
-        hexaStack.Render.SetOriginPosition(slot.transform.position);
+        hexaStack.transform.localPosition = HexagonStackRender.RestingLocalPosition;
+        hexaStack.Render.SetOriginPosition(hexaStack.transform.position);
         hexaStack.DisableAllCollider();
         ClearCurrentSelection();
         dropHexagonChannel?.Raise(gridPos);

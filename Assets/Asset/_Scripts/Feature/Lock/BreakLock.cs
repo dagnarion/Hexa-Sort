@@ -11,33 +11,36 @@ public class BreakLock : MonoBehaviour, IHittableLock
     private ComponentPoolSO<BreakLock> pool;
     private bool isUnlocking;
     private bool unlockEffectStarted;
+    private int poolVersion;
 
     public void SetPool(ComponentPoolSO<BreakLock> lockPool) => pool = lockPool;
 
     public void Init(int remain, Vector3 position, Quaternion rotation = default)
     {
+        poolVersion++;
         OnUnlocked = null;
         isUnlocking = false;
         unlockEffectStarted = false;
         transform.DOKill();
         transform.SetPositionAndRotation(position, rotation);
         transform.localScale = Vector3.one;
-        this.remain = remain;
-        lockRender.Init();
+        int initialStage = Mathf.Clamp(remain, 1, 3);
+        this.remain = initialStage + 1;
+        lockRender.Init(initialStage - 1);
     }
 
     public async UniTask<bool> TakeHitAsync(int damage = 1)
     {
         if (remain <= 0 || isUnlocking) return true;
+        if (damage <= 0) return false;
         remain = Mathf.Max(0, remain - damage);
         if (remain <= 0)
         {
             isUnlocking = true;
-            await lockRender.OnHit(remain);
             await UnlockAsync();
             return true;
         }
-        await lockRender.OnHit(remain);
+        await lockRender.OnHit(Mathf.Max(0, remain - 2));
         return false;
     }
 
@@ -46,14 +49,16 @@ public class BreakLock : MonoBehaviour, IHittableLock
         if (unlockEffectStarted) return;
         unlockEffectStarted = true;
         isUnlocking = true;
+        int version = poolVersion;
         await lockRender.PlayUnlockEffect();
-        if (this == null) return;
+        if (this == null || version != poolVersion) return;
         OnUnlocked?.Invoke(this);
         ReleaseLock();
     }
 
     public void ReleaseLock()
     {
+        poolVersion++;
         OnUnlocked = null;
         isUnlocking = false;
         unlockEffectStarted = false;

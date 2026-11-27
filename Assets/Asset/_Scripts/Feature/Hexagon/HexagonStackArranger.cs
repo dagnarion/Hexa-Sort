@@ -3,19 +3,17 @@ using UnityEngine;
 public class HexagonStackArranger
 {
     private HexagonStack hexagonStack;
-    private float spacing = 0.2f;
+    private const float Spacing = 0.2f;
 
     public HexagonStackArranger(HexagonStack hexagonStack)
     {
         this.hexagonStack = hexagonStack;
     }
 
+    public static Vector3 GetLocalPosition(int index) => Vector3.up * (Spacing * index);
+
     public Vector3 GetTopPosition()
     {
-        if (hexagonStack.IsEmpty)
-        {
-            return hexagonStack.transform.position;
-        }
-        return hexagonStack.transform.position + Vector3.up * spacing * hexagonStack.GetNumberOfElement();
+        return hexagonStack.transform.TransformPoint(GetLocalPosition(hexagonStack.GetNumberOfElement()));
     }
 }

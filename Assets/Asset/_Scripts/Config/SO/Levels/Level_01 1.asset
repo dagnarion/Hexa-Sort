@@ -123,7 +123,7 @@ MonoBehaviour:
   - isActive: 1
     slotType: 0
     lockType: 1
-    breakHitCount: 5
+    breakHitCount: 3
     taskTargetScore: 50
     hasStack: 0
     gridPosition: {x: 3, y: 2}

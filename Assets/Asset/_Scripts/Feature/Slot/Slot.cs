@@ -11,11 +11,13 @@ public class Slot : MonoBehaviour
     [SerializeField] private EventChannel<int> OnLockBreaked;
     private HexagonStack currentStack;
     [SerializeField] private SlotRender slotRender;
+    [SerializeField] private GameObject blockedVisual;
 
     public void Init(SlotType type, Vector2Int position, HexagonStack stack, ILock Lock)
     {
         ReleaseLock();
         this.Type = type;
+        if (blockedVisual != null) blockedVisual.SetActive(type == SlotType.Block && Lock == null);
         this.Position = position;
         this.currentStack = stack;
         this.IsLocked = false;
@@ -28,6 +30,7 @@ public class Slot : MonoBehaviour
         if (currentLock != null)
             currentLock.OnUnlocked -= HandleLockUnlocked;
         currentLock = lockItem;
+        if (lockItem is TaskLock taskLock) taskLock.SetStack(currentStack);
         if (currentLock != null)
         {
             currentLock.OnUnlocked += HandleLockUnlocked;

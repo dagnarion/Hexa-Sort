@@ -57,27 +57,27 @@ public class HexagonRender : MonoBehaviour
         hexagonTransform.position = pos;
     }
 
-    public Sequence GotoTargetPosition(Vector3 target)
+    public Sequence GotoTargetPosition(Vector3 target, Transform destinationStack = null)
     {
         Sequence sequence = DOTween.Sequence();
 
-        Vector3 start = hexagonTransform.position;
+        if (destinationStack != null)
+            hexagonTransform.SetParent(destinationStack, true);
+        Vector3 start = destinationStack != null ? hexagonTransform.localPosition : hexagonTransform.position;
         Vector3 middle = Vector3.Lerp(start, target, 0.5f);
         middle.y += JumpPower;
 
-        sequence.Append(
-            hexagonTransform.DOPath(
-                new[] { start, middle, target },
-                jumpDuration,
-                PathType.CatmullRom
-            ).SetEase(Ease.InOutQuad)
-        );
+        Vector3[] path = { start, middle, target };
+        Tween flight = destinationStack != null
+            ? hexagonTransform.DOLocalPath(path, jumpDuration, PathType.CatmullRom)
+            : hexagonTransform.DOPath(path, jumpDuration, PathType.CatmullRom);
+        sequence.Append(flight.SetEase(Ease.InOutQuad));
 
         sequence.Join(
-            transform.DORotate(
+            transform.DOLocalRotate(
                 new Vector3(0f, 0f, 180f),
                 jumpDuration,
-                RotateMode.WorldAxisAdd
+                RotateMode.LocalAxisAdd
             ).SetEase(Ease.Linear)
         );
         sequence.Append(

@@ -26,7 +26,7 @@ public class LevelEditorWindow : EditorWindow
     private bool hasSelection = false;
 
     private LockType brushLockType = LockType.BreakLock;
-    private int brushBreakHits = 2;
+    private int brushBreakHits = 3;
     private int brushTaskTarget = 50;
     private SlotLevelData clipboardSlotData = null;
 
@@ -424,7 +424,7 @@ public class LevelEditorWindow : EditorWindow
             if (brushLockType == LockType.BreakLock)
             {
                 EditorGUILayout.LabelField("Hits:", GUILayout.Width(35));
-                brushBreakHits = EditorGUILayout.IntSlider(brushBreakHits, 1, 10, GUILayout.Width(120));
+                brushBreakHits = EditorGUILayout.IntSlider(brushBreakHits, 1, 3, GUILayout.Width(120));
             }
             else if (brushLockType == LockType.TaskLock)
             {
@@ -941,7 +941,7 @@ public class LevelEditorWindow : EditorWindow
 
         if (slot.lockType == LockType.BreakLock)
         {
-            slot.breakHitCount = EditorGUILayout.IntSlider("Hit Count (Remain)", slot.breakHitCount, 1, 20);
+            slot.breakHitCount = EditorGUILayout.IntSlider("Wood stage (1–3)", slot.breakHitCount, 1, 3);
             EditorGUILayout.HelpBox("BreakLock cần N lần merge lục giác kế bên để phá khóa.", MessageType.None);
         }
         else if (slot.lockType == LockType.TaskLock)

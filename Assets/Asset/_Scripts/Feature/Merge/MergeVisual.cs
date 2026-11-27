@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class MergeVisual
 {
-    public async UniTask VisualHandler(List<Hexagon> hexagon,Vector3 target)
+    public async UniTask VisualHandler(List<Hexagon> hexagons, Transform targetStack, int firstLandingIndex)
     {
         Sequence sequence = DOTween.Sequence();
-        for (int i = 0; i < hexagon.Count; i++)
+        for (int i = 0; i < hexagons.Count; i++)
         {
-            sequence.Insert(0.07f * i, hexagon[i].render.GotoTargetPosition(target.With(y:target.y+i*.2f)));
+            Vector3 landingPosition = HexagonStackArranger.GetLocalPosition(firstLandingIndex + i);
+            sequence.Insert(0.07f * i, hexagons[i].render.GotoTargetPosition(landingPosition, targetStack));
         }
         await sequence.ToUniTask();
     }

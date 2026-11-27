@@ -132,45 +132,22 @@ public class SwapBooster : SaveLoadAbstract
         isCommitting = true;
         try
         {
-            if (targetStack == null)
-            {
-                originStack.transform.SetParent(null);
-                Sequence sequence = DOTween.Sequence();
-                sequence.Join(originStack.Render.LerpToTargetPosition(
-                    slot.transform.position.With(y: originStack.transform.position.y)));
-                await sequence.ToUniTask();
-                sequence.Kill();
-                originStack.transform.SetParent(slot.transform);
-                originStack.Render.SetUpAndDownPosition(slot.transform.position);
-                originStack.Render.SetOriginPosition(slot.transform.position);
-                originSlot.FillHexagonStackToSlot(null);
-                slot.FillHexagonStackToSlot(originStack);
-                await originStack.Render.MoveDown().ToUniTask();
-            }
-            else
-            {
+            if (targetStack != null)
                 await targetStack.Render.MoveUp().ToUniTask();
-                originStack.transform.SetParent(null);
-                targetStack.transform.SetParent(null);
 
-                Sequence sequence = DOTween.Sequence();
-                sequence.Join(originStack.Render.LerpToTargetPosition(
-                    slot.transform.position.With(y: originStack.transform.position.y)));
-                sequence.Join(targetStack.Render.LerpToTargetPosition(
-                    originSlot.transform.position.With(y: targetStack.transform.position.y)));
-                await sequence.ToUniTask();
-                sequence.Kill();
+            Sequence travel = DOTween.Sequence();
+            travel.Join(originStack.Render.MoveToRaisedSlot(slot.transform));
+            if (targetStack != null)
+                travel.Join(targetStack.Render.MoveToRaisedSlot(originSlot.transform));
+            await travel.ToUniTask();
 
-                originStack.transform.SetParent(slot.transform);
-                targetStack.transform.SetParent(originSlot.transform);
-                originStack.Render.SetUpAndDownPosition(slot.transform.position);
-                targetStack.Render.SetUpAndDownPosition(originSlot.transform.position);
-                originStack.Render.SetOriginPosition(slot.transform.position);
-                targetStack.Render.SetOriginPosition(originSlot.transform.position);
-                originSlot.FillHexagonStackToSlot(targetStack);
-                slot.FillHexagonStackToSlot(originStack);
-                await UniTask.WhenAll(originStack.Render.MoveDown().ToUniTask(), targetStack.Render.MoveDown().ToUniTask());
-            }
+            originSlot.FillHexagonStackToSlot(targetStack);
+            slot.FillHexagonStackToSlot(originStack);
+            Sequence landing = DOTween.Sequence();
+            landing.Join(originStack.Render.MoveDown());
+            if (targetStack != null)
+                landing.Join(targetStack.Render.MoveDown());
+            await landing.ToUniTask();
 
             selectedSlot = null;
             remain = Mathf.Max(0, remain - 1);

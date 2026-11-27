@@ -9,7 +9,7 @@ public class SlotLevelData
     public bool isActive = true;
     public SlotType slotType = SlotType.Nozmal;
     public LockType lockType = LockType.None;
-    public int breakHitCount = 2;
+    [Range(1, 3)] public int breakHitCount = 3;
     public int taskTargetScore = 50;
     public bool hasStack = false;
     #endregion
@@ -29,7 +29,7 @@ public class SlotLevelData
         isActive = active;
         slotType = SlotType.Nozmal;
         lockType = LockType.None;
-        breakHitCount = 2;
+        breakHitCount = 3;
         taskTargetScore = 50;
         hasStack = false;
         stackColors = new List<Color>();

@@ -84,12 +84,11 @@ public class BoardBuilder
         if (!slotData.hasStack || slotData.stackColors == null || slotData.stackColors.Count == 0) return null;
         HexagonStack stack = hexagonStackPool.Get();
         stack.transform.SetParent(slot.transform, false);
-        stack.transform.localPosition = new Vector3(0f, 0.2f, 0f);
+        stack.transform.localPosition = HexagonStackRender.RestingLocalPosition;
         stack.transform.localRotation = Quaternion.identity;
         stack.transform.localScale = Vector3.one;
 
         stack.Render.SetOriginPosition(stack.transform.position);
-        stack.Render.SetUpAndDownPosition(slot.transform.position);
 
         foreach (var color in slotData.stackColors)
         {

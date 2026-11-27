@@ -42,7 +42,7 @@ public class MergeHandler
         
         if (topTargetCell == null) return;
         List<Hexagon> hexagons = new List<Hexagon>();
-        Vector3 targetPos = targetStack.Render.GetTopPosition();
+        int firstLandingIndex = targetStack.GetNumberOfElement();
         
         for (int i = currentStack.GetNumberOfElement() - 1; i >= 0; i--)
         {
@@ -54,15 +54,7 @@ public class MergeHandler
         }
         
         if(hexagons.Count == 0) return;
-        await mergeVisual.VisualHandler(hexagons,targetPos);
-        
-        for(int i = 0;i<hexagons.Count;i++)
-        {
-            if (hexagons[i] != null && hexagons[i].gameObject.activeInHierarchy && targetStack.gameObject.activeInHierarchy)
-            {
-                hexagons[i].SetParent(targetStack.transform);
-            }
-        }
+        await mergeVisual.VisualHandler(hexagons, targetStack.transform, firstLandingIndex);
 
         if (currentStack.gameObject.activeInHierarchy && currentStack.IsEmpty && currentSlot.GetHexagonStack() == currentStack)
         {

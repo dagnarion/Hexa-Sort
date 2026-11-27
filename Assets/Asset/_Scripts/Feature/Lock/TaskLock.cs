@@ -10,6 +10,7 @@ public class TaskLock : MonoBehaviour, ILock
     public event Action<ILock> OnUnlocked;
     private int target;
     private bool IsLocked;
+    private int generation;
     private ComponentPoolSO<TaskLock> pool;
 
     public void SetPool(ComponentPoolSO<TaskLock> lockPool) => pool = lockPool;
@@ -28,14 +29,17 @@ public class TaskLock : MonoBehaviour, ILock
 
     public void Init(int target, Vector3 position, Quaternion rotation = default)
     {
+        generation++;
         OnUnlocked = null;
         IsLocked = true;
         transform.DOKill();
         this.transform.SetPositionAndRotation(position, rotation);
         this.transform.localScale = Vector3.one;
         this.target = target;
-        render.Lock();
+        render.Lock(target);
     }
+
+    public void SetStack(HexagonStack stack) => render.SetStack(stack);
 
     private void OnProgressUpdate(int currentAmount)
     {
@@ -50,14 +54,16 @@ public class TaskLock : MonoBehaviour, ILock
     {
         if (!IsLocked) return;
         IsLocked = false;
+        int unlockGeneration = generation;
         await render.PlayUnlockEffect();
-        if (this == null) return;
+        if (this == null || generation != unlockGeneration) return;
         OnUnlocked?.Invoke(this);
         ReleaseLock();
     }
 
     public void ReleaseLock()
     {
+        generation++;
         IsLocked = false;
         OnUnlocked = null;
         if (render != null) render.ResetRender();
