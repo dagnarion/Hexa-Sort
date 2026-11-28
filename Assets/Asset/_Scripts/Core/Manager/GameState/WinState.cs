@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+
 public class WinState : IState
 {
     private GameManager gameManager;
@@ -8,9 +10,12 @@ public class WinState : IState
     public async void Enter()
     {
         gameManager.InputManager.ChangeToUI();
+        int reward = gameManager.WinLoseManager.CompleteWinAndSave();
+        WinConfetti.Play(UnityEngine.Camera.main).Forget();
         await gameManager.GridClearServices.Release();
-        gameManager.WinLoseManager.CompleteWinAndSave();
-        gameManager.StateMachine.ChangeState(gameManager.PreparePlayingState);
+        if (!gameManager) return;
+        if (gameManager.StateMachine.CurrentState == this)
+            gameManager.WinLoseManager.ShowWin(reward);
     }
 
     public void Tick()

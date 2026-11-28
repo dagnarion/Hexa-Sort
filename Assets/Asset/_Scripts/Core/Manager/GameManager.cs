@@ -229,6 +229,27 @@ public class GameManager : MonoBehaviour
         StateMachine.ChangeState(PausedState);
     }
 
+#if UNITY_EDITOR
+    public bool CanForceResult => StateMachine?.CurrentState == PlayingState && PlayingState != null &&
+        GridController.IsMergeIdle && !InputManager.IsBoosterInputLocked;
+
+    public bool CanJumpToTestLevel => !isStartingGame && StateMachine?.CurrentState != null &&
+        (StateMachine.CurrentState == MainMenuState || StateMachine.CurrentState == LoseState || CanForceResult);
+
+    public bool JumpToTestLevel(int number)
+    {
+        if (!CanJumpToTestLevel || number < 1 || number > LevelLoader.LevelCount ||
+            !SaveLoadServices.SetTestLevel(number - 1)) return false;
+        WinLoseManager.HideResultForTest();
+        var lifePopup = FindFirstObjectByType<OutOfLivesPopup>();
+        if (lifePopup != null) Destroy(lifePopup.gameObject);
+        MainMenuCanvas.gameObject.SetActive(false);
+        GamePlayCanvas.gameObject.SetActive(true);
+        StateMachine.ChangeState(PreparePlayingState);
+        return true;
+    }
+#endif
+
     public void ResumeGame()
     {
         StateMachine.ChangeState(PlayingState);

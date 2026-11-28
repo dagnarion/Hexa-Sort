@@ -8,6 +8,7 @@ public class MergeService : MonoBehaviour
     [SerializeField] private Transform holder;
     [SerializeField] private EventChannel<Vector2Int> dropChannel;
     [SerializeField] private ComponentPoolSO<HexagonStack> hexagonStackPool;
+    [SerializeField] private StackReleaseBurstPool releaseBurstPool;
     private SlotScoring slotScoring;
 
     private MergeChainResolver chainResolver;
@@ -22,6 +23,10 @@ public class MergeService : MonoBehaviour
     private Grid<Slot> currentGrid;
 
     public bool IsAcceptingCommands => acceptingCommands;
+
+    private void Awake() => releaseBurstPool?.InitPool(transform);
+
+    private void OnDestroy() => releaseBurstPool?.Clear();
 
     private void OnEnable()
     {
@@ -50,7 +55,7 @@ public class MergeService : MonoBehaviour
         slotScoring = new SlotScoring(grid);
         chainResolver = new MergeChainResolver(slotScoring);
         connectedSlotFinder = new ConnectedSlotFinder(grid);
-        mergeVisual = new MergeVisual();
+        mergeVisual = new MergeVisual(releaseBurstPool);
         mergeResolve = new MergeResolve(mergeVisual, grid, hexagonStackPool, holder);
         mergeHandler = new MergeHandler(mergeVisual, holder);
         acceptingCommands = true;

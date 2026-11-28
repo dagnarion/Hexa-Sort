@@ -52,6 +52,8 @@ public class BreakLock : MonoBehaviour, IHittableLock
         int version = poolVersion;
         await lockRender.PlayUnlockEffect();
         if (this == null || version != poolVersion) return;
+        await TaskGoalSpawner.FlyPickups(TaskGoalKind.BreakBlocks, transform.position, Color.white, 1);
+        if (this == null || version != poolVersion) return;
         OnUnlocked?.Invoke(this);
         ReleaseLock();
     }

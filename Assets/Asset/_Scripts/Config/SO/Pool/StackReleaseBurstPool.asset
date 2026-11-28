@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b610335caafd3304782409197b9a841a, type: 3}
+  m_Name: StackReleaseBurstPool
+  m_EditorClassIdentifier: Assembly-CSharp::StackReleaseBurstPool
+  prefab: {fileID: 3512102921748702953, guid: 4ebfba3b105b53e44ae6f90ed8bc5634, type: 3}
+  Capacity: 4
+  MaxSize: 16

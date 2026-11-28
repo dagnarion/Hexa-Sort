@@ -29,6 +29,11 @@ public class GameData
     }
 
     public int LevelID;
+    public int DailyRewardsInCycle;
+    public long LastDailyRewardDay;
+    public long InfiniteLivesUntilUtc;
+
+    public GameData CopyForReward() => (GameData)MemberwiseClone();
     public const int WinsPerSpin = 5;
     public int WheelWins;
     public int WheelSpins;

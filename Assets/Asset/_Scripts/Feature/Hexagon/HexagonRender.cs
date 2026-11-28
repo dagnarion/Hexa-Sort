@@ -90,6 +90,8 @@ public class HexagonRender : MonoBehaviour
         return sequence;
     }
 
+    public void CreditCollection(int amount) => OnHexagonCollected?.Raise(amount);
+
     public Sequence ReleaseHexagon(bool countAsCollected = true)
     {
         if (isReleasing) return DOTween.Sequence();

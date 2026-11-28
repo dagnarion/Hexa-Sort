@@ -41,16 +41,9 @@ public class MergeResolve
             hexagonStack.RemoveElement(it);
         }
 
-        await mergeVisual.ReleaseHexagon(hexagons);
+        await UniTask.WhenAll(mergeVisual.ReleaseHexagon(hexagons), TryDamageNeighbourLocksAsync(slot));
 
-        if (slot.GetHexagonStack() != hexagonStack || !hexagonStack.gameObject.activeInHierarchy)
-        {
-            return;
-        }
-
-        await TryDamageNeighbourLocksAsync(slot);
-
-        if (slot.GetHexagonStack() == hexagonStack && hexagonStack.IsEmpty)
+        if (slot.GetHexagonStack() == hexagonStack && hexagonStack.gameObject.activeInHierarchy && hexagonStack.IsEmpty)
         {
             slot.ReleaseSlot();
             hexagonStack.Release();

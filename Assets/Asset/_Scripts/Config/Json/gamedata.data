@@ -1,15 +1,19 @@
 {
-    "MissingLives": 0,
-    "NextLifeUtcSeconds": 0,
+    "MissingLives": 1,
+    "NextLifeUtcSeconds": 1795855605,
     "LevelID": 1,
-    "WheelWins": 1,
-    "WheelSpins": 0,
+    "DailyRewardsInCycle": 1,
+    "LastDailyRewardDay": 739947,
+    "InfiniteLivesUntilUtc": 1795836964,
+    "WheelWins": 3,
+    "WheelSpins": 2,
     "WheelProgressInitialized": true,
-    "Gold": 0,
+    "Gold": 510,
     "RewardedLevelIDs": [
-        0
+        0,
+        1
     ],
-    "BreakBoosterRemain": 19,
-    "SwapBoosterRemain": 5,
-    "ShuffleBoosterRemain": 16
+    "BreakBoosterRemain": 5,
+    "SwapBoosterRemain": 0,
+    "ShuffleBoosterRemain": 0
 }

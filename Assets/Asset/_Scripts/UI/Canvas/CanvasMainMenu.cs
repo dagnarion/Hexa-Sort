@@ -7,6 +7,7 @@ public class CanvasMainMenu : MonoBehaviour
     [SerializeField] private RectTransform[] panels;
     [SerializeField] private float duration = 0.35f;
     [SerializeField] private TMP_Text heartCount;
+    [SerializeField] private TMP_Text playLevelText;
     [SerializeField] private TMP_Text refillTimer;
     [SerializeField] private UnityEngine.UI.Button standalonePlayButton;
     private SaveLoadServices save;
@@ -27,7 +28,16 @@ public class CanvasMainMenu : MonoBehaviour
 
     private void RefreshLives()
     {
+        if (playLevelText != null) playLevelText.SetText("LEVEL {0}", save.LevelNumber);
         int lives = save.GetLives(out int seconds);
+        long unlimited = save.InfiniteLifeSeconds;
+        if (unlimited > 0)
+        {
+            heartCount.text = "∞";
+            refillTimer.text = $"{unlimited / 60:00}:{unlimited % 60:00}";
+            nextRefresh = Time.realtimeSinceStartupAsDouble + 1;
+            return;
+        }
         heartCount.SetText("{0}", lives);
         refillTimer.text = seconds == 0 ? "FULL" : $"{seconds / 60:00}:{seconds % 60:00}";
         nextRefresh = Time.realtimeSinceStartupAsDouble + 1;

@@ -4988,14 +4988,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f11d3ff8fafc364e82cf59cbb73949f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CanvasMainMenu
-  heartCount: {fileID: 190815894}
-  standalonePlayButton: {fileID: 334465047}
-  refillTimer: {fileID: 183104950}
   panels:
   - {fileID: 7797438532123887078}
   - {fileID: 1104514143}
   - {fileID: 886654941}
   duration: 0.35
+  heartCount: {fileID: 190815894}
+  playLevelText: {fileID: 1186483972}
+  refillTimer: {fileID: 183104950}
+  standalonePlayButton: {fileID: 334465047}
 --- !u!114 &142448006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5016,7 +5017,6 @@ MonoBehaviour:
   mainMenuCoinText: {fileID: 1806090123}
   coinPlusButton: {fileID: 0}
   coinPillTransform: {fileID: 4685176449843538026}
-  initialBalance: 219
   purchasePopup: {fileID: 2198410311695730012}
   navTabs:
   - {fileID: 0}
@@ -20707,6 +20707,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 709649400}
   m_CullTransparentMesh: 1
+--- !u!1001 &713155181
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2114793031608417695, guid: 859eb451f64617644a95c8ebc842000a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2114793031608417695, guid: 859eb451f64617644a95c8ebc842000a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2114793031608417695, guid: 859eb451f64617644a95c8ebc842000a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2114793031608417695, guid: 859eb451f64617644a95c8ebc842000a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2114793031608417695, guid: 859eb451f64617644a95c8ebc842000a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2114793031608417695, guid: 859eb451f64617644a95c8ebc842000a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2114793031608417695, guid: 859eb451f64617644a95c8ebc842000a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2114793031608417695, guid: 859eb451f64617644a95c8ebc842000a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2114793031608417695, guid: 859eb451f64617644a95c8ebc842000a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2114793031608417695, guid: 859eb451f64617644a95c8ebc842000a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4925231289925325567, guid: 859eb451f64617644a95c8ebc842000a, type: 3}
+      propertyPath: m_Name
+      value: Out Of Lives Popup
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 859eb451f64617644a95c8ebc842000a, type: 3}
 --- !u!1 &713826797
 GameObject:
   m_ObjectHideFlags: 0
@@ -21624,6 +21681,7 @@ GameObject:
   - component: {fileID: 740899536}
   - component: {fileID: 740899535}
   - component: {fileID: 740899537}
+  - component: {fileID: 8981255072013}
   m_Layer: 0
   m_Name: Daily Reward Panel
   m_TagString: Untagged
@@ -33093,7 +33151,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: LEVEL 6
+  m_text: LEVEL 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b98d3e5f40a39d8408f37af94a931545, type: 2}
   m_sharedMaterial: {fileID: 5683980856358487934, guid: b98d3e5f40a39d8408f37af94a931545, type: 2}
@@ -36714,6 +36772,10 @@ MonoBehaviour:
   targetButton: {fileID: 2015089408}
   selected: {fileID: 650593850}
   unselected: {fileID: 844459743}
+  tabContent:
+  - {fileID: 1504493892}
+  - {fileID: 1181954116}
+  - {fileID: 401564307}
   showIcon: {fileID: 397769867}
   hideIcon: {fileID: 1739155550}
   punchVel: {x: 0.2, y: 0.2, z: 0}
@@ -56074,6 +56136,10 @@ MonoBehaviour:
   targetButton: {fileID: 1310118364}
   selected: {fileID: 1851039410}
   unselected: {fileID: 572732706}
+  tabContent:
+  - {fileID: 1929985885}
+  - {fileID: 908206210}
+  - {fileID: 1504933234}
   showIcon: {fileID: 1546714271}
   hideIcon: {fileID: 1667653256}
   punchVel: {x: 0.2, y: 0.2, z: 0}
@@ -60673,6 +60739,40 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -64, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8901700311548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2848211202477610831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eeb1b1beef44c2a4c86d9e0da36c5c2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HexaSort.UI.LuckyWheelController
+  wheelDiscTransform: {fileID: 8812953433390959681}
+  spinButton: {fileID: 7983844086524538824}
+  availableSpinSprite: {fileID: 21300000, guid: 892f66bb48eab744b80bda6aec1a6073, type: 2}
+  closeButton: {fileID: 0}
+  luckyWheelCanvas: {fileID: 0}
+  prizeItemTransforms: []
+  subtitleText: {fileID: 0}
+  spinDuration: 4.5
+  minFullTurns: 5
+  maxFullTurns: 7
+--- !u!114 &8981255072013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740899533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b1e0861ba3b4dd2ac47387f6a703aad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DailyRewardPanel
 --- !u!224 &4139344535894491
 RectTransform:
   m_ObjectHideFlags: 0
@@ -63940,23 +64040,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8901700311548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2848211202477610831}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eeb1b1beef44c2a4c86d9e0da36c5c2d, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::HexaSort.UI.LuckyWheelController
-  wheelDiscTransform: {fileID: 8812953433390959681}
-  spinButton: {fileID: 7983844086524538824}
-  spinDuration: 4.5
-  minFullTurns: 5
-  maxFullTurns: 7
 --- !u!114 &3158510640712761978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70832,3 +70915,4 @@ SceneRoots:
   - {fileID: 1256642028}
   - {fileID: 142448004}
   - {fileID: 297685076}
+  - {fileID: 713155181}

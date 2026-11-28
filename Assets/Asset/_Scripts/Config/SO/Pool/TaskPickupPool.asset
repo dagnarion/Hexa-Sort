@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11c1d9a13abbb184aa2404b7dcf69a88, type: 3}
+  m_Name: TaskPickupPool
+  m_EditorClassIdentifier: Assembly-CSharp::TaskPickupPool
+  prefab: {fileID: 7080912418487800218, guid: df26432e9866b8e419966f89348f413b, type: 3}
+  Capacity: 8
+  MaxSize: 48

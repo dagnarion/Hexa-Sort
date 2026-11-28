@@ -11,6 +11,7 @@ namespace HexaSort.UI
         [Header("Wheel Components")]
         [SerializeField] private RectTransform wheelDiscTransform;
         [SerializeField] private Button spinButton;
+        [SerializeField] private Sprite availableSpinSprite;
         [SerializeField] private Button closeButton;
         [SerializeField] private Canvas luckyWheelCanvas;
 
@@ -26,7 +27,6 @@ namespace HexaSort.UI
         private bool m_IsSpinning = false;
         private SaveLoadServices save;
         private TMP_Text progressText;
-        private TMP_Text spinText;
         private RectTransform progressFill;
         private RectTransform celebratingPrize;
         private Vector3 originalScale;
@@ -62,7 +62,6 @@ namespace HexaSort.UI
             save = SaveLoadServices.FindForMenu(gameObject);
             progressText = transform.Find("ProgressCapsule/ProgressText").GetComponent<TMP_Text>();
             progressFill = (RectTransform)transform.Find("ProgressCapsule/Fill");
-            spinText = transform.Find("SpinButton/SpinText").GetComponent<TMP_Text>();
             if (wheelDiscTransform == null)
             {
                 var rotator = transform.Find("WheelArea/WheelRotator");
@@ -112,11 +111,12 @@ namespace HexaSort.UI
         {
             int wins = save.WheelWins;
             int spins = save.WheelSpins;
-            progressText.text = $"{wins}/{GameData.WinsPerSpin}";
-            spinText.text = $"SPIN ({spins})";
+            int displayedWins = wins == 0 && spins > 0 ? GameData.WinsPerSpin : wins;
+            progressText.text = $"{displayedWins}/{GameData.WinsPerSpin}";
             var bar = (RectTransform)progressFill.parent;
             float width = Mathf.Max(0f, bar.rect.width - 2f * progressFill.anchoredPosition.x);
-            progressFill.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width * wins / GameData.WinsPerSpin);
+            progressFill.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width * displayedWins / GameData.WinsPerSpin);
+            spinButton.image.overrideSprite = spins > 0 ? availableSpinSprite : null;
             spinButton.interactable = !m_IsSpinning && spins > 0;
         }
 
